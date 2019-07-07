@@ -13,11 +13,17 @@ class Feature {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id ;
     private String name ;
+    /*
+    * Take the id from Maven Repository
+    * */
     @OneToOne
     @JoinColumn(name="id")
     @MapsId
     private MavenRepository mavenRepository;
-    @ManyToMany(targetEntity=Xde.class)
-    private Set<Xde> xdeSet=new HashSet<Xde>();
+    /*
+    * split relation ManyToMany between " Feature and Xde " To 2 relations "OneToMany"
+    * */
+    @OneToMany(targetEntity=Feature_Xde.class)
+    private Set<Feature_Xde> xdeSet=new HashSet<Feature_Xde>();
 
 }

@@ -15,4 +15,5 @@ class Profile {
     private String name;
     @ManyToMany(targetEntity = Feature.class)
     private Set<Feature> features = new HashSet<Feature>();
+
 }
