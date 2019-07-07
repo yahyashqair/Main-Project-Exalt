@@ -1,7 +1,9 @@
 package com.exult.ProjectCisco.service;
 
+import com.exult.ProjectCisco.model.Maven;
 import com.exult.ProjectCisco.model.Xde;
 import com.exult.ProjectCisco.repository.XdeRepository;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +11,7 @@ import javax.transaction.Transactional;
 import java.util.Set;
 
 @Service
-public class XdeServiceImplementation implements XdeService{
+public  @Setter class  XdeServiceImplementation implements XdeService{
     @Autowired
     private XdeRepository xdeRepository;
 
@@ -21,8 +23,33 @@ public class XdeServiceImplementation implements XdeService{
     * */
 
     @Transactional
-    Set<Xde> readData(){
-        return (Set<Xde>) xdeRepository.findByName("Test");
+    public Set<Xde> findXde(String x){
+        return (Set<Xde>) xdeRepository.findByName(x);
     }
+
+    @Transactional
+    public boolean deleteXde(Integer id){
+        Xde xde =  xdeRepository.findById(id).get();
+        xdeRepository.delete(xde);
+        return true;
+    }
+    @Transactional
+    public Xde updateXde(Integer id, String name, Maven maven){
+        Xde xde =  xdeRepository.findById(id).get();
+        xde.setMaven(maven);
+        xde.setName(name);
+        return xde;
+    }
+
+    @Transactional
+    public Xde insertXde(String name, Maven maven){
+        Xde xde = new Xde();
+        xde.setMaven(maven);
+        xde.setName(name);
+        xde=xdeRepository.save(xde);
+        return xde;
+    }
+
+
 
 }
