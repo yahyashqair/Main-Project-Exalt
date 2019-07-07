@@ -1,4 +1,4 @@
-package com.exult.ProjectCisco.Model;
+package com.exult.ProjectCisco.model;
 
 import lombok.Data;
 
@@ -9,11 +9,13 @@ public @Data
 class Xde {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String name;
+    /*
+     * Take the id from Maven repository
+     * */
     @OneToOne
     @JoinColumn(name = "id")
     @MapsId
-    private MavenRepository mavenRepository;
+    private Maven maven;
 }

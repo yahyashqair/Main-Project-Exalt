@@ -1,15 +1,14 @@
-package com.exult.ProjectCisco.Model;
+package com.exult.ProjectCisco.model;
 
 import lombok.Data;
 
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 public@Data
-class Feature_Xde {
+class FeatureXde {
     @ManyToOne
     private Feature feature;
     @ManyToOne
     private Xde xde ;
-    private String name ;
+    private String typeOfRelation ;
 }

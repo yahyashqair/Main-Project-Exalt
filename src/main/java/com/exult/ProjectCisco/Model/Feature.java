@@ -1,4 +1,4 @@
-package com.exult.ProjectCisco.Model;
+package com.exult.ProjectCisco.model;
 
 import lombok.Data;
 
@@ -9,21 +9,24 @@ import java.util.Set;
 @Entity
 public @Data
 class Feature {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id ;
-    private String name ;
+    private Integer id;
+
+    private String name;
     /*
-    * Take the id from Maven Repository
-    * */
+     * Take the id from Maven repository
+     * */
     @OneToOne
-    @JoinColumn(name="id")
+    @JoinColumn(name = "id")
     @MapsId
-    private MavenRepository mavenRepository;
+    private Maven maven;
+
     /*
-    * split relation ManyToMany between " Feature and Xde " To 2 relations "OneToMany"
-    * */
-    @OneToMany(targetEntity=Feature_Xde.class)
-    private Set<Feature_Xde> xdeSet=new HashSet<Feature_Xde>();
+     * split relation ManyToMany between " Feature and Xde " To 2 relations "OneToMany"
+     * */
+    @OneToMany(targetEntity = FeatureXde.class)
+    private Set<FeatureXde> xdeSet = new HashSet<FeatureXde>();
 
 }

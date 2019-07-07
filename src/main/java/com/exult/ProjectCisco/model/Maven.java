@@ -1,4 +1,4 @@
-package com.exult.ProjectCisco.Model;
+package com.exult.ProjectCisco.model;
 
 import lombok.Data;
 
@@ -8,12 +8,10 @@ import javax.persistence.Id;
 
 @Entity
 public @Data
-class MavenRepository {
+class Maven {
     @Id
     private String groupArtifactId;
     private String groupId;
     private String artifactId;
     private String version;
-
-
 }

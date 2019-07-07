@@ -1,4 +1,4 @@
-package com.exult.ProjectCisco.Model;
+package com.exult.ProjectCisco.model;
 
 import lombok.Data;
 
@@ -15,5 +15,11 @@ class Profile {
     private String name;
     @ManyToMany(targetEntity = Feature.class)
     private Set<Feature> features = new HashSet<Feature>();
+
+    /*
+    * Each Profile has more than one configuration
+    * */
+    @ManyToMany
+    private Set<Configuration> configurations=new HashSet<Configuration>();
 
 }
