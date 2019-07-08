@@ -24,7 +24,6 @@ public class FeatureController {
     @Autowired
     private MavenRepository mavenRepository;
 
-
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     Optional<Feature> getFeature(@PathVariable("id") Long id) {
         return featureService.findById(id);

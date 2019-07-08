@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -28,26 +29,32 @@ public  @Setter class  ProfileServiceImplementation implements ProfileService {
     }
 
     @Transactional
-    public boolean deleteProfile(Integer id){
+    public boolean deleteProfile(Long id){
         Profile profile =  profileRepository.findById(id).get();
         profileRepository.delete(profile);
         return true;
     }
     @Transactional
-    public Profile updateProfile(Integer id, String name){
+    public Profile updateProfile(Long id, String name, Maven maven){
         Profile profile =  profileRepository.findById(id).get();
         profile.setName(name);
+        profile.setMaven(maven);
         return profile;
     }
 
     @Transactional
-    public Profile insertProfile(String name){
+    public Profile insertProfile(String name, Maven maven){
         Profile profile= new Profile();
         profile.setName(name);
+        profile.setMaven(maven);
         profile=profileRepository.save(profile);
         return profile;
     }
 
+    @Override
+    public Optional<Profile> findById(Long x) {
+        return profileRepository.findById(x);
+    }
 
 
 }

@@ -12,9 +12,15 @@ class Profile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id ;
     private String name;
     @ManyToMany(targetEntity = Feature.class)
     private Set<Feature> features = new HashSet<Feature>();
+
+    @OneToOne
+    @JoinColumn(name = "id")
+    @MapsId
+    private Maven maven;
 
     /*
     * Each Feature has more than one configuration

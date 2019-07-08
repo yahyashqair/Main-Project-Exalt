@@ -1,11 +1,16 @@
 package com.exult.ProjectCisco.service.Profile;
 
+import com.exult.ProjectCisco.model.Maven;
 import com.exult.ProjectCisco.model.Profile;
+
+import java.util.Optional;
 import java.util.Set;
 
 public interface ProfileService {
     Set<Profile> findProfile(String x);
-    boolean deleteProfile(Integer id);
-    Profile updateProfile(Integer id, String name);
-    Profile insertProfile(String name);
+    boolean deleteProfile(Long id);
+    Profile updateProfile(Long id, String name, Maven maven);
+    Profile insertProfile(String name, Maven maven);
+    Optional<Profile> findById(Long x);
+
 }

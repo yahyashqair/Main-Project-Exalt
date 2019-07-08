@@ -15,6 +15,7 @@ import java.util.Optional;
 
 @Controller
 @RestController
+@RequestMapping("xde")
 public class XdeController {
 
     @Autowired
