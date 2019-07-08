@@ -11,7 +11,7 @@ public @Data
 class Feature {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String name;
@@ -26,7 +26,7 @@ class Feature {
     /*
      * split relation ManyToMany between " Feature and Xde " To 2 relations "OneToMany"
      * */
-    @OneToMany(targetEntity = FeatureXde.class)
+    @OneToMany(mappedBy = "feature")
     private Set<FeatureXde> xdeSet = new HashSet<FeatureXde>();
 
 }

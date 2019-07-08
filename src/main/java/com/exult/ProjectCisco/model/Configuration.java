@@ -3,8 +3,10 @@ package com.exult.ProjectCisco.model;
 import lombok.Data;
 
 import javax.persistence.*;
-
+@Entity
 public @Data class Configuration {
     @Id
-    private String name ;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id ;
+    private String name;
 }

@@ -10,7 +10,7 @@ import java.util.Set;
 public @Data
 class Device {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToMany

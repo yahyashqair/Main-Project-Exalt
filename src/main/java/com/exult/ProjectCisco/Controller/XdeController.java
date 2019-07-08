@@ -16,7 +16,7 @@ import java.util.Optional;
 public class XdeController {
 
     @Autowired
-    XdeService xdeService;
+    private XdeService xdeService;
 
     @RequestMapping(value = "/{id}" ,method = RequestMethod.GET)
     Optional<Xde> getXde(@PathVariable("id") Integer id){
