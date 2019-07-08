@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -27,6 +28,11 @@ public class ProfileController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     Optional<Profile> getProfile(@PathVariable("id") Long id) {
         return profileService.findById(id);
+    }
+
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    List<Profile> getProfiles() {
+        return profileService.findAll();
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
