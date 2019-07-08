@@ -2,6 +2,7 @@ package com.exult.ProjectCisco.service.Xde;
 
 import com.exult.ProjectCisco.model.Maven;
 import com.exult.ProjectCisco.model.Xde;
+import com.exult.ProjectCisco.repository.MavenRepository;
 import com.exult.ProjectCisco.repository.XdeRepository;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ public  @Setter class  XdeServiceImplementation implements XdeService {
     @Autowired
     private XdeRepository xdeRepository;
 
+
     /*
     * Add
     * Delete
@@ -29,24 +31,23 @@ public  @Setter class  XdeServiceImplementation implements XdeService {
     }
 
     @Override
-    public Optional<Xde> findById(Integer x) {
+    public Optional<Xde> findById(Long x) {
         return xdeRepository.findById(x);
     }
 
     @Transactional
-    public boolean deleteXde(Integer id){
+    public boolean deleteXde(Long id){
         Xde xde =  xdeRepository.findById(id).get();
         xdeRepository.delete(xde);
         return true;
     }
     @Transactional
-    public Xde updateXde(Integer id, String name, Maven maven){
+    public Xde updateXde(Long id, String name, Maven maven){
         Xde xde =  xdeRepository.findById(id).get();
         xde.setMaven(maven);
         xde.setName(name);
         return xde;
     }
-
     @Transactional
     public Xde insertXde(String name, Maven maven){
         Xde xde = new Xde();
@@ -55,7 +56,4 @@ public  @Setter class  XdeServiceImplementation implements XdeService {
         xde=xdeRepository.save(xde);
         return xde;
     }
-
-
-
 }

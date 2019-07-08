@@ -7,9 +7,8 @@ import javax.persistence.*;
 @Entity
 public @Data
 class Xde {
-
     @Id
-    private Integer id;
+    private Long id;
     private String name;
     /*
      * Take the id from Maven repository

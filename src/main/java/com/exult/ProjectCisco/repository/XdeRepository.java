@@ -10,6 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface XdeRepository extends JpaRepository<Xde,Integer> {
+public interface XdeRepository extends JpaRepository<Xde,Long> {
     Xde findByName(String name);
 }
