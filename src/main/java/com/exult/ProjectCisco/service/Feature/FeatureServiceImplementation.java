@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -28,13 +29,13 @@ public  @Setter class  FeatureServiceImplementation implements FeatureService {
     }
 
     @Transactional
-    public boolean deleteFeature(Integer id){
+    public boolean deleteFeature(Long id){
         Feature feature =  featureRepository.findById(id).get();
         featureRepository.delete(feature);
         return true;
     }
     @Transactional
-    public Feature updateFeature(Integer id, String name, Maven maven){
+    public Feature updateFeature(Long id, String name, Maven maven){
         Feature feature =  featureRepository.findById(id).get();
         feature.setMaven(maven);
         feature.setName(name);
@@ -50,6 +51,10 @@ public  @Setter class  FeatureServiceImplementation implements FeatureService {
         return feature;
     }
 
+    @Override
+    public Optional<Feature> findById(Long x) {
+        return featureRepository.findById(x);
+    }
 
 
 }
