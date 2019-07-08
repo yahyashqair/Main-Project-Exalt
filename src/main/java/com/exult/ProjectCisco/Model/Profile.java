@@ -17,7 +17,7 @@ class Profile {
     private Set<Feature> features = new HashSet<Feature>();
 
     /*
-    * Each Profile has more than one configuration
+    * Each Feature has more than one configuration
     * */
     @ManyToMany
     private Set<Configuration> configurations=new HashSet<Configuration>();

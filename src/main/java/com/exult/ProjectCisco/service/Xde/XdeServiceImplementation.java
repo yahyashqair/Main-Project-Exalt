@@ -1,8 +1,9 @@
-package com.exult.ProjectCisco.service;
+package com.exult.ProjectCisco.service.Xde;
 
 import com.exult.ProjectCisco.model.Maven;
 import com.exult.ProjectCisco.model.Xde;
 import com.exult.ProjectCisco.repository.XdeRepository;
+import com.exult.ProjectCisco.service.Xde.XdeService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ import javax.transaction.Transactional;
 import java.util.Set;
 
 @Service
-public  @Setter class  XdeServiceImplementation implements XdeService{
+public  @Setter class  XdeServiceImplementation implements XdeService {
     @Autowired
     private XdeRepository xdeRepository;
 
