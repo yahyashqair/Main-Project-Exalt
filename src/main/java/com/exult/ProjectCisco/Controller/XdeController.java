@@ -1,4 +1,4 @@
-package com.exult.ProjectCisco.Controller;
+package com.exult.ProjectCisco.controller;
 
 import com.exult.ProjectCisco.dto.XdeDto;
 import com.exult.ProjectCisco.model.Xde;

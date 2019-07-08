@@ -1,4 +1,4 @@
-package com.exult.ProjectCisco.Controller;
+package com.exult.ProjectCisco.controller;
 
 import com.exult.ProjectCisco.dto.ProfileDto;
 import com.exult.ProjectCisco.model.Profile;
