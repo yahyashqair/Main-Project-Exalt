@@ -3,12 +3,12 @@ package com.exult.ProjectCisco.service.Xde;
 import com.exult.ProjectCisco.model.Maven;
 import com.exult.ProjectCisco.model.Xde;
 import com.exult.ProjectCisco.repository.XdeRepository;
-import com.exult.ProjectCisco.service.Xde.XdeService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -26,6 +26,11 @@ public  @Setter class  XdeServiceImplementation implements XdeService {
     @Transactional
     public Set<Xde> findXde(String x){
         return (Set<Xde>) xdeRepository.findByName(x);
+    }
+
+    @Override
+    public Optional<Xde> findById(Integer x) {
+        return xdeRepository.findById(x);
     }
 
     @Transactional
