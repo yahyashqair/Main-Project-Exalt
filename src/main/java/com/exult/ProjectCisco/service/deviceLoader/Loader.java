@@ -1,4 +1,5 @@
 package com.exult.ProjectCisco.service.deviceLoader;
+import com.exult.ProjectCisco.model.Xde;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
@@ -31,65 +32,34 @@ import java.util.stream.Stream;
 public class Loader {
 
 
-    void parse(String file) throws ParserConfigurationException, IOException, SAXException {
-        DocumentBuilderFactory factory1 = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory1.newDocumentBuilder();
-        Document document = builder.parse(new File( file ));
-        Schema schema = null;
-        try {
-            String language = XMLConstants.W3C_XML_SCHEMA_NS_URI;
-            SchemaFactory factory = SchemaFactory.newInstance(language);
-            schema = factory.newSchema(new File(file));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        Validator validator = schema.newValidator();
-        validator.validate(new DOMSource(document));
-        Element root = document.getDocumentElement();
+    Document parse(File file) throws ParserConfigurationException, IOException, SAXException {
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document document = dBuilder.parse(file);
+        document.getDocumentElement().normalize();
+        return document;
 
     }
 
-    public  void run() {
-        File folder = new File("C:\\Users\\user\\Desktop\\device_packages_ifm");
-        System.out.println(Arrays.toString(folder.list()));
-        //listAllFiles(folder);
+    public  void run() throws IOException, ParserConfigurationException, SAXException {
+        File folder = new File("C:\\Users\\user\\Desktop\\device_packages_ifm\\test");
+        //System.out.println(Arrays.toString(folder.list()));
+        listAllFiles(folder);
     }
     // Uses listFiles method
-    public void listAllFiles(File folder){
-        System.out.println("In listAllfiles(File) method");
+    public void listAllFiles(File folder) throws IOException, ParserConfigurationException, SAXException {
         File[] fileNames = folder.listFiles();
         for(File file : fileNames){
             // if directory call the same method again
             if(file.isDirectory()){
                 listAllFiles(file);
             }else{
-                try {
-                    readContent(file);
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                if (file.getName().equals("xmpxde.xml")) {
+                    System.out.println("Yes");
+                    readXde(file);
+                    return;
                 }
-
             }
-        }
-    }
-    // Uses Files.walk method
-    public void listAllFiles(String path){
-        System.out.println("In listAllfiles(String path) method");
-        try(Stream<Path> paths = Files.walk(Paths.get(path))) {
-            paths.forEach(filePath -> {
-                if (Files.isRegularFile(filePath)) {
-                    try {
-                        readContent(filePath);
-                    } catch (Exception e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
-            });
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         }
     }
 
@@ -105,13 +75,16 @@ public class Loader {
         }
     }
 
-    public void readContent(Path filePath) throws IOException{
-        System.out.println("read file " + filePath);
-        List<String> fileList = Files.readAllLines(filePath);
-        System.out.println("" + fileList);
+    public void readXde(File file) throws IOException, ParserConfigurationException, SAXException {
+        Document document = parse(file);
+        Element element = document.getDocumentElement();
+
+
+        NodeList namedNodeMap2 = document.getChildNodes();
+        Node node= namedNodeMap2.item(0);
+        NodeList namedNodeMap = node.getChildNodes();
+        Xde xde = new Xde();
+        
+
     }
-
-
-
-
 }
