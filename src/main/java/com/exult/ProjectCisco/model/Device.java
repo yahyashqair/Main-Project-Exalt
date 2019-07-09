@@ -11,7 +11,7 @@ public @Data
 class Device {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @ManyToMany
     private Set<Configuration> configurationSet = new HashSet<Configuration>();

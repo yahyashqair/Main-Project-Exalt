@@ -12,7 +12,7 @@ class Profile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id ;
+    private Long id;
     private String name;
     @ManyToMany(targetEntity = Feature.class)
     private Set<Feature> features = new HashSet<Feature>();
@@ -23,9 +23,10 @@ class Profile {
     private Maven maven;
 
     /*
-    * Each Feature has more than one configuration
-    * */
+     * Each Feature has more than one configuration
+     * */
     @ManyToMany
-    private Set<Configuration> configurations=new HashSet<Configuration>();
+    @JoinTable(name = "profile_configuration", joinColumns = @JoinColumn(name = "profile_id"), inverseJoinColumns = @JoinColumn(name = "configuration_id"))
+    private Set<Configuration> configurations = new HashSet<Configuration>();
 
 }

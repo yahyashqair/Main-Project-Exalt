@@ -1,4 +1,4 @@
-package com.exult.ProjectCisco.service.Feature;
+package com.exult.ProjectCisco.service.ifmDevice.Feature;
 
 import com.exult.ProjectCisco.model.Feature;
 import com.exult.ProjectCisco.model.Maven;

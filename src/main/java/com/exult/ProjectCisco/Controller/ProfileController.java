@@ -3,13 +3,10 @@ package com.exult.ProjectCisco.controller;
 import com.exult.ProjectCisco.dto.ProfileDto;
 import com.exult.ProjectCisco.model.Profile;
 import com.exult.ProjectCisco.repository.MavenRepository;
-import com.exult.ProjectCisco.service.Profile.ProfileService;
+import com.exult.ProjectCisco.service.ifmDevice.Profile.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,18 +33,19 @@ public class ProfileController {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    Profile postProfile(ProfileDto profileDto) {
-        return profileService.insertProfile(profileDto.getName(), mavenRepository.findById(profileDto.getMavenId().intValue()).get());
+    Profile postProfile(@RequestBody ProfileDto profileDto) {
+        System.out.println(profileDto);
+        return profileService.insertProfile(profileDto.getName(), mavenRepository.findById(profileDto.getMavenId()).get());
     }
 
     // Update Profile
     @RequestMapping(value = "/", method = RequestMethod.PUT)
     Profile putProfile(ProfileDto profileDto) {
-        return profileService.insertProfile(profileDto.getName(), mavenRepository.findById(profileDto.getMavenId().intValue()).get());
+        return profileService.insertProfile(profileDto.getName(), mavenRepository.findById(profileDto.getMavenId()).get());
     }
     // Delete Profile
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
     boolean deleteProfile(ProfileDto profileDto) {
-        return profileService.deleteProfile(mavenRepository.findById(profileDto.getMavenId().intValue()).get().getId());
+        return profileService.deleteProfile(mavenRepository.findById(profileDto.getMavenId()).get().getId());
     }
 }

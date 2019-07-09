@@ -1,4 +1,4 @@
-package com.exult.ProjectCisco.service.Xde;
+package com.exult.ProjectCisco.service.ifmDevice.Xde;
 
 import com.exult.ProjectCisco.model.Maven;
 import com.exult.ProjectCisco.model.Xde;

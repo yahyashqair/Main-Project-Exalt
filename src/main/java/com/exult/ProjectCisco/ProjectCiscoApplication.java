@@ -4,14 +4,13 @@ import com.exult.ProjectCisco.model.Maven;
 import com.exult.ProjectCisco.model.Xde;
 import com.exult.ProjectCisco.repository.MavenRepository;
 import com.exult.ProjectCisco.repository.XdeRepository;
-import com.exult.ProjectCisco.service.Xde.XdeService;
+import com.exult.ProjectCisco.service.deviceLoader.Loader;
+import com.exult.ProjectCisco.service.ifmDevice.Xde.XdeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.annotation.PostConstruct;
 
 @SpringBootApplication
 public class ProjectCiscoApplication implements CommandLineRunner {
@@ -21,8 +20,10 @@ public class ProjectCiscoApplication implements CommandLineRunner {
     @Autowired
     private XdeRepository xdeRepository;
     @Autowired
-    private  XdeService xdeService;
+    private XdeService xdeService;
 
+    @Autowired
+    Loader loader ;
     public static void main(String[] args) {
         SpringApplication.run(ProjectCiscoApplication.class, args);
     }
@@ -30,23 +31,6 @@ public class ProjectCiscoApplication implements CommandLineRunner {
     @Transactional
     @Override
     public void run(String... args) throws Exception {
-//        Maven maven1 = new Maven();
-//        Maven maven2 = new Maven();
-//        Maven maven3 = new Maven();
-//        maven1.setGroupId("1");
-//        maven1.setArtifactId("1");
-//        maven2.setGroupId("1");
-//        maven2.setArtifactId("2");
-//        maven3.setGroupId("1");
-//        maven3.setArtifactId("3");
-//        System.out.println("Start");
-//        mavenRepository.save(maven1);
-//        mavenRepository.save(maven2);
-//        mavenRepository.save(maven3);
-//        Xde xde=new Xde();
-//        xde.setMaven(maven1);
-//        xde.setName("FirstXde");
-//        xdeRepository.save(xde);
-//        System.out.println("Finished");
+        loader.run();
     }
 }

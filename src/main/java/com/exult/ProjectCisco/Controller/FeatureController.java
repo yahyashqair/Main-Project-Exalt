@@ -3,7 +3,7 @@ package com.exult.ProjectCisco.controller;
 import com.exult.ProjectCisco.dto.FeatureDto;
 import com.exult.ProjectCisco.model.Feature;
 import com.exult.ProjectCisco.repository.MavenRepository;
-import com.exult.ProjectCisco.service.Feature.FeatureService;
+import com.exult.ProjectCisco.service.ifmDevice.Feature.FeatureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,17 +31,17 @@ public class FeatureController {
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     Feature postFeature(FeatureDto featureDto) {
-        return featureService.insertFeature(featureDto.getName(), mavenRepository.findById(featureDto.getMavenId().intValue()).get());
+        return featureService.insertFeature(featureDto.getName(), mavenRepository.findById(featureDto.getMavenId()).get());
     }
 
     // Update Feature
     @RequestMapping(value = "/", method = RequestMethod.PUT)
     Feature putFeature(FeatureDto featureDto) {
-        return featureService.insertFeature(featureDto.getName(), mavenRepository.findById(featureDto.getMavenId().intValue()).get());
+        return featureService.insertFeature(featureDto.getName(), mavenRepository.findById(featureDto.getMavenId()).get());
     }
     // Delete Feature
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
     boolean deleteFeature(FeatureDto featureDto) {
-        return featureService.deleteFeature(mavenRepository.findById(featureDto.getMavenId().intValue()).get().getId());
+        return featureService.deleteFeature(mavenRepository.findById(featureDto.getMavenId()).get().getId());
     }
 }

@@ -1,4 +1,4 @@
-package com.exult.ProjectCisco.service.Profile;
+package com.exult.ProjectCisco.service.ifmDevice.Profile;
 
 import com.exult.ProjectCisco.model.Maven;
 import com.exult.ProjectCisco.model.Profile;

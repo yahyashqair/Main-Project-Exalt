@@ -1,8 +1,7 @@
-package com.exult.ProjectCisco.service.Xde;
+package com.exult.ProjectCisco.service.ifmDevice.Xde;
 
 import com.exult.ProjectCisco.model.Maven;
 import com.exult.ProjectCisco.model.Xde;
-import com.exult.ProjectCisco.repository.MavenRepository;
 import com.exult.ProjectCisco.repository.XdeRepository;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;

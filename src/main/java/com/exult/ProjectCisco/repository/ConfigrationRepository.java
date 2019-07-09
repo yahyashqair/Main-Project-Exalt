@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ConfigrationRepository extends JpaRepository<Configuration,Integer> {
+public interface ConfigrationRepository extends JpaRepository<Configuration,Long> {
 
 }

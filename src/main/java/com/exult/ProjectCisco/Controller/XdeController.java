@@ -3,7 +3,7 @@ package com.exult.ProjectCisco.controller;
 import com.exult.ProjectCisco.dto.XdeDto;
 import com.exult.ProjectCisco.model.Xde;
 import com.exult.ProjectCisco.repository.MavenRepository;
-import com.exult.ProjectCisco.service.Xde.XdeService;
+import com.exult.ProjectCisco.service.ifmDevice.Xde.XdeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,17 +32,17 @@ public class XdeController {
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     Xde postXde(XdeDto xdeDto) {
-        return xdeService.insertXde(xdeDto.getName(), mavenRepository.findById(xdeDto.getMavenId().intValue()).get());
+        return xdeService.insertXde(xdeDto.getName(), mavenRepository.findById(xdeDto.getMavenId()).get());
     }
 
     // Update Xde
     @RequestMapping(value = "/", method = RequestMethod.PUT)
     Xde putXde(XdeDto xdeDto) {
-        return xdeService.insertXde(xdeDto.getName(), mavenRepository.findById(xdeDto.getMavenId().intValue()).get());
+        return xdeService.insertXde(xdeDto.getName(), mavenRepository.findById(xdeDto.getMavenId()).get());
     }
     // Delete Xde
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
     boolean deleteXde(XdeDto xdeDto) {
-        return xdeService.deleteXde(mavenRepository.findById(xdeDto.getMavenId().intValue()).get().getId());
+        return xdeService.deleteXde(mavenRepository.findById(xdeDto.getMavenId()).get().getId());
     }
 }
