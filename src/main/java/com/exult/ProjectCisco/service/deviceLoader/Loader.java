@@ -19,10 +19,9 @@ import javax.transaction.Transactional;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Set;
 
 @Service
@@ -31,29 +30,37 @@ public class Loader {
     @Autowired
     XdeService xdeService;
 
-
     @Autowired
     FeatureXdeRepository featureXdeRepository;
 
     @Autowired
     FeatureRepository featureRepository;
 
+    // Store all XmpXde and XmpFeature here For Sorting xml and feature to avoid errors
+    ArrayList<File> XdeFiles = new ArrayList<>();
+    ArrayList<File> FeatureFiles = new ArrayList<>();
+
+    /*
+     * Helper function for parse the xml pages and convert it into DOM object
+     * */
     Document parse(File file) throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document document = dBuilder.parse(file);
         document.getDocumentElement().normalize();
         return document;
-
     }
 
+    /*
+     *   Take file directory and run the loader
+     * */
     public void run() throws IOException, ParserConfigurationException, SAXException {
         File folder = new File("C:\\Users\\user\\Desktop\\device_packages_ifm\\test");
         //System.out.println(Arrays.toString(folder.list()));
         listAllFiles(folder);
     }
 
-    // Uses listFiles method
+    // Recurrence function that open all folders and explore files
     public void listAllFiles(File folder) throws IOException, ParserConfigurationException, SAXException {
         File[] fileNames = folder.listFiles();
         for (File file : fileNames) {
@@ -62,19 +69,22 @@ public class Loader {
                 listAllFiles(file);
             } else {
                 if (file.getName().equals("xmpxde.xml")) {
-//                    System.out.println("Yes");
-//                    readXde(file);
-//                    return;
+                    XdeFiles.add(file);
+                    return;
                 } else if (file.getName().equals("xmpfeature.xml")) {
-                    //1- Read xmpfeature
-                    System.out.println("Feature");
-                    readFeature(file);
-                    //2- Read relation type
+                    FeatureFiles.add(file);
                 }
             }
         }
     }
-    
+
+    /*
+    * Function that store Xdes first then store Features
+    * */
+    public void storeInOrder(){
+        
+    }
+
     // Tested
     public void readXde(File file) throws IOException, ParserConfigurationException, SAXException {
         Document document = parse(file);
@@ -94,6 +104,7 @@ public class Loader {
         xdeService.insertXde(maven.getGroupId() + maven.getArtifactId(), maven);
     }
 
+    //Tested
     @Transactional
     public void readFeature(File file) throws IOException, SAXException, ParserConfigurationException {
         Document document = parse(file);
@@ -149,7 +160,7 @@ public class Loader {
             Set<FeatureXde> featureXdeSet = feature.getXdeSet();
             featureXdeSet.add(featureXde);
             feature.setXdeSet(featureXdeSet);
-            feature.setName(maven.getGroupId()+maven.getArtifactId());
+            feature.setName(maven.getGroupId() + maven.getArtifactId());
             featureXdeRepository.save(featureXde);
         }
         featureRepository.save(feature);
