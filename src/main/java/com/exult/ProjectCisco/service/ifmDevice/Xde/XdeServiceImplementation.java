@@ -25,8 +25,8 @@ public  @Setter class  XdeServiceImplementation implements XdeService {
     * */
 
     @Transactional
-    public Set<Xde> findXde(String x){
-        return (Set<Xde>) xdeRepository.findByName(x);
+    public Xde findXde(String x){
+        return  xdeRepository.findByName(x);
     }
 
     @Override

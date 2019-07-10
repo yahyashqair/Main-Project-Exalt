@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface XdeService {
-    Set<Xde> findXde(String x);
+    Xde findXde(String x);
     Optional<Xde> findById(Long x);
     boolean deleteXde(Long id);
     Xde updateXde(Long id, String name, Maven maven);

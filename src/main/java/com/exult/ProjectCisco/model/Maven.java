@@ -6,9 +6,7 @@ import javax.persistence.*;
 
 
 @Entity
-@Table(uniqueConstraints={
-        @UniqueConstraint(columnNames = {"artifactId", "groupId"})
-})
+
 @Data
 public class Maven {
     @Id
@@ -18,3 +16,8 @@ public class Maven {
     private String artifactId;
     private String version;
 }
+/*
+* @Table(uniqueConstraints={
+        @UniqueConstraint(columnNames = {"artifactId", "groupId"})
+})
+* */
