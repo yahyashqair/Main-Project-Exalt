@@ -8,8 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface XdeRepository extends JpaRepository<Xde,Long> {
-    Xde findByName(String name);
+    List<Xde> findByName(String name);
 }

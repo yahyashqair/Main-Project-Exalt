@@ -6,6 +6,7 @@ import com.exult.ProjectCisco.model.Maven;
 import com.exult.ProjectCisco.model.Xde;
 import com.exult.ProjectCisco.repository.FeatureRepository;
 import com.exult.ProjectCisco.repository.FeatureXdeRepository;
+import com.exult.ProjectCisco.repository.MavenRepository;
 import com.exult.ProjectCisco.service.ifmDevice.Xde.XdeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,8 +20,7 @@ import javax.transaction.Transactional;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -35,6 +35,10 @@ public class Loader {
 
     @Autowired
     FeatureRepository featureRepository;
+
+    @Autowired
+    MavenRepository mavenRepository;
+
 
     // Store all XmpXde and XmpFeature here For Sorting xml and feature to avoid errors
     ArrayList<File> XdeFiles = new ArrayList<>();
@@ -55,9 +59,9 @@ public class Loader {
      *   Take file directory and run the loader
      * */
     public void run() throws IOException, ParserConfigurationException, SAXException {
-        File folder = new File("C:\\Users\\user\\Desktop\\device_packages_ifm\\test");
-        //System.out.println(Arrays.toString(folder.list()));
+        File folder = new File("C:\\Users\\user\\Desktop\\device_packages_ifm");
         listAllFiles(folder);
+        storeInOrder();
     }
 
     // Recurrence function that open all folders and explore files
@@ -70,7 +74,6 @@ public class Loader {
             } else {
                 if (file.getName().equals("xmpxde.xml")) {
                     XdeFiles.add(file);
-                    return;
                 } else if (file.getName().equals("xmpfeature.xml")) {
                     FeatureFiles.add(file);
                 }
@@ -79,15 +82,21 @@ public class Loader {
     }
 
     /*
-    * Function that store Xdes first then store Features
-    * */
-    public void storeInOrder(){
-        
+     * Function that store Xdes first then store Features
+     * */
+    public void storeInOrder() throws ParserConfigurationException, SAXException, IOException {
+        for (int i = 0; i < XdeFiles.size(); i++) {
+            readXde(XdeFiles.get(i));
+        }
+        for (int i = 0; i < FeatureFiles.size(); i++) {
+            readFeature(FeatureFiles.get(i));
+        }
     }
 
     // Tested
     public void readXde(File file) throws IOException, ParserConfigurationException, SAXException {
         Document document = parse(file);
+        System.err.println(file.getPath());
         Element element = document.getDocumentElement();
         NodeList nodeList = element.getChildNodes();
         Maven maven = new Maven();
@@ -126,6 +135,9 @@ public class Loader {
                 maven.setVersion(node.getTextContent());
             }
         }
+        feature.setMaven(maven);
+        mavenRepository.save(maven);
+        featureRepository.save(feature);
         //System.out.println(maven);
         /*
          * Loop to extract Dependencies ' Xde '
@@ -156,14 +168,37 @@ public class Loader {
             FeatureXde featureXde = new FeatureXde();
             featureXde.setFeature(feature);
             featureXde.setXde(xde);
-            feature.setMaven(maven);
             Set<FeatureXde> featureXdeSet = feature.getXdeSet();
+            featureXde.setTypeOfRelation(findRelationType(file,xde));
             featureXdeSet.add(featureXde);
             feature.setXdeSet(featureXdeSet);
             feature.setName(maven.getGroupId() + maven.getArtifactId());
+
+            /*
+             * Find Relation type
+             * */
+
             featureXdeRepository.save(featureXde);
         }
         featureRepository.save(feature);
+    }
+
+    public String findRelationType(File file,Xde xde) {
+        try {
+            String newfile = file.getParent() + "\\src\\main\\resources\\META-INF\\MANIFEST.MF";
+            System.out.println(file.getPath());
+            BufferedReader br = new BufferedReader(new FileReader(newfile));
+            String st;
+            while ((st = br.readLine()) != null){
+                if(st.contains(xde.getMaven().getGroupId()+":"+xde.getMaven().getArtifactId())){
+                    st = br.readLine();
+                    return st.substring(18);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("File Not Found "+file.getPath());
+        }
+        return null;
     }
 
 }
