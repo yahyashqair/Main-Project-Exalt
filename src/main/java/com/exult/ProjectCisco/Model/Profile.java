@@ -11,9 +11,9 @@ public @Data
 class Profile {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+
     @ManyToMany(targetEntity = Feature.class)
     private Set<Feature> features = new HashSet<Feature>();
 
@@ -21,6 +21,10 @@ class Profile {
     @JoinColumn(name = "id")
     @MapsId
     private Maven maven;
+
+
+    @Transient
+    private Set<Feature> excludeFeature = new HashSet<Feature>();
 
     /*
      * Each Feature has more than one configuration

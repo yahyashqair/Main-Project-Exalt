@@ -2,12 +2,14 @@ package com.exult.ProjectCisco.service.ifmDevice.Feature;
 
 import com.exult.ProjectCisco.model.Feature;
 import com.exult.ProjectCisco.model.Maven;
+import com.exult.ProjectCisco.model.Xde;
 import com.exult.ProjectCisco.repository.FeatureRepository;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -24,8 +26,12 @@ public  @Setter class  FeatureServiceImplementation implements FeatureService {
     * */
 
     @Transactional
-    public Set<Feature> findFeature(String x){
-        return (Set<Feature>) featureRepository.findByName(x);
+    public Feature findFeature(String x){
+        List<Feature> featureList = featureRepository.findByName(x);
+        if(featureList.size()>0){
+            return featureList.get(0);
+        }
+        return null;
     }
 
     @Transactional

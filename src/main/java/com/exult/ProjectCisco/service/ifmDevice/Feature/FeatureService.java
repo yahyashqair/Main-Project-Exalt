@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface FeatureService {
-    Set<Feature> findFeature(String x);
+    Feature findFeature(String x);
     boolean deleteFeature(Long id);
     Feature updateFeature(Long id, String name, Maven maven);
     Feature insertFeature(String name, Maven maven);
