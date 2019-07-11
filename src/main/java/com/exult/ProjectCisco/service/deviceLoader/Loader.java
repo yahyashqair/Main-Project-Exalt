@@ -41,8 +41,8 @@ public class Loader {
 
 
     // Store all XmpXde and XmpFeature here For Sorting xml and feature to avoid errors
-    ArrayList<File> XdeFiles = new ArrayList<>();
-    ArrayList<File> FeatureFiles = new ArrayList<>();
+    ArrayList<File> xdeFiles = new ArrayList<>();
+    ArrayList<File> featureFiles = new ArrayList<>();
 
     /*
      * Helper function for parse the xml pages and convert it into DOM object
@@ -73,9 +73,9 @@ public class Loader {
                 listAllFiles(file);
             } else {
                 if (file.getName().equals("xmpxde.xml")) {
-                    XdeFiles.add(file);
+                    readXde(file);
                 } else if (file.getName().equals("xmpfeature.xml")) {
-                    FeatureFiles.add(file);
+                    featureFiles.add(file);
                 }
             }
         }
@@ -85,11 +85,11 @@ public class Loader {
      * Function that store Xdes first then store Features
      * */
     public void storeInOrder() throws ParserConfigurationException, SAXException, IOException {
-        for (int i = 0; i < XdeFiles.size(); i++) {
-            readXde(XdeFiles.get(i));
-        }
-        for (int i = 0; i < FeatureFiles.size(); i++) {
-            readFeature(FeatureFiles.get(i));
+//        for (File xdeFile: xdeFiles) {
+//            readXde(xdeFile);
+//        }
+        for (int i = 0; i < featureFiles.size(); i++) {
+            readFeature(featureFiles.get(i));
         }
     }
 
@@ -156,9 +156,9 @@ public class Loader {
                 Node nNode = nodeList.item(j);
                 if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                     Element eElement = (Element) nNode;
-                    if (eElement.getNodeName() == "groupId") {
+                    if (eElement.getNodeName().equals("groupId")) {
                         groupId = eElement.getTextContent();
-                    } else if (eElement.getNodeName() == "artifactId") {
+                    } else if (eElement.getNodeName().equals("artifactId")) {
                         artifactId = eElement.getTextContent();
                     }
                 }
@@ -173,11 +173,9 @@ public class Loader {
             featureXdeSet.add(featureXde);
             feature.setXdeSet(featureXdeSet);
             feature.setName(maven.getGroupId() + maven.getArtifactId());
-
             /*
              * Find Relation type
              * */
-
             featureXdeRepository.save(featureXde);
         }
         featureRepository.save(feature);
