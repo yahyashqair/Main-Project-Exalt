@@ -26,37 +26,37 @@ import java.io.IOException;
 import java.util.*;
 
 @Service
-public class Loader {
+public class DeviceLoader {
 
     @Autowired
-    XdeService xdeService;
+    private XdeService xdeService;
 
     @Autowired
-    FeatureService featureService;
+    private FeatureService featureService;
 
     @Autowired
-    FeatureXdeRepository featureXdeRepository;
+    private FeatureXdeRepository featureXdeRepository;
 
     @Autowired
-    FeatureRepository featureRepository;
+    private FeatureRepository featureRepository;
 
     @Autowired
-    ProfileRepository profileRepository;
+    private ProfileRepository profileRepository;
 
     @Autowired
-    MavenRepository mavenRepository;
+    private MavenRepository mavenRepository;
 
 
     // Store all XmpXde and XmpFeature here For Sorting xml and feature to avoid errors
-    ArrayList<File> xdeFiles = new ArrayList<>();
-    ArrayList<File> featureFiles = new ArrayList<>();
-    ArrayList<File> profileFiles = new ArrayList<>();
+    private ArrayList<File> xdeFiles = new ArrayList<>();
+    private ArrayList<File> featureFiles = new ArrayList<>();
+    private ArrayList<File> profileFiles = new ArrayList<>();
     // Array for Solve the dependency between profiles
-    HashMap<String, String> profileMap = new HashMap<String, String>();
+    private HashMap<String, String> profileMap = new HashMap<String, String>();
     /*
      * Helper function for parse the xml pages and convert it into DOM object
      * */
-    Document parse(File file) throws ParserConfigurationException, IOException, SAXException {
+    private Document parse(File file) throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document document = dBuilder.parse(file);
@@ -67,35 +67,37 @@ public class Loader {
     /*
      *   Take file directory and run the loader
      * */
-    public void run() throws IOException, ParserConfigurationException, SAXException {
-        File folder = new File("C:\\Users\\user\\Desktop\\test2");
+    public void run(File folder) throws IOException, ParserConfigurationException, SAXException {
+       // File folder = new File("C:\\Users\\user\\Desktop\\test2");
         listAllFiles(folder);
         storeInOrder();
     }
 
     // Recurrence function that open all folders and explore files
-    public void listAllFiles(File folder) throws IOException, ParserConfigurationException, SAXException {
+    private  void listAllFiles(File folder) throws IOException, ParserConfigurationException, SAXException {
         File[] fileNames = folder.listFiles();
-        for (File file : fileNames) {
-            // if directory call the same method again
-            if (file.isDirectory()) {
-                listAllFiles(file);
-            } else {
-                if (file.getName().equals("xmpxde.xml")) {
-                    readXde(file);
-                } else if (file.getName().equals("xmpfeature.xml")) {
-                    featureFiles.add(file);
-                }else if (file.getName().equals("xmpdevice.xml")){
-                    profileFiles.add(file);
+        if (fileNames != null) {
+            for (File file : fileNames) {
+                // if directory call the same method again
+                if (file.isDirectory()) {
+                    listAllFiles(file);
+                } else {
+                    if (file.getName().equals("xmpxde.xml")) {
+                        readXde(file);
+                    } else if (file.getName().equals("xmpfeature.xml")) {
+                        featureFiles.add(file);
+                    }else if (file.getName().equals("xmpdevice.xml")){
+                        profileFiles.add(file);
+                    }
                 }
             }
         }
     }
 
     /*
-     * Function that store Xdes first then store Features
+     * Function that store Xdes first then store Features then store Profiles
      * */
-    public void storeInOrder() throws ParserConfigurationException, SAXException, IOException {
+    private  void storeInOrder() throws ParserConfigurationException, SAXException, IOException {
 //        for (File xdeFile: xdeFiles) {
 //            readXde(xdeFile);
 //        }
@@ -114,25 +116,10 @@ public class Loader {
             solveProfileDependency(key,value);
         }
     }
-
-    private void solveProfileDependency(String child,String parent){
-        if (parent == null)return;
-        try {
-            solveProfileDependency(parent, profileMap.get(parent));
-            Profile p1 = profileRepository.findByName(child);
-            Profile p2 = profileRepository.findByName(parent);
-            Set<Feature> featureSet = p1.getFeatures();
-            featureSet.addAll(p2.getFeatures());
-            p1.setFeatures(featureSet);
-            featureSet.removeAll(p1.getExcludeFeature());
-        }catch (Exception e){
-            System.err.println("Error"+e.getMessage());
-        }
-        profileMap.put(child,null);
-    }
-
-    // Tested
-    public void readXde(File file) throws IOException, ParserConfigurationException, SAXException {
+    /*
+     * Function Take file "xmpfeature.xml" and added it in data base
+     * */
+    private  void readXde(File file) throws IOException, ParserConfigurationException, SAXException {
         Document document = parse(file);
         System.err.println(file.getPath());
         Element element = document.getDocumentElement();
@@ -150,7 +137,10 @@ public class Loader {
         }
         xdeService.insertXde(maven.getGroupId() + maven.getArtifactId(), maven);
     }
-    //Tested
+    /*
+    * Function Take file "xmpfeature.xml" and added it in data base
+    * Helper Function findRelationType
+    * */
     @Transactional
     public void readFeature(File file) throws IOException, SAXException, ParserConfigurationException {
         Document document = parse(file);
@@ -217,8 +207,11 @@ public class Loader {
         }
         featureRepository.save(feature);
     }
-
-    public String findRelationType(File file, Xde xde) {
+    /*
+    * Helper Function for readFeature
+    * Take xmpfeature.xml and xde and return type of its relation
+    * */
+    private String findRelationType(File file, Xde xde) {
         try {
             String newfile = file.getParent() + "\\src\\main\\resources\\META-INF\\MANIFEST.MF";
             System.out.println(file.getPath());
@@ -235,7 +228,12 @@ public class Loader {
         }
         return null;
     }
+    // End of Feature Functionality.
 
+    /*
+    * Take xmpdevice.xml , and add it in database ,
+    * Helper Function solveProfileDependency
+    * */
     @Transactional
     public void readProfile(File file) throws IOException, SAXException, ParserConfigurationException {
         Document document = parse(file);
@@ -332,6 +330,32 @@ public class Loader {
          * Save profile ,
          * */
         profileRepository.save(profile);
+    }
+    /*
+    * After adding profile , there is some feature that Child profile inherit  from his parent
+    * this function solve this dependency
+    * */
+    private void solveProfileDependency(String child,String parent){
+        if (parent == null)return;
+        try {
+            // Solve Parent Dependency
+            solveProfileDependency(parent, profileMap.get(parent));
+            // Solved Parent
+
+            Profile p1 = profileRepository.findByName(child);
+            Profile p2 = profileRepository.findByName(parent);
+
+            // Add parent Feature to Child and exclude "ExFeature"
+            Set<Feature> featureSet = p1.getFeatures();
+            featureSet.addAll(p2.getFeatures());
+            p1.setFeatures(featureSet);
+            featureSet.removeAll(p1.getExcludeFeature());
+
+        }catch (Exception e){
+            System.err.println("Error"+e.getMessage());
+        }
+        // Set Chlid independent of his parent ,'Null'
+        profileMap.put(child,null);
     }
 
 }

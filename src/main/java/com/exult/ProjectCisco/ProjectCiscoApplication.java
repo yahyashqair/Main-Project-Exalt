@@ -1,23 +1,20 @@
 package com.exult.ProjectCisco;
 
-import com.exult.ProjectCisco.model.Maven;
-import com.exult.ProjectCisco.model.Xde;
 import com.exult.ProjectCisco.repository.MavenRepository;
 import com.exult.ProjectCisco.repository.XdeRepository;
-import com.exult.ProjectCisco.service.deviceLoader.Loader;
+import com.exult.ProjectCisco.service.deviceLoader.DeviceLoader;
 import com.exult.ProjectCisco.service.ifmDevice.Xde.XdeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.xml.parsers.DocumentBuilder;
+import java.io.File;
 
 @SpringBootApplication
 public class ProjectCiscoApplication implements CommandLineRunner {
-
+    
     @Autowired
     private MavenRepository mavenRepository;
     @Autowired
@@ -26,7 +23,7 @@ public class ProjectCiscoApplication implements CommandLineRunner {
     private XdeService xdeService;
 
     @Autowired
-    Loader loader ;
+    DeviceLoader loader ;
     public static void main(String[] args) {
         SpringApplication.run(ProjectCiscoApplication.class, args);
     }
@@ -34,7 +31,7 @@ public class ProjectCiscoApplication implements CommandLineRunner {
     @Transactional
     @Override
     public void run(String... args) throws Exception {
-        loader.run();
+        loader.run(new File("test "));
     }
 
 }
