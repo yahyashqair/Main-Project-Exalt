@@ -21,7 +21,7 @@ class Feature {
     @OneToOne
     @JoinColumn(name = "id")
     @MapsId
-    private Maven maven;
+    private com.exult.ProjectCisco.model.Maven maven;
 
     /*
      * split relation ManyToMany between " Feature and Xde " To 2 relations "OneToMany"
