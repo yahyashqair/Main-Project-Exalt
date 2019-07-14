@@ -31,7 +31,7 @@ public class ProjectCiscoApplication implements CommandLineRunner {
     @Transactional
     @Override
     public void run(String... args) throws Exception {
-        loader.run(new File("test "));
+        loader.run(new File("C:\\Users\\user\\Desktop\\device_packages_ifm"));
     }
 
 }

@@ -46,7 +46,6 @@ public class DeviceLoader {
     @Autowired
     private MavenRepository mavenRepository;
 
-
     // Store all XmpXde and XmpFeature here For Sorting xml and feature to avoid errors
     private ArrayList<File> xdeFiles = new ArrayList<>();
     private ArrayList<File> featureFiles = new ArrayList<>();
@@ -93,7 +92,6 @@ public class DeviceLoader {
             }
         }
     }
-
     /*
      * Function that store Xdes first then store Features then store Profiles
      * */
@@ -135,7 +133,7 @@ public class DeviceLoader {
                 maven.setVersion(node.getTextContent());
             }
         }
-        xdeService.insertXde(maven.getGroupId() + maven.getArtifactId(), maven);
+        xdeService.insertXde(maven.getGroupId() +"."+ maven.getArtifactId(), maven);
     }
     /*
     * Function Take file "xmpfeature.xml" and added it in data base
@@ -199,7 +197,7 @@ public class DeviceLoader {
             featureXde.setTypeOfRelation(findRelationType(file, xde));
             featureXdeSet.add(featureXde);
             feature.setXdeSet(featureXdeSet);
-            feature.setName(maven.getGroupId() + maven.getArtifactId());
+            feature.setName(maven.getGroupId()+"."+maven.getArtifactId());
             /*
              * Find Relation type
              * */
@@ -249,15 +247,15 @@ public class DeviceLoader {
         Maven maven = new Maven();
         for (int i = 0; i < nodeList1.getLength(); i++) {
             Node node = nodeList1.item(i);
-            if (node.getNodeName() == "groupId") {
+            if (node.getNodeName().equals("groupId")) {
                 maven.setGroupId(node.getTextContent());
-            } else if (node.getNodeName() == "artifactId") {
+            } else if (node.getNodeName().equals("artifactId")) {
                 maven.setArtifactId(node.getTextContent());
-            } else if (node.getNodeName() == "version") {
+            } else if (node.getNodeName().equals("version")) {
                 maven.setVersion(node.getTextContent());
             }
         }
-        profile.setName(maven.getGroupId()+maven.getArtifactId());
+        profile.setName(maven.getGroupId()+"."+maven.getArtifactId());
         profile.setMaven(maven);
         mavenRepository.save(maven);
         profileRepository.save(profile);
@@ -335,6 +333,7 @@ public class DeviceLoader {
     * After adding profile , there is some feature that Child profile inherit  from his parent
     * this function solve this dependency
     * */
+
     private void solveProfileDependency(String child,String parent){
         if (parent == null)return;
         try {
@@ -351,11 +350,15 @@ public class DeviceLoader {
             p1.setFeatures(featureSet);
             featureSet.removeAll(p1.getExcludeFeature());
 
+            //Set Parent to Child
+            p1.setParent(p2);
+
         }catch (Exception e){
             System.err.println("Error"+e.getMessage());
         }
         // Set Chlid independent of his parent ,'Null'
         profileMap.put(child,null);
     }
+
 
 }

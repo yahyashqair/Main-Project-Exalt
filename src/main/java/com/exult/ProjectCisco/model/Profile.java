@@ -22,6 +22,9 @@ class Profile {
     @MapsId
     private Maven maven;
 
+    @ManyToOne
+    @JoinColumn(name="parent_id")
+    private Profile parent ;
 
     @Transient
     private Set<Feature> excludeFeature = new HashSet<Feature>();
