@@ -31,7 +31,8 @@ public class ProjectCiscoApplication implements CommandLineRunner {
     @Transactional
     @Override
     public void run(String... args) throws Exception {
-        loader.run(new File("C:\\Users\\user\\Desktop\\device_packages_ifm"));
+        //loader.run(new File("C:\\Users\\user\\Desktop\\device_packages_ifm"));
+        //System.out.println(loader.findConfigurationsSet(new File("C:\\Users\\user\\Desktop\\device_packages_ifm\\ifm_device_profiles\\com.cisco.ifm.deviceprofile.cat4k_wireless\\xmpdevice.xml")));
     }
 
 }
