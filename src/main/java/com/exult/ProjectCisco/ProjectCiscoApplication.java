@@ -27,7 +27,7 @@ public class ProjectCiscoApplication implements CommandLineRunner {
     public static void main(String[] args) {
         SpringApplication.run(ProjectCiscoApplication.class, args);
     }
-    
+
     @Transactional
     @Override
     public void run(String... args) throws Exception {
