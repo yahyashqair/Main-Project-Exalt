@@ -8,26 +8,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 
 @SpringBootApplication
+@EnableConfigurationProperties(StorageProperties.class)
 public class ProjectCiscoApplication implements CommandLineRunner {
-    
     @Autowired
     private MavenRepository mavenRepository;
     @Autowired
     private XdeRepository xdeRepository;
     @Autowired
     private XdeService xdeService;
-
     @Autowired
     DeviceLoader loader ;
     public static void main(String[] args) {
         SpringApplication.run(ProjectCiscoApplication.class, args);
     }
-
+    
     @Transactional
     @Override
     public void run(String... args) throws Exception {
