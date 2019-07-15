@@ -11,5 +11,5 @@ public interface FeatureService {
     boolean deleteFeature(Long id);
     Feature updateFeature(Long id, String name, Maven maven);
     Feature insertFeature(String name, Maven maven);
-    Optional<Feature> findFeatureById(Long x);
+    Feature findFeatureById(Long x);
 }

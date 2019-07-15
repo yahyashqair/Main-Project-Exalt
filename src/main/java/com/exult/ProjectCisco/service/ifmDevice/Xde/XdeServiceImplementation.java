@@ -35,8 +35,8 @@ public  @Setter class  XdeServiceImplementation implements XdeService {
     }
 
     @Override
-    public Optional<Xde> findById(Long x) {
-        return xdeRepository.findById(x);
+    public Xde findById(Long x) {
+        return xdeRepository.findById(x).get();
     }
 
     @Transactional

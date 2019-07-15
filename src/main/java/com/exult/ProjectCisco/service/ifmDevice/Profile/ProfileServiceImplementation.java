@@ -1,5 +1,7 @@
 package com.exult.ProjectCisco.service.ifmDevice.Profile;
 
+import com.exult.ProjectCisco.model.Feature;
+import com.exult.ProjectCisco.model.FeatureXde;
 import com.exult.ProjectCisco.model.Profile;
 import com.exult.ProjectCisco.model.Maven;
 import com.exult.ProjectCisco.repository.ProfileRepository;
@@ -8,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -53,12 +55,22 @@ public  @Setter class  ProfileServiceImplementation implements ProfileService {
     }
 
     @Override
-    public Optional<Profile> findById(Long x) {
-        return profileRepository.findById(x);
+    public Profile findById(Long x) {
+        return profileRepository.findById(x).get();
     }
     @Override
     public List<Profile> findAll(){
         return profileRepository.findAll();
+    }
+
+    @Override
+    public Set<FeatureXde> getFeatureXde(long id) {
+        Set<Feature> featureSet = findById(id).getFeatures();
+        Set<FeatureXde> featureXdes = new HashSet<>();
+        for (Feature feature : featureSet) {
+            featureXdes.addAll(feature.getXdeSet());
+        }
+        return featureXdes;
     }
 
 }

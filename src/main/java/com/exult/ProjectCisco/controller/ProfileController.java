@@ -27,27 +27,22 @@ public class ProfileController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     Profile getProfile(@PathVariable("id") Long id) {
-        return profileService.findById(id).get();
+        return profileService.findById(id);
     }
 
     @RequestMapping(value = "/all/", method = RequestMethod.GET)
     List<Profile> getAllProfile() {
         return profileService.findAll();
     }
-    
+
     @RequestMapping(value = "/feature/{id}", method = RequestMethod.GET)
     Set<Feature> getFeature(@PathVariable("id") Long id) {
-        return profileService.findById(id).get().getFeatures();
+        return profileService.findById(id).getFeatures();
     }
 
     @RequestMapping(value = "/xde/{id}", method = RequestMethod.GET)
     Set<FeatureXde> getXde(@PathVariable("id") Long id) {
-        Set<Feature> featureSet = profileService.findById(id).get().getFeatures();
-        Set<FeatureXde> featureXdes = new HashSet<>();
-        for (Feature feature : featureSet) {
-            featureXdes.addAll(feature.getXdeSet());
-        }
-        return featureXdes;
+        return profileService.getFeatureXde(id);
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)

@@ -58,8 +58,8 @@ public  @Setter class  FeatureServiceImplementation implements FeatureService {
     }
 
     @Override
-    public Optional<Feature> findFeatureById(Long x) {
-        return featureRepository.findById(x);
+    public Feature findFeatureById(Long x) {
+        return featureRepository.findById(x).get();
     }
 
 
