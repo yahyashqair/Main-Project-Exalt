@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Controller
@@ -27,28 +26,28 @@ public class ProfileController {
     private MavenRepository mavenRepository;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    Optional<Profile> getProfile(@PathVariable("id") Long id) {
-        return profileService.findById(id);
+    Profile getProfile(@PathVariable("id") Long id) {
+        return profileService.findById(id).get();
     }
 
     @RequestMapping(value = "/all/", method = RequestMethod.GET)
     List<Profile> getAllProfile() {
         return profileService.findAll();
     }
-
+    
     @RequestMapping(value = "/feature/{id}", method = RequestMethod.GET)
     Set<Feature> getFeature(@PathVariable("id") Long id) {
         return profileService.findById(id).get().getFeatures();
     }
 
     @RequestMapping(value = "/xde/{id}", method = RequestMethod.GET)
-    Set<Feature> getXde(@PathVariable("id") Long id) {
+    Set<FeatureXde> getXde(@PathVariable("id") Long id) {
         Set<Feature> featureSet = profileService.findById(id).get().getFeatures();
         Set<FeatureXde> featureXdes = new HashSet<>();
         for (Feature feature : featureSet) {
             featureXdes.addAll(feature.getXdeSet());
         }
-        return featureSet;
+        return featureXdes;
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)

@@ -24,7 +24,6 @@ public class XdeController {
     @Autowired
     private MavenRepository mavenRepository;
 
-
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     Optional<Xde> getXde(@PathVariable("id") Long id) {
         return xdeService.findById(id);

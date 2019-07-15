@@ -21,7 +21,7 @@ import java.util.Set;
 
 @Controller
 @RestController
-@RequestMapping("feature")
+@RequestMapping("/feature")
 public class FeatureController {
 
     @Autowired
@@ -33,13 +33,15 @@ public class FeatureController {
     private MavenRepository mavenRepository;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    Optional<Feature> getFeature(@PathVariable("id") Long id) {
-        return featureService.findById(id);
+    public Feature getFeature(@PathVariable("id") Long id) {
+        return featureService.findFeatureById(id).get();
     }
 
     @RequestMapping(value = "/xde/{id}", method = RequestMethod.GET)
-    Set<Xde> getXde(@PathVariable("id") Long id) {
-        Set<FeatureXde> featureXdes=featureService.findById(id).get().getXdeSet();
+    public Set<Xde> getXde(@PathVariable("id") Long id) {
+        // move logic to service
+        //
+        Set<FeatureXde> featureXdes=featureService.findFeatureById(id).get().getXdeSet();
         Set<Xde> xdes = new HashSet<>();
         for(FeatureXde  featureXde: featureXdes){
             xdes.add(featureXde.getXde());

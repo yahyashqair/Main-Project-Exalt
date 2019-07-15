@@ -1,13 +1,13 @@
 package com.exult.ProjectCisco.controller;
 
+import com.exult.ProjectCisco.dto.FileResponse;
 import com.exult.ProjectCisco.service.Storage.StorageService;
 import com.exult.ProjectCisco.service.deviceLoader.DeviceLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -44,4 +44,17 @@ public class DeviceLoaderController {
         deviceLoader.run(file1);
         return file1.getPath();
     }
+
+    @PostMapping("/zip")
+    @ResponseBody
+    public FileResponse uploadFile(@RequestParam("file") MultipartFile file) {
+        String name = storageService.store(file);
+
+        String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/download/")
+                .path(name)
+                .toUriString();
+        return new FileResponse(name, uri, file.getContentType(), file.getSize());
+    }
+
 }
