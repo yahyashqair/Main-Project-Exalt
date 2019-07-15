@@ -34,11 +34,14 @@ public class DeviceLoaderController {
         Path path = storageService.load(filename);
         File file = path.toFile();
         ZipFile zipFile = new ZipFile(file);
-        zipFile.extractAll(file.getParent()+"/test");
-        File file1= new File(file.getParent()+"/test");
+        if(filename.contains(".")){
+            int x = filename.indexOf(".");
+            filename=filename.substring(0,x-1);
+        }
+        zipFile.extractAll(file.getParent()+"/"+filename);
+        File file1= new File(file.getParent()+"/"+filename);
         System.out.println(file1);
         deviceLoader.run(file1);
         return file1.getPath();
     }
-
 }

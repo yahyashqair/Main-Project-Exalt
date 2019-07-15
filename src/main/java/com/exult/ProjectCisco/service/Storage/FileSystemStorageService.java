@@ -36,7 +36,7 @@ public class FileSystemStorageService implements StorageService {
         try {
             Files.createDirectories(rootLocation);
         } catch (IOException e) {
-            throw new StorageException("Could not initialize storage location", e);
+            System.out.println(("Could not initialize storage location"+e.getMessage()));
         }
     }
 
@@ -45,11 +45,11 @@ public class FileSystemStorageService implements StorageService {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         try {
             if (file.isEmpty()) {
-                throw new StorageException("Failed to store empty file " + filename);
+                System.out.println("Failed to store empty file " + filename);
             }
             if (filename.contains("..")) {
                 // This is a security check
-                throw new StorageException(
+                System.out.println(
                         "Cannot store file with relative path outside current directory "
                                 + filename);
             }
@@ -59,51 +59,16 @@ public class FileSystemStorageService implements StorageService {
             }
         }
         catch (IOException e) {
-            throw new StorageException("Failed to store file " + filename, e);
+            System.out.println(("Failed to store file " + filename+e));
         }
 
         return filename;
     }
 
-    @Override
-    public Stream<Path> loadAll() {
-        try {
-            return Files.walk(this.rootLocation, 1)
-                    .filter(path -> !path.equals(this.rootLocation))
-                    .map(this.rootLocation::relativize);
-        }
-        catch (IOException e) {
-            throw new StorageException("Failed to read stored files", e);
-        }
-
-    }
 
     @Override
     public Path load(String filename) {
         return rootLocation.resolve(filename);
     }
 
-    @Override
-    public Resource loadAsResource(String filename) {
-        try {
-            Path file = load(filename);
-            Resource resource = new UrlResource(file.toUri());
-            if (resource.exists() || resource.isReadable()) {
-                return resource;
-            }
-            else {
-                throw new FileNotFoundException(
-                        "Could not read file: " + filename);
-            }
-        }
-        catch (Exception e) {
-            System.out.println(("Could not read file: " + filename+ e.getMessage()));
-        }
-        return null;
-    }
-
-    @Override
-    public void deleteAll() {
-        FileSystemUtils.deleteRecursively(rootLocation.toFile());
-    }
-}
+   }
