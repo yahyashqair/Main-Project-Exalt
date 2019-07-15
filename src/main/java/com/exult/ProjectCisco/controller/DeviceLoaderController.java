@@ -36,7 +36,7 @@ public class DeviceLoaderController {
         ZipFile zipFile = new ZipFile(file);
         if(filename.contains(".")){
             int x = filename.indexOf(".");
-            filename=filename.substring(0,x-1);
+            filename=filename.substring(0,x);
         }
         zipFile.extractAll(file.getParent()+"/"+filename);
         File file1= new File(file.getParent()+"/"+filename);
