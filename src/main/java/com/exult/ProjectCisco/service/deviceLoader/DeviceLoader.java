@@ -52,7 +52,6 @@ public class DeviceLoader {
     private ArrayList<File> profileFiles = new ArrayList<>();
     // Array for Solve the dependency between profiles
     private HashMap<String, String> profileMap = new HashMap<String, String>();
-
     /*
      * Helper function for parse the xml pages and convert it into DOM object
      * */
@@ -128,11 +127,11 @@ public class DeviceLoader {
         Maven maven = new Maven();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
-            if (node.getNodeName() == "groupId") {
+            if (node.getNodeName().equals("groupId")) {
                 maven.setGroupId(node.getTextContent());
-            } else if (node.getNodeName() == "artifactId") {
+            } else if (node.getNodeName().equals("artifactId")) {
                 maven.setArtifactId(node.getTextContent());
-            } else if (node.getNodeName() == "version") {
+            } else if (node.getNodeName().equals("version")) {
                 maven.setVersion(node.getTextContent());
             }
         }
@@ -156,11 +155,11 @@ public class DeviceLoader {
         Maven maven = new Maven();
         for (int i = 0; i < nodeList1.getLength(); i++) {
             Node node = nodeList1.item(i);
-            if (node.getNodeName() == "groupId") {
+            if (node.getNodeName().equals("groupId")) {
                 maven.setGroupId(node.getTextContent());
-            } else if (node.getNodeName() == "artifactId") {
+            } else if (node.getNodeName().equals("artifactId")) {
                 maven.setArtifactId(node.getTextContent());
-            } else if (node.getNodeName() == "version") {
+            } else if (node.getNodeName().equals("version")) {
                 maven.setVersion(node.getTextContent());
             }
         }
