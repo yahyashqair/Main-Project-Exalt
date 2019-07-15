@@ -97,8 +97,9 @@ public class FileSystemStorageService implements StorageService {
             }
         }
         catch (Exception e) {
-            throw new FileNotFoundException("Could not read file: " + filename, e);
+            System.out.println(("Could not read file: " + filename+ e.getMessage()));
         }
+        return null;
     }
 
     @Override

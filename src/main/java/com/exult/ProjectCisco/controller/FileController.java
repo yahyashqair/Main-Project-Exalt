@@ -1,6 +1,7 @@
 package com.exult.ProjectCisco.controller;
 import com.exult.ProjectCisco.dto.FileResponse;
 import com.exult.ProjectCisco.service.Storage.StorageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +18,11 @@ import java.util.stream.Collectors;
 @Controller
 public class FileController {
 
+    @Autowired
     private StorageService storageService;
 
-    public FileController(StorageService storageService) {
-        this.storageService = storageService;
+    public FileController() {
+
     }
 
     @GetMapping("/")
