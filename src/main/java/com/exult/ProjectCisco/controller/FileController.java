@@ -59,7 +59,6 @@ public class FileController {
                 .path("/download/")
                 .path(name)
                 .toUriString();
-
         return new FileResponse(name, uri, file.getContentType(), file.getSize());
     }
 
