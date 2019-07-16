@@ -29,15 +29,11 @@ public class DeviceLoaderController {
     @Autowired
     private StorageService storageService;
 
-    @GetMapping(value = "/{filename:.+}")
-    public String loadDevicePackagesFromFile(@PathVariable() String filename) throws ParserConfigurationException, SAXException, IOException, ZipException {
-        return storageService.unzipedFileAndLoaded(filename);
-    }
     @PostMapping("/zip")
     @ResponseBody
-    public FileResponse uploadFile(@RequestParam("file") MultipartFile file) {
+    public FileResponse uploadFile(@RequestParam("file") MultipartFile file) throws ParserConfigurationException, ZipException, SAXException, IOException {
         String name = storageService.store(file);
-
+        storageService.unzipedFileAndLoaded(name);
         String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/download/")
                 .path(name)
