@@ -44,7 +44,7 @@ public class DeviceLoader {
     private MavenRepository mavenRepository;
 
     @Autowired
-    private ConfigrationRepository configrationRepository;
+    private ConfigurationRepository configrationRepository;
 
     // Store all XmpXde and XmpFeature here For Sorting xml and feature to avoid errors
     private ArrayList<File> xdeFiles = new ArrayList<>();

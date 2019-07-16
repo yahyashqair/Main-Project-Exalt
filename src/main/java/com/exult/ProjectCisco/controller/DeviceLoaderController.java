@@ -30,10 +30,9 @@ public class DeviceLoaderController {
     private StorageService storageService;
 
     @GetMapping(value = "/{filename:.+}")
-    String fun(@PathVariable() String filename) throws ParserConfigurationException, SAXException, IOException, ZipException {
+    public String loadDevicePackagesFromFile(@PathVariable() String filename) throws ParserConfigurationException, SAXException, IOException, ZipException {
         return storageService.unzipedFileAndLoaded(filename);
     }
-
     @PostMapping("/zip")
     @ResponseBody
     public FileResponse uploadFile(@RequestParam("file") MultipartFile file) {

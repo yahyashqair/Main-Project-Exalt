@@ -28,9 +28,9 @@ public  @Setter class  FeatureServiceImplementation implements FeatureService {
     * Find
     * */
 
+    @Transactional
     public Set<Xde> getFeatureXdeSet(Long id) {
-        // move logic to service
-        //
+
         Set<FeatureXde> featureXdes=findFeatureById(id).getXdeSet();
         Set<Xde> xdes = new HashSet<>();
         for(FeatureXde  featureXde: featureXdes){
@@ -71,6 +71,7 @@ public  @Setter class  FeatureServiceImplementation implements FeatureService {
         return feature;
     }
 
+    @Transactional
     @Override
     public Feature findFeatureById(Long x) {
         return featureRepository.findById(x).get();

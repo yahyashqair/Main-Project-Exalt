@@ -2,8 +2,8 @@ package com.exult.ProjectCisco.service.ifmDevice.Profile;
 
 import com.exult.ProjectCisco.model.Feature;
 import com.exult.ProjectCisco.model.FeatureXde;
-import com.exult.ProjectCisco.model.Profile;
 import com.exult.ProjectCisco.model.Maven;
+import com.exult.ProjectCisco.model.Profile;
 import com.exult.ProjectCisco.repository.ProfileRepository;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,54 +15,60 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-public  @Setter class  ProfileServiceImplementation implements ProfileService {
+public @Setter
+class ProfileServiceImplementation implements ProfileService {
     @Autowired
     private ProfileRepository profileRepository;
 
     /*
-    * Add
-    * Delete
-    * Update
-    * Find
-    * */
+     * Add
+     * Delete
+     * Update
+     * Find
+     * */
 
     @Transactional
-    public Set<Profile> findProfile(String x){
+    public Set<Profile> findProfile(String x) {
         return (Set<Profile>) profileRepository.findByName(x);
     }
 
     @Transactional
-    public boolean deleteProfile(Long id){
-        Profile profile =  profileRepository.findById(id).get();
+    public boolean deleteProfile(Long id) {
+        Profile profile = profileRepository.findById(id).get();
         profileRepository.delete(profile);
         return true;
     }
+
     @Transactional
-    public Profile updateProfile(Long id, String name, Maven maven){
-        Profile profile =  profileRepository.findById(id).get();
+    public Profile updateProfile(Long id, String name, Maven maven) {
+        Profile profile = profileRepository.findById(id).get();
         profile.setName(name);
         profile.setMaven(maven);
         return profile;
     }
 
     @Transactional
-    public Profile insertProfile(String name, Maven maven){
-        Profile profile= new Profile();
+    public Profile insertProfile(String name, Maven maven) {
+        Profile profile = new Profile();
         profile.setName(name);
         profile.setMaven(maven);
-        profile=profileRepository.save(profile);
+        profile = profileRepository.save(profile);
         return profile;
     }
 
+    @Transactional
     @Override
     public Profile findById(Long x) {
         return profileRepository.findById(x).get();
     }
+
+    @Transactional
     @Override
-    public List<Profile> findAll(){
+    public List<Profile> findAll() {
         return profileRepository.findAll();
     }
 
+    @Transactional
     @Override
     public Set<FeatureXde> getFeatureXde(long id) {
         Set<Feature> featureSet = findById(id).getFeatures();

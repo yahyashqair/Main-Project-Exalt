@@ -27,45 +27,45 @@ public class ProfileController {
     private MavenService mavenService;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    Profile getProfile(@PathVariable("id") Long id) {
+    public Profile getProfile(@PathVariable("id") Long id) {
         return profileService.findById(id);
     }
 
     @RequestMapping(value = "/all/", method = RequestMethod.GET)
-    List<Profile> getAllProfile() {
+    public List<Profile> getAllProfile() {
         return profileService.findAll();
     }
 
     @RequestMapping(value = "/feature/{id}", method = RequestMethod.GET)
-    Set<Feature> getFeature(@PathVariable("id") Long id) {
+    public Set<Feature> getFeature(@PathVariable("id") Long id) {
         return profileService.findById(id).getFeatures();
     }
 
     @RequestMapping(value = "/xde/{id}", method = RequestMethod.GET)
-    Set<FeatureXde> getXde(@PathVariable("id") Long id) {
+    public Set<FeatureXde> getXde(@PathVariable("id") Long id) {
         return profileService.getFeatureXde(id);
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    List<Profile> getProfiles() {
+    public List<Profile> getProfiles() {
         return profileService.findAll();
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    Profile postProfile(@RequestBody ProfileDto profileDto) {
+    public Profile postProfile(@RequestBody ProfileDto profileDto) {
         System.out.println(profileDto);
         return profileService.insertProfile(profileDto.getName(), mavenService.findMavenById(profileDto.getMavenId()));
     }
 
     // Update Profile
     @RequestMapping(value = "/", method = RequestMethod.PUT)
-    Profile putProfile(ProfileDto profileDto) {
+    public Profile putProfile(ProfileDto profileDto) {
         return profileService.insertProfile(profileDto.getName(), mavenService.findMavenById(profileDto.getMavenId()));
     }
 
     // Delete Profile
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
-    boolean deleteProfile(ProfileDto profileDto) {
+    public boolean deleteProfile(ProfileDto profileDto) {
         return profileService.deleteProfile(mavenService.findMavenById(profileDto.getMavenId()).getId());
     }
 }
