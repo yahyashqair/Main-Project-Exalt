@@ -18,7 +18,7 @@ import java.util.HashMap;
 @Service
 public class Mdfdata {
 
-    public void getDeviceDetails(String id) throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
+    public HashMap<String, String> getDeviceDetails(String id) throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance(); DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.parse(new File("src\\main\\resources\\sample.xml"));
@@ -41,10 +41,6 @@ public class Mdfdata {
         node=node.getParentNode();
         hashMap.put("productFamily",node.getAttributes().getNamedItem("MDFID").getNodeValue());
         System.out.println(hashMap);
-
-//        System.out.println(nodes.getLength());
-//        for (int i = 0; i < nodes.getLength(); i++) {
-//            System.out.println(nodes.item(i).getParentNode().getNodeName());
-//        }
+        return hashMap;
     }
 }
