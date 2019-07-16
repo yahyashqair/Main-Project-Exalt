@@ -1,14 +1,17 @@
 package com.exult.ProjectCisco.service.ifmDevice.Feature;
 
 import com.exult.ProjectCisco.model.Feature;
+import com.exult.ProjectCisco.model.FeatureXde;
 import com.exult.ProjectCisco.model.Maven;
 import com.exult.ProjectCisco.model.Xde;
 import com.exult.ProjectCisco.repository.FeatureRepository;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.transaction.Transactional;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -24,6 +27,17 @@ public  @Setter class  FeatureServiceImplementation implements FeatureService {
     * Update
     * Find
     * */
+
+    public Set<Xde> getFeatureXdeSet(Long id) {
+        // move logic to service
+        //
+        Set<FeatureXde> featureXdes=findFeatureById(id).getXdeSet();
+        Set<Xde> xdes = new HashSet<>();
+        for(FeatureXde  featureXde: featureXdes){
+            xdes.add(featureXde.getXde());
+        }
+        return xdes;
+    }
 
     @Transactional
     public Feature findFeature(String x){

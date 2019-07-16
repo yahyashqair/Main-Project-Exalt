@@ -7,6 +7,7 @@ import com.exult.ProjectCisco.model.Xde;
 import com.exult.ProjectCisco.repository.MavenRepository;
 import com.exult.ProjectCisco.service.ifmDevice.Feature.FeatureService;
 import com.exult.ProjectCisco.service.ifmDevice.Xde.XdeService;
+import com.exult.ProjectCisco.service.ifmDevice.maven.MavenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,38 +31,29 @@ public class FeatureController {
     private XdeService xdeService;
 
     @Autowired
-    private MavenRepository mavenRepository;
+    private MavenService mavenService;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Feature getFeature(@PathVariable("id") Long id) {
-        return featureService.findFeatureById(id).get();
+        return featureService.findFeatureById(id);
     }
-
     @RequestMapping(value = "/xde/{id}", method = RequestMethod.GET)
-    public Set<Xde> getXde(@PathVariable("id") Long id) {
-        // move logic to service
-        //
-        Set<FeatureXde> featureXdes=featureService.findFeatureById(id).get().getXdeSet();
-        Set<Xde> xdes = new HashSet<>();
-        for(FeatureXde  featureXde: featureXdes){
-            xdes.add(featureXde.getXde());
-        }
-    return xdes;
+    public Set<Xde> getFeatureXdeSet(@PathVariable("id") Long id) {
+        return featureService.getFeatureXdeSet(id);
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     Feature postFeature(FeatureDto featureDto) {
-        return featureService.insertFeature(featureDto.getName(), mavenRepository.findById(featureDto.getMavenId()).get());
+        return featureService.insertFeature(featureDto.getName(), mavenService.findMavenById(featureDto.getMavenId()));
     }
-
     // Update Feature
     @RequestMapping(value = "/", method = RequestMethod.PUT)
     Feature putFeature(FeatureDto featureDto) {
-        return featureService.insertFeature(featureDto.getName(), mavenRepository.findById(featureDto.getMavenId()).get());
+        return featureService.insertFeature(featureDto.getName(), mavenService.findMavenById(featureDto.getMavenId()));
     }
     // Delete Feature
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
     boolean deleteFeature(FeatureDto featureDto) {
-        return featureService.deleteFeature(mavenRepository.findById(featureDto.getMavenId()).get().getId());
+        return featureService.deleteFeature(mavenService.findMavenById(featureDto.getMavenId()).getId());
     }
 }

@@ -31,18 +31,7 @@ public class DeviceLoaderController {
 
     @GetMapping(value = "/{filename:.+}")
     String fun(@PathVariable() String filename) throws ParserConfigurationException, SAXException, IOException, ZipException {
-        Path path = storageService.load(filename);
-        File file = path.toFile();
-        ZipFile zipFile = new ZipFile(file);
-        if(filename.contains(".")){
-            int x = filename.indexOf(".");
-            filename=filename.substring(0,x);
-        }
-        zipFile.extractAll(file.getParent()+"/"+filename);
-        File file1= new File(file.getParent()+"/"+filename);
-        System.out.println(file1);
-        deviceLoader.run(file1);
-        return file1.getPath();
+        return storageService.unzipedFileAndLoaded(filename);
     }
 
     @PostMapping("/zip")

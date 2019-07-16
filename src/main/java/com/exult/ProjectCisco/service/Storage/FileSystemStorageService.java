@@ -1,29 +1,35 @@
 package com.exult.ProjectCisco.service.Storage;
 
 import com.exult.ProjectCisco.StorageProperties;
+import com.exult.ProjectCisco.service.deviceLoader.DeviceLoader;
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.xml.sax.SAXException;
 
 import javax.annotation.PostConstruct;
-import java.io.FileNotFoundException;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.stream.Stream;
 
 @Service
 public class FileSystemStorageService implements StorageService {
 
     private final Path rootLocation;
+
+    @Autowired
+    StorageService storageService;
+
+    @Autowired
+    DeviceLoader deviceLoader;
 
     @Autowired
     public FileSystemStorageService(StorageProperties properties) {
@@ -71,4 +77,18 @@ public class FileSystemStorageService implements StorageService {
         return rootLocation.resolve(filename);
     }
 
-   }
+    public String unzipedFileAndLoaded(String filename) throws ZipException, ParserConfigurationException, SAXException, IOException {
+                    Path path = storageService.load(filename);
+            File file = path.toFile();
+            ZipFile zipFile = new ZipFile(file);
+            if(filename.contains(".")){
+                int x = filename.indexOf(".");
+                filename=filename.substring(0,x);
+            }
+            zipFile.extractAll(file.getParent()+"/"+filename);
+            File file1= new File(file.getParent()+"/"+filename);
+            System.out.println(file1);
+            deviceLoader.run(file1);
+            return file1.getPath();
+        }
+    }

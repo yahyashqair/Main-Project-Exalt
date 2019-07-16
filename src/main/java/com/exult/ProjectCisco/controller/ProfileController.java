@@ -6,6 +6,7 @@ import com.exult.ProjectCisco.model.FeatureXde;
 import com.exult.ProjectCisco.model.Profile;
 import com.exult.ProjectCisco.repository.MavenRepository;
 import com.exult.ProjectCisco.service.ifmDevice.Profile.ProfileService;
+import com.exult.ProjectCisco.service.ifmDevice.maven.MavenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class ProfileController {
     private ProfileService profileService;
 
     @Autowired
-    private MavenRepository mavenRepository;
+    private MavenService mavenService;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     Profile getProfile(@PathVariable("id") Long id) {
@@ -53,18 +54,18 @@ public class ProfileController {
     @RequestMapping(value = "/", method = RequestMethod.POST)
     Profile postProfile(@RequestBody ProfileDto profileDto) {
         System.out.println(profileDto);
-        return profileService.insertProfile(profileDto.getName(), mavenRepository.findById(profileDto.getMavenId()).get());
+        return profileService.insertProfile(profileDto.getName(), mavenService.findMavenById(profileDto.getMavenId()));
     }
 
     // Update Profile
     @RequestMapping(value = "/", method = RequestMethod.PUT)
     Profile putProfile(ProfileDto profileDto) {
-        return profileService.insertProfile(profileDto.getName(), mavenRepository.findById(profileDto.getMavenId()).get());
+        return profileService.insertProfile(profileDto.getName(), mavenService.findMavenById(profileDto.getMavenId()));
     }
 
     // Delete Profile
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
     boolean deleteProfile(ProfileDto profileDto) {
-        return profileService.deleteProfile(mavenRepository.findById(profileDto.getMavenId()).get().getId());
+        return profileService.deleteProfile(mavenService.findMavenById(profileDto.getMavenId()).getId());
     }
 }
