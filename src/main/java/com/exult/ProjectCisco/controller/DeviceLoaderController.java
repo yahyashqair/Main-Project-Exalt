@@ -21,6 +21,7 @@ import net.lingala.zip4j.core.ZipFile;
 @Controller
 @RestController
 @RequestMapping("loader")
+@CrossOrigin(origins = "http://localhost:4200")
 public class DeviceLoaderController {
 
 

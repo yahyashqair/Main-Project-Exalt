@@ -1,5 +1,6 @@
 package com.exult.ProjectCisco.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ class FeatureXde {
     @ManyToOne
     @JoinColumn()
     //Json Ignore
+    @JsonIgnore
     private Feature feature;
     @ManyToOne
     @JoinColumn

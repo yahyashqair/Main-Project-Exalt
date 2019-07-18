@@ -63,4 +63,9 @@ class XdeServiceImplementation implements XdeService {
         xde = xdeRepository.save(xde);
         return xde;
     }
+
+    @Override
+    public List<Xde> findAllXde() {
+        return xdeRepository.findAll();
+    }
 }

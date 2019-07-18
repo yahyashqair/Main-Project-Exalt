@@ -4,6 +4,7 @@ import com.exult.ProjectCisco.model.Feature;
 import com.exult.ProjectCisco.model.Maven;
 import com.exult.ProjectCisco.model.Xde;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -14,4 +15,5 @@ public interface FeatureService {
     Feature insertFeature(String name, Maven maven);
     Feature findFeatureById(Long x);
     public Set<Xde> getFeatureXdeSet(Long id);
+    List<Feature> getAllFeatures();
 }

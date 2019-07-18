@@ -8,16 +8,15 @@ import com.exult.ProjectCisco.service.ifmDevice.Xde.XdeService;
 import com.exult.ProjectCisco.service.ifmDevice.maven.MavenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Controller
 @RestController
 @RequestMapping("/feature")
+@CrossOrigin(origins = "http://localhost:4200")
 public class FeatureController {
 
     @Autowired
@@ -32,6 +31,13 @@ public class FeatureController {
     public Feature getFeature(@PathVariable("id") Long id) {
         return featureService.findFeatureById(id);
     }
+
+
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    public List<Feature> getFeatures() {
+        return featureService.getAllFeatures();
+    }
+
 
     @RequestMapping(value = "/xde/{id}", method = RequestMethod.GET)
     public Set<Xde> getFeatureXdeSet(@PathVariable("id") Long id) {

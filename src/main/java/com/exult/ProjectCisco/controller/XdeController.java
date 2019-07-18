@@ -7,16 +7,15 @@ import com.exult.ProjectCisco.service.ifmDevice.Xde.XdeService;
 import com.exult.ProjectCisco.service.ifmDevice.maven.MavenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
 @RestController
 @RequestMapping("xde")
+@CrossOrigin(origins = "http://localhost:4200")
 public class XdeController {
 
     @Autowired
@@ -29,6 +28,12 @@ public class XdeController {
     Xde getXde(@PathVariable("id") Long id) {
         return xdeService.findById(id);
     }
+
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    List<Xde> getXdes() {
+        return xdeService.findAllXde();
+    }
+
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     Xde postXde(XdeDto xdeDto) {

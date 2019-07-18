@@ -1,6 +1,7 @@
 package com.exult.ProjectCisco.controller;
 
 import com.exult.ProjectCisco.dto.ProfileDto;
+import com.exult.ProjectCisco.dto.ProfileRelation;
 import com.exult.ProjectCisco.model.Feature;
 import com.exult.ProjectCisco.model.FeatureXde;
 import com.exult.ProjectCisco.model.Profile;
@@ -11,13 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Controller
 @RestController
-@RequestMapping("profile")
+@RequestMapping("/profile")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ProfileController {
 
     @Autowired
@@ -51,12 +54,26 @@ public class ProfileController {
         return profileService.findAll();
     }
 
+
+    @RequestMapping(value = "/relations/", method = RequestMethod.GET)
+    public List<ProfileRelation> getRelations() {
+           List<Profile> profiles=profileService.findAll();
+           List<ProfileRelation> profileRelations = new ArrayList<ProfileRelation>();
+        for (Profile profile:profiles) {
+            if(profile.getParent()!=null){
+                ProfileRelation profileRelation = new ProfileRelation();
+                profileRelation.setChild(profile.getId());
+
+                profileRelation.setParent(profile.getParent().getId());
+                profileRelations.add(profileRelation);}
+        }
+        return profileRelations;
+    }
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public Profile postProfile(@RequestBody ProfileDto profileDto) {
         System.out.println(profileDto);
         return profileService.insertProfile(profileDto.getName(), mavenService.findMavenById(profileDto.getMavenId()));
     }
-
     // Update Profile
     @RequestMapping(value = "/", method = RequestMethod.PUT)
     public Profile putProfile(ProfileDto profileDto) {

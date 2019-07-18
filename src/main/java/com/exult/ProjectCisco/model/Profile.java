@@ -1,5 +1,6 @@
 package com.exult.ProjectCisco.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -24,6 +25,7 @@ class Profile {
 
     @ManyToOne
     @JoinColumn(name="parent_id")
+    @JsonIgnore
     private Profile parent ;
 
     @Transient

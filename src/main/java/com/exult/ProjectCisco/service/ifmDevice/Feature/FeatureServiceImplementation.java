@@ -39,6 +39,11 @@ public  @Setter class  FeatureServiceImplementation implements FeatureService {
         return xdes;
     }
 
+    @Override
+    public List<Feature> getAllFeatures() {
+        return featureRepository.findAll();
+    }
+
     @Transactional
     public Feature findFeature(String x){
         List<Feature> featureList = featureRepository.findByName(x);
