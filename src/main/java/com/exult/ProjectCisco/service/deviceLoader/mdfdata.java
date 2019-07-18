@@ -21,7 +21,9 @@ public class Mdfdata {
     public HashMap<String, String> getDeviceDetails(String id) throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance(); DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
-        Document doc = builder.parse(new File("src\\main\\resources\\sample.xml"));
+        String filePath = System.getenv().get("mdfdata");
+        System.out.println(filePath);
+        Document doc = builder.parse(new File(filePath));
         // Create XPathFactory for creating XPath Object
         XPathFactory xPathFactory = XPathFactory.newInstance();
         // Create XPath object from XPathFactory
