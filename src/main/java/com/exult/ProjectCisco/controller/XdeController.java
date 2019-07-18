@@ -6,6 +6,8 @@ import com.exult.ProjectCisco.repository.MavenRepository;
 import com.exult.ProjectCisco.service.ifmDevice.Xde.XdeService;
 import com.exult.ProjectCisco.service.ifmDevice.maven.MavenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,12 +31,15 @@ public class XdeController {
         return xdeService.findById(id);
     }
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
-    List<Xde> getXdes() {
-        return xdeService.findAllXde();
+//    @RequestMapping(value = "/all", method = RequestMethod.GET)
+//    List<Xde> getXdes() {
+//        return xdeService.findAllXde();
+//    }
+
+    @RequestMapping(value = "/all/", method = RequestMethod.GET)
+    Page<Xde> getXdePage(@RequestParam(defaultValue = "pagenumber") int pagenumber,@RequestParam(defaultValue = "size") int size) {
+        return xdeService.findAllPage(PageRequest.of(pagenumber,size));
     }
-
-
     @RequestMapping(value = "/", method = RequestMethod.POST)
     Xde postXde(XdeDto xdeDto) {
         return xdeService.insertXde(xdeDto.getName(), mavenService.findMavenById(xdeDto.getMavenId()));

@@ -5,6 +5,9 @@ import com.exult.ProjectCisco.model.Xde;
 import com.exult.ProjectCisco.repository.XdeRepository;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -67,5 +70,11 @@ class XdeServiceImplementation implements XdeService {
     @Override
     public List<Xde> findAllXde() {
         return xdeRepository.findAll();
+    }
+
+    @Override
+    public Page<Xde> findAllPage(Pageable P) {
+        Page<Xde> xdePage=xdeRepository.findAll(P);
+        return xdePage;
     }
 }

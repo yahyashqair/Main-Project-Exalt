@@ -2,6 +2,8 @@ package com.exult.ProjectCisco.service.ifmDevice.Xde;
 
 import com.exult.ProjectCisco.model.Maven;
 import com.exult.ProjectCisco.model.Xde;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,4 +16,5 @@ public interface XdeService {
     Xde updateXde(Long id, String name, Maven maven);
     Xde insertXde(String name , Maven maven);
     List<Xde> findAllXde();
+    Page<Xde> findAllPage(Pageable P);
 }
