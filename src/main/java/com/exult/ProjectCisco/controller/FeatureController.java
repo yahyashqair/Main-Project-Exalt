@@ -7,6 +7,8 @@ import com.exult.ProjectCisco.service.ifmDevice.Feature.FeatureService;
 import com.exult.ProjectCisco.service.ifmDevice.Xde.XdeService;
 import com.exult.ProjectCisco.service.ifmDevice.maven.MavenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +23,7 @@ public class FeatureController {
 
     @Autowired
     private FeatureService featureService;
-    @Autowired
-    private XdeService xdeService;
+
 
     @Autowired
     private MavenService mavenService;
@@ -37,7 +38,10 @@ public class FeatureController {
     public List<Feature> getFeatures() {
         return featureService.getAllFeatures();
     }
-
+    @RequestMapping(value = "/all/", method = RequestMethod.GET)
+    Page<Feature> getFeaturePage(@RequestParam(defaultValue = "pagenumber") int pagenumber, @RequestParam(defaultValue = "size") int size) {
+        return featureService.findAllPage(PageRequest.of(pagenumber,size));
+    }
 
     @RequestMapping(value = "/xde/{id}", method = RequestMethod.GET)
     public Set<Xde> getFeatureXdeSet(@PathVariable("id") Long id) {
