@@ -28,8 +28,12 @@ class ProfileServiceImplementation implements ProfileService {
      * */
 
     @Transactional
-    public Set<Profile> findProfile(String x) {
-        return (Set<Profile>) profileRepository.findByName(x);
+    public Profile findProfile(String x) {
+        List<Profile> profileSet = (List<Profile>) profileRepository.findByName(x);
+         if(profileSet.size()>0){
+             return profileSet.get(0);
+         }
+         return null;
     }
 
     @Transactional
@@ -49,11 +53,17 @@ class ProfileServiceImplementation implements ProfileService {
 
     @Transactional
     public Profile insertProfile(String name, Maven maven) {
-        Profile profile = new Profile();
-        profile.setName(name);
-        profile.setMaven(maven);
-        profile = profileRepository.save(profile);
-        return profile;
+        try {
+            Profile profile = new Profile();
+            profile.setName(name);
+            profile.setMaven(maven);
+            profile = profileRepository.save(profile);
+            return profile;
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 
     @Transactional

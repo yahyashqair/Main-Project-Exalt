@@ -33,7 +33,6 @@ public class FeatureController {
         return featureService.findFeatureById(id);
     }
 
-
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public List<Feature> getFeatures() {
         return featureService.getAllFeatures();

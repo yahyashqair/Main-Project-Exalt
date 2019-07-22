@@ -18,26 +18,24 @@ public @Setter
 class XdeServiceImplementation implements XdeService {
     @Autowired
     private XdeRepository xdeRepository;
-
-
     /*
      * Add
      * Delete
      * Update
      * Find
      * */
-
     @Transactional
     public Xde findXde(String x) {
+        try{
         List<Xde> xdeList = xdeRepository.findByName(x);
         if (xdeList.size() > 0) {
             return xdeList.get(0);
+        }}catch (Exception e){
+            System.out.println(e.getMessage());
         }
         return null;
     }
-
     @Transactional
-
     @Override
     public Xde findById(Long x) {
         return xdeRepository.findById(x).get();
@@ -60,12 +58,18 @@ class XdeServiceImplementation implements XdeService {
 
     @Transactional
     public Xde insertXde(String name, Maven maven) {
-        Xde xde = new Xde();
-        xde.setMaven(maven);
-        xde.setName(name);
-        xde = xdeRepository.save(xde);
-        return xde;
-    }
+        try {
+            Xde xde = new Xde();
+            xde.setMaven(maven);
+            xde.setName(name);
+            xde = xdeRepository.save(xde);
+            return xde;
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return null;
+        }
 
     @Override
     public List<Xde> findAllXde() {

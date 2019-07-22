@@ -119,6 +119,7 @@ public class DeviceLoader {
     /*
      * Function Take file "xmpfeature.xml" and added it in data base
      * */
+
     private void readXde(File file) throws IOException, ParserConfigurationException, SAXException {
         Document document = parse(file);
         System.err.println(file.getPath());
@@ -135,6 +136,7 @@ public class DeviceLoader {
                 maven.setVersion(node.getTextContent());
             }
         }
+        mavenRepository.save(maven);
         xdeService.insertXde(maven.getGroupId() + "." + maven.getArtifactId(), maven);
     }
 
@@ -163,8 +165,8 @@ public class DeviceLoader {
                 maven.setVersion(node.getTextContent());
             }
         }
-        feature.setMaven(maven);
         mavenRepository.save(maven);
+        feature.setMaven(maven);
         featureRepository.save(feature);
         //System.out.println(maven);
         /*
@@ -220,7 +222,7 @@ public class DeviceLoader {
             BufferedReader br = new BufferedReader(new FileReader(newfile));
             String st;
             while ((st = br.readLine()) != null) {
-                if (st.contains(xde.getMaven().getGroupId() + "." + xde.getMaven().getArtifactId())) {
+                if (st.contains(xde.getMaven().getGroupId() + ":" + xde.getMaven().getArtifactId())) {
                     st = br.readLine();
                     return st.substring(18);
                 }

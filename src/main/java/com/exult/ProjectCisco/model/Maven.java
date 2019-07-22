@@ -3,11 +3,9 @@ package com.exult.ProjectCisco.model;
 import lombok.Data;
 
 import javax.persistence.*;
-
-
 @Entity
-
 @Data
+
 public class Maven {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

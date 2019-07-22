@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface ProfileService {
-    Set<Profile> findProfile(String x);
+    Profile findProfile(String x);
     boolean deleteProfile(Long id);
     Profile updateProfile(Long id, String name, Maven maven);
     Profile insertProfile(String name, Maven maven);

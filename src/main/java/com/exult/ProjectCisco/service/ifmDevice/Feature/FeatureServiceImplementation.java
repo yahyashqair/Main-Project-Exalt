@@ -10,32 +10,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
-public  @Setter class  FeatureServiceImplementation implements FeatureService {
+public @Setter
+class FeatureServiceImplementation implements FeatureService {
     @Autowired
     private FeatureRepository featureRepository;
 
     /*
-    * Add
-    * Delete
-    * Update
-    * Find
-    * */
+     * Add
+     * Delete
+     * Update
+     * Find
+     * */
 
     @Transactional
     public Set<Xde> getFeatureXdeSet(Long id) {
 
-        Set<FeatureXde> featureXdes=findFeatureById(id).getXdeSet();
+        Set<FeatureXde> featureXdes = findFeatureById(id).getXdeSet();
         Set<Xde> xdes = new HashSet<>();
-        for(FeatureXde  featureXde: featureXdes){
+        for (FeatureXde featureXde : featureXdes) {
             xdes.add(featureXde.getXde());
         }
         return xdes;
@@ -48,39 +47,45 @@ public  @Setter class  FeatureServiceImplementation implements FeatureService {
 
     @Override
     public Page<Feature> findAllPage(Pageable pageable) {
-    return featureRepository.findAll(pageable);
+        return featureRepository.findAll(pageable);
     }
 
     @Transactional
-    public Feature findFeature(String x){
+    public Feature findFeature(String x) {
         List<Feature> featureList = featureRepository.findByName(x);
-        if(featureList.size()>0){
+        if (featureList.size() > 0) {
             return featureList.get(0);
         }
         return null;
     }
 
     @Transactional
-    public boolean deleteFeature(Long id){
-        Feature feature =  featureRepository.findById(id).get();
+    public boolean deleteFeature(Long id) {
+        Feature feature = featureRepository.findById(id).get();
         featureRepository.delete(feature);
         return true;
     }
+
     @Transactional
-    public Feature updateFeature(Long id, String name, Maven maven){
-        Feature feature =  featureRepository.findById(id).get();
+    public Feature updateFeature(Long id, String name, Maven maven) {
+        Feature feature = featureRepository.findById(id).get();
         feature.setMaven(maven);
         feature.setName(name);
         return feature;
     }
 
     @Transactional
-    public Feature insertFeature(String name, Maven maven){
-        Feature feature= new Feature();
-        feature.setMaven(maven);
-        feature.setName(name);
-        feature=featureRepository.save(feature);
-        return feature;
+    public Feature insertFeature(String name, Maven maven) {
+        try {
+            Feature feature = new Feature();
+            feature.setMaven(maven);
+            feature.setName(name);
+            feature = featureRepository.save(feature);
+            return feature;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 
     @Transactional

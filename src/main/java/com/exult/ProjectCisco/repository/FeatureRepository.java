@@ -14,5 +14,4 @@ import java.util.List;
 public interface FeatureRepository extends JpaRepository<Feature,Long>, PagingAndSortingRepository<Feature, Long> {
     List<Feature> findByName(String name);
     Page<Feature> findAll(Pageable pageable);
-
 }

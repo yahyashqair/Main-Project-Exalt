@@ -13,6 +13,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
+
 @SpringBootApplication
 @EnableConfigurationProperties(StorageProperties.class)
 public class ProjectCiscoApplication implements CommandLineRunner {
@@ -35,8 +37,8 @@ public class ProjectCiscoApplication implements CommandLineRunner {
     @Transactional
     @Override
     public void run(String... args) throws Exception {
-        mdfdata.getDeviceDetails("1.3.6.1.4.1.9.12.3.1.3.847");
-        //loader.run(new File("C:\\Users\\user\\Desktop\\device_packages_ifm"));
+        //mdfdata.getDeviceDetails("1.3.6.1.4.1.9.12.3.1.3.847");
+        //loader.run(new File("C:\\Users\\user\\Desktop\\devices"));
         //System.out.println(loader.findConfigurationsSet(new File("C:\\Users\\user\\Desktop\\device_packages_ifm\\ifm_device_profiles\\com.cisco.ifm.deviceprofile.cat4k_wireless\\xmpdevice.xml")));
     }
 
