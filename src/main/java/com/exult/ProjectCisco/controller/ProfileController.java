@@ -5,10 +5,14 @@ import com.exult.ProjectCisco.dto.ProfileRelation;
 import com.exult.ProjectCisco.model.Feature;
 import com.exult.ProjectCisco.model.FeatureXde;
 import com.exult.ProjectCisco.model.Profile;
+import com.exult.ProjectCisco.model.Xde;
 import com.exult.ProjectCisco.repository.MavenRepository;
 import com.exult.ProjectCisco.service.ifmDevice.Profile.ProfileService;
 import com.exult.ProjectCisco.service.ifmDevice.maven.MavenService;
+import org.hibernate.annotations.Parent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +38,26 @@ public class ProfileController {
         return profileService.findById(id);
     }
 
+
+    @RequestMapping(value = "/parents/{id}", method = RequestMethod.GET)
+    public List<Profile> getParents(@PathVariable("id") Long id) {
+        List<Profile> profileList = new ArrayList<>();
+        Profile profile = profileService.findById(id);
+        profileList.add(profile);
+        while(profile.getParent()!=null){
+            profileList.add(profile.getParent());
+            profile = profile.getParent();
+        }
+        return profileList;
+    }
+
+
     @RequestMapping(value = "/all/", method = RequestMethod.GET)
+    Page<Profile> getXdePage(@RequestParam(defaultValue = "pagenumber") int pagenumber, @RequestParam(defaultValue = "size") int size) {
+        return profileService.findAllPage(PageRequest.of(pagenumber,size));
+    }
+
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
     public List<Profile> getAllProfile() {
         return profileService.findAll();
     }
@@ -53,7 +76,6 @@ public class ProfileController {
     public List<Profile> getProfiles() {
         return profileService.findAll();
     }
-
 
     @RequestMapping(value = "/relations/", method = RequestMethod.GET)
     public List<ProfileRelation> getRelations() {
@@ -79,7 +101,6 @@ public class ProfileController {
     public Profile putProfile(ProfileDto profileDto) {
         return profileService.insertProfile(profileDto.getName(), mavenService.findMavenById(profileDto.getMavenId()));
     }
-
     // Delete Profile
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
     public boolean deleteProfile(ProfileDto profileDto) {

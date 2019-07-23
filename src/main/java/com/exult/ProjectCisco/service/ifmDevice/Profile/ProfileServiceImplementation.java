@@ -7,6 +7,8 @@ import com.exult.ProjectCisco.model.Profile;
 import com.exult.ProjectCisco.repository.ProfileRepository;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -30,10 +32,10 @@ class ProfileServiceImplementation implements ProfileService {
     @Transactional
     public Profile findProfile(String x) {
         List<Profile> profileSet = (List<Profile>) profileRepository.findByName(x);
-         if(profileSet.size()>0){
-             return profileSet.get(0);
-         }
-         return null;
+        if (profileSet.size() > 0) {
+            return profileSet.get(0);
+        }
+        return null;
     }
 
     @Transactional
@@ -59,8 +61,7 @@ class ProfileServiceImplementation implements ProfileService {
             profile.setMaven(maven);
             profile = profileRepository.save(profile);
             return profile;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return null;
@@ -87,6 +88,12 @@ class ProfileServiceImplementation implements ProfileService {
             featureXdes.addAll(feature.getXdeSet());
         }
         return featureXdes;
+    }
+
+    @Override
+    public Page<Profile> findAllPage(Pageable P) {
+        Page<Profile> profilePage = profileRepository.findAll(P);
+        return profilePage;
     }
 
 }
