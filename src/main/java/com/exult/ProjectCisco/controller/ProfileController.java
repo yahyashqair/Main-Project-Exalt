@@ -51,9 +51,8 @@ public class ProfileController {
         return profileList;
     }
 
-
     @RequestMapping(value = "/all/", method = RequestMethod.GET)
-    Page<Profile> getXdePage(@RequestParam(defaultValue = "pagenumber") int pagenumber, @RequestParam(defaultValue = "size") int size) {
+    Page<Profile> findAllPage(@RequestParam(defaultValue = "pagenumber") int pagenumber, @RequestParam(defaultValue = "size") int size) {
         return profileService.findAllPage(PageRequest.of(pagenumber,size));
     }
 
@@ -67,6 +66,14 @@ public class ProfileController {
         return profileService.findById(id).getFeatures();
     }
 
+    @RequestMapping(value = "/search/{qstring}", method = RequestMethod.GET)
+    public List<Profile> getpro(@PathVariable("qstring") String qstring) {
+        return profileService.findByNameLike("%"+qstring+"%");
+    }
+    @RequestMapping(value = "/search/", method = RequestMethod.GET)
+    public List<Profile> getpros() {
+        return  findAllPage(1,10).getContent();
+    }
     @RequestMapping(value = "/xde/{id}", method = RequestMethod.GET)
     public Set<FeatureXde> getXde(@PathVariable("id") Long id) {
         return profileService.getFeatureXde(id);
@@ -91,6 +98,7 @@ public class ProfileController {
         }
         return profileRelations;
     }
+
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public Profile postProfile(@RequestBody ProfileDto profileDto) {
         System.out.println(profileDto);

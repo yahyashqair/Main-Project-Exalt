@@ -37,6 +37,9 @@ public class FeatureController {
     public List<Feature> getFeatures() {
         return featureService.getAllFeatures();
     }
+
+
+
     @RequestMapping(value = "/all/", method = RequestMethod.GET)
     Page<Feature> getFeaturePage(@RequestParam(defaultValue = "pagenumber") int pagenumber, @RequestParam(defaultValue = "size") int size) {
         return featureService.findAllPage(PageRequest.of(pagenumber,size));
@@ -52,6 +55,10 @@ public class FeatureController {
         return featureService.insertFeature(featureDto.getName(), mavenService.findMavenById(featureDto.getMavenId()));
     }
 
+    @RequestMapping(value = "/search/{qstring}", method = RequestMethod.GET)
+    public List<Feature> getpro(@PathVariable("qstring") String qstring) {
+        return featureService.findByNameLike("%"+qstring+"%");
+    }
     // Update Feature
     @RequestMapping(value = "/", method = RequestMethod.PUT)
     Feature putFeature(FeatureDto featureDto) {

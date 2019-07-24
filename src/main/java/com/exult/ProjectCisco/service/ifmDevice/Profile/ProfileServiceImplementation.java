@@ -96,4 +96,9 @@ class ProfileServiceImplementation implements ProfileService {
         return profilePage;
     }
 
+    @Override
+    public List<Profile> findByNameLike(String search) {
+        return profileRepository.findByNameLike(search);
+    }
+
 }

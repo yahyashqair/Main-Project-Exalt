@@ -17,4 +17,6 @@ public interface XdeService {
     Xde insertXde(String name , Maven maven);
     List<Xde> findAllXde();
     Page<Xde> findAllPage(Pageable P);
+    List<Xde> findByNameLike(String search);
+
 }

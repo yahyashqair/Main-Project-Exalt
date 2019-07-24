@@ -46,6 +46,11 @@ class FeatureServiceImplementation implements FeatureService {
     }
 
     @Override
+    public List<Feature> findByNameLike(String username) {
+        return featureRepository.findByNameLike(username);
+    }
+
+    @Override
     public Page<Feature> findAllPage(Pageable pageable) {
         return featureRepository.findAll(pageable);
     }

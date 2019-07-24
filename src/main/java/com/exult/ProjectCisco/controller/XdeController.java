@@ -30,6 +30,10 @@ public class XdeController {
     Xde getXde(@PathVariable("id") Long id) {
         return xdeService.findById(id);
     }
+    @RequestMapping(value = "/search/{qstring}", method = RequestMethod.GET)
+    public List<Xde> getpro(@PathVariable("qstring") String qstring) {
+        return xdeService.findByNameLike("%"+qstring+"%");
+    }
 
 //    @RequestMapping(value = "/all", method = RequestMethod.GET)
 //    List<Xde> getXdes() {

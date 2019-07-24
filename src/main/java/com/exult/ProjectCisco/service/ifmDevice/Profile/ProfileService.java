@@ -19,6 +19,7 @@ public interface ProfileService {
     public List<Profile> findAll();
     Set<FeatureXde> getFeatureXde(long id);
     Page<Profile> findAllPage(Pageable P);
+    List<Profile> findByNameLike(String search);
 
 
 }
