@@ -5,7 +5,9 @@ import lombok.Data;
 import javax.persistence.*;
 @Entity
 @Data
-
+@Table(uniqueConstraints={
+        @UniqueConstraint(columnNames = {"artifactId", "groupId"})
+})
 public class Maven {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,8 +16,5 @@ public class Maven {
     private String artifactId;
     private String version;
 }
-/*
-* @Table(uniqueConstraints={
-        @UniqueConstraint(columnNames = {"artifactId", "groupId"})
-})
-* */
+
+

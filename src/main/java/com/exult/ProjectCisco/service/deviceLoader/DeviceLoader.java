@@ -82,7 +82,7 @@ public class DeviceLoader {
                     listAllFiles(file);
                 } else {
                     if (file.getName().equals("xmpxde.xml")) {
-                        readXde(file);
+                        xdeFiles.add(file);
                     } else if (file.getName().equals("xmpfeature.xml")) {
                         featureFiles.add(file);
                     } else if (file.getName().equals("xmpdevice.xml")) {
@@ -93,13 +93,38 @@ public class DeviceLoader {
         }
     }
 
+    public static <T> ArrayList<T> removeDuplicates(ArrayList<T> list)
+    {
+
+        // Create a new LinkedHashSet
+        Set<T> set = new LinkedHashSet<>();
+
+        // Add the elements to set
+        set.addAll(list);
+
+        // Clear the list
+        list.clear();
+
+        // add the elements of set
+        // with no duplicates to the list
+        list.addAll(set);
+
+        // return the list
+        return list;
+    }
     /*
      * Function that store Xdes first then store Features then store Profiles
      * */
+
     private void storeInOrder() throws ParserConfigurationException, SAXException, IOException {
-//        for (File xdeFile: xdeFiles) {
-//            readXde(xdeFile);
-//        }
+        // Remove Dublicate
+        xdeFiles=removeDuplicates(xdeFiles);
+        featureFiles=removeDuplicates(featureFiles);
+        profileFiles=removeDuplicates(profileFiles);
+
+        for (File xdeFile: xdeFiles) {
+            readXde(xdeFile);
+        }
         for (int i = 0; i < featureFiles.size(); i++) {
             readFeature(featureFiles.get(i));
         }
@@ -136,8 +161,10 @@ public class DeviceLoader {
                 maven.setVersion(node.getTextContent());
             }
         }
-        mavenRepository.save(maven);
-        xdeService.insertXde(maven.getGroupId() + "." + maven.getArtifactId(), maven);
+        if(mavenRepository.findByArtifactIdAndAndGroupId(maven.getArtifactId(),maven.getGroupId())==null) {
+            mavenRepository.save(maven);
+            xdeService.insertXde(maven.getGroupId() + "." + maven.getArtifactId(), maven);
+        }
     }
 
     /*
@@ -165,7 +192,11 @@ public class DeviceLoader {
                 maven.setVersion(node.getTextContent());
             }
         }
-        mavenRepository.save(maven);
+
+        if(mavenRepository.findByArtifactIdAndAndGroupId(maven.getArtifactId(),maven.getGroupId())==null) {
+            mavenRepository.save(maven);}else{
+            return;
+        }
         feature.setMaven(maven);
         featureRepository.save(feature);
         //System.out.println(maven);
@@ -174,7 +205,6 @@ public class DeviceLoader {
          * */
         NodeList nList = document.getElementsByTagName("dependency");
         for (int i = 0; i < nList.getLength(); i++) {
-
             Node node = nList.item(i);
             System.out.println("namee" + node.getTextContent());
             NodeList nodeList = node.getChildNodes();
@@ -263,7 +293,11 @@ public class DeviceLoader {
         }
         profile.setName(maven.getGroupId() + "." + maven.getArtifactId());
         profile.setMaven(maven);
-        mavenRepository.save(maven);
+        if(mavenRepository.findByArtifactIdAndAndGroupId(maven.getArtifactId(),maven.getGroupId())==null) {
+            mavenRepository.save(maven);
+        }else{
+            return;
+        }
         profileRepository.save(profile);
         /*
          * Find Features , parent  ;
