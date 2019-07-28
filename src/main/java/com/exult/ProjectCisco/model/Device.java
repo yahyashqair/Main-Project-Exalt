@@ -13,6 +13,6 @@ class Device {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     // ipAddress , cliAddress , username , password , protocol , port , snmp community
-    @ManyToMany
-    private Set<Configuration> configurationSet = new HashSet<Configuration>();
+//    @ManyToMany
+//    private Set<Configuration> configurationSet = new HashSet<Configuration>();
 }

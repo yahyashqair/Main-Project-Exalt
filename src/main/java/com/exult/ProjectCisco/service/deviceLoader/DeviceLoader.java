@@ -43,8 +43,8 @@ public class DeviceLoader {
     @Autowired
     private MavenRepository mavenRepository;
 
-    @Autowired
-    private ConfigurationRepository configrationRepository;
+//    @Autowired
+//    private ConfigurationRepository configrationRepository;
 
     // Store all XmpXde and XmpFeature here For Sorting xml and feature to avoid errors
     private ArrayList<File> xdeFiles = new ArrayList<>();
@@ -428,7 +428,7 @@ public class DeviceLoader {
                     Configuration configuration = new Configuration();
                     configuration.setName(name);
                     configuration.setValue(value);
-                    configrationRepository.save(configuration);
+                    //configrationRepository.save(configuration);
                     configurations.add(configuration);
                 }
             }
