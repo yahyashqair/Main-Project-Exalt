@@ -1,5 +1,6 @@
 package com.exult.ProjectCisco.repository;
 
+import com.exult.ProjectCisco.model.Configuration;
 import com.exult.ProjectCisco.model.Profile;
 import com.exult.ProjectCisco.model.Xde;
 import org.springframework.data.jpa.repository.JpaRepository;
