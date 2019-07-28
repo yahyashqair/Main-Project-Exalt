@@ -3,30 +3,44 @@ package com.exult.ProjectCisco.service.ifmDevice.Device;
 import com.exult.ProjectCisco.model.Configuration;
 import com.exult.ProjectCisco.model.Profile;
 import com.exult.ProjectCisco.repository.ProfileRepository;
-import com.exult.ProjectCisco.service.ifmDevice.Profile.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Service
-public class deviceServiceImplementaion implements deviceService {
+public class deviceServiceImplementaion implements DeviceService {
     @Autowired
     ProfileRepository profileRepository;
 
     @Override
-    public List<Profile> getMatchingProfile(HashMap<String,String> map) {
+    public List<Profile> getMatchingProfile(HashMap<String, String> map) {
         List<Profile> profiles = profileRepository.findAll();
-        for (Profile profile:profiles) {
-            Map<String,Boolean> stringBooleanMap=new HashMap<>();
-            for (Configuration configuration:profile.getConfigurations()) {
-                if(map.containsKey(configuration.getName())){
-                    
+        List<Profile> matchProfile =new ArrayList<>();
+        for (Profile profile : profiles) {
+            Map<String, Boolean> stringBooleanMap = new HashMap<>();
+            for (Configuration configuration : profile.getConfigurations()) {
+                if (map.containsKey(configuration.getName())) {
+                    if (map.get(configuration.getName()).equals(configuration.getValue())) {
+                        stringBooleanMap.put(configuration.getName(), true);
+                    } else {
+                        if (stringBooleanMap.containsKey(configuration.getName()) && stringBooleanMap.get(configuration.getName())) {
+                            ;
+                        }else{
+                            stringBooleanMap.put(configuration.getName(),false);
+                        }
+                    }
+                } else {
+                    break;
                 }
             }
+            if(!stringBooleanMap.values().isEmpty()&&!stringBooleanMap.values().contains(false)){
+                matchProfile.add(profile);
+            }
         }
-        return null;
+        return matchProfile;
     }
 }
