@@ -41,6 +41,16 @@ public class deviceServiceImplementaion implements DeviceService {
                 matchProfile.add(profile);
             }
         }
+        if(matchProfile.isEmpty()){
+            return matchProfile;
+        }
+        for (int i = 0 ; i < matchProfile.size();i++){
+            Profile p = matchProfile.get(i).getParent();
+            while(p!=null){
+                matchProfile.remove(p);
+                p=p.getParent();
+            }
+        }
         return matchProfile;
     }
 }
