@@ -34,13 +34,17 @@ class Profile {
     /*
      * Each Feature has more than one configuration
      * */
+//    @ElementCollection
+//    @CollectionTable(
+//            joinColumns=@JoinColumn(name="profile_id")
+//    )
 //    @ManyToMany
 //    @JoinTable(name = "profile_configuration", joinColumns = @JoinColumn(name = "profile_id"), inverseJoinColumns = @JoinColumn(name = "configuration_id"))
     @ElementCollection
     @CollectionTable(
             joinColumns=@JoinColumn(name="profile_id")
     )
-    private Set<Configuration> configurations = new HashSet<Configuration>();
+    private Set<Criteria> criteriaSet = new HashSet<Criteria>();
 
 
 }
