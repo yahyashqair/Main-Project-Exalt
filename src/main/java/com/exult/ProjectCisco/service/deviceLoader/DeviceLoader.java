@@ -420,9 +420,8 @@ public class DeviceLoader {
                         Set<Configuration> configurationSet = new HashSet<>();
                         criteria.setName(findString(name, "name"));
                         // Has more than 1 configuration
-                        System.out.println(eElement.getAttributes().getLength());
                         if (!eElement.getAttribute("param:operator").isEmpty()) {
-                            criteria.setOperater(eElement.getAttribute("param:operator"));
+                            criteria.setOperator(eElement.getAttribute("param:operator"));
                             NodeList nList2 = nList.item(i).getChildNodes();
                             for (int j = 0; j < nList2.getLength(); j++) {
                                 Node node2 = nList.item(j);
@@ -438,6 +437,7 @@ public class DeviceLoader {
                                 }
                             }
                         } else {
+                            criteria.setOperator("or");
                             Configuration configuration = new Configuration();
                             configuration.setValue(eElement.getTextContent());
                             if (!eElement.getAttribute("param:operation").equals("")) {
@@ -454,7 +454,6 @@ public class DeviceLoader {
             }
             criteriaRepository.saveAll(criteriaSet);
             System.out.println(criteriaSet);
-
             return criteriaSet;
         } catch (Exception e) {
             System.err.println("Error" + e.getMessage());

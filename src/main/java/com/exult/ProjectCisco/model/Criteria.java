@@ -14,8 +14,7 @@ public class Criteria {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id ;
     private String name;
-    private String operater ;
-    private String operation;
+    private String operator;
     @ElementCollection
     @CollectionTable(
             joinColumns=@JoinColumn(name="criteria_id")

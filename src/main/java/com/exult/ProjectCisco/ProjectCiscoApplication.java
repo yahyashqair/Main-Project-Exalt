@@ -48,7 +48,7 @@ public class ProjectCiscoApplication implements CommandLineRunner {
         //map.put("software","IOS");
         //System.out.println(deviceService.getMatchingProfile(map));
         //mdfdata.getDeviceDetails("1.3.6.1.4.1.9.12.3.1.3.847");
-        //loader.run(new File("C:\\Users\\user\\Desktop\\devices"));
+          loader.run(new File("C:\\Users\\user\\Desktop\\devices"));
         //System.out.println(loader.findConfigurationsSet(new File("C:\\Users\\user\\Desktop\\device_packages_ifm\\ifm_device_profiles\\com.cisco.ifm.deviceprofile.cat4k_wireless\\xmpdevice.xml")));
     }
 
