@@ -221,18 +221,20 @@ public class DeviceLoader {
             }
             Xde xde = xdeService.findXde(groupId + "." + artifactId);
             //System.out.println(xde);
-            FeatureXde featureXde = new FeatureXde();
-            featureXde.setFeature(feature);
-            featureXde.setXde(xde);
-            Set<FeatureXde> featureXdeSet = feature.getXdeSet();
-            featureXde.setTypeOfRelation(findRelationType(file, xde));
-            featureXdeSet.add(featureXde);
-            feature.setXdeSet(featureXdeSet);
+            if(xde!=null) {
+                FeatureXde featureXde = new FeatureXde();
+                featureXde.setFeature(feature);
+                featureXde.setXde(xde);
+                Set<FeatureXde> featureXdeSet = feature.getXdeSet();
+                featureXde.setTypeOfRelation(findRelationType(file, xde));
+                featureXdeSet.add(featureXde);
+                feature.setXdeSet(featureXdeSet);
+                featureXdeRepository.save(featureXde);
+            }
             feature.setName(maven.getGroupId() + "." + maven.getArtifactId());
             /*
              * Find Relation type
              * */
-            featureXdeRepository.save(featureXde);
         }
         featureRepository.save(feature);
     }
@@ -243,7 +245,7 @@ public class DeviceLoader {
      * */
     private String findRelationType(File file, Xde xde) {
         try {
-            String newfile = file.getParent() + "\\src\\main\\resources\\META-INF\\MANIFEST.MF";
+            String newfile = file.getParent() + "/src/main/resources/META-INF/MANIFEST.MF";
             //  System.out.println(file.getPath());
             BufferedReader br = new BufferedReader(new FileReader(newfile));
             String st;
@@ -254,7 +256,8 @@ public class DeviceLoader {
                 }
             }
         } catch (Exception e) {
-            System.out.println("File Not Found " + file.getPath());
+            System.out.println(e.getMessage());
+
         }
         return null;
     }
@@ -403,7 +406,7 @@ public class DeviceLoader {
     @Transactional
     public Set<Criteria> findConfigurationsSet(File file) throws IOException, SAXException, ParserConfigurationException {
         try {
-            String newfile = file.getParent() + "\\src\\main\\resources\\.orderedFeatures";
+            String newfile = file.getParent() + "/src/main/resources/.orderedFeatures";
             Document document = parse(new File(newfile));
             NodeList nodeList = document.getElementsByTagName("configuration");
             Node node1 = nodeList.item(0);

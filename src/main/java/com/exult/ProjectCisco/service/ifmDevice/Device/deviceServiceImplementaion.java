@@ -1,6 +1,7 @@
 package com.exult.ProjectCisco.service.ifmDevice.Device;
 
 import com.exult.ProjectCisco.model.Configuration;
+import com.exult.ProjectCisco.model.Criteria;
 import com.exult.ProjectCisco.model.Profile;
 import com.exult.ProjectCisco.repository.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,45 @@ public class deviceServiceImplementaion implements DeviceService {
     @Override
     public List<Profile> getMatchingProfile(HashMap<String, String> map) {
         List<Profile> profiles = profileRepository.findAll();
-        List<Profile> matchProfile =new ArrayList<>();
+        List<Profile> matchProfile = new ArrayList<>();
+        for (Profile profile : profiles) {
+            Map<String, Boolean> stringBooleanMap = new HashMap<>();
+            for (Criteria criteria : profile.getCriteriaSet()) {
+                // LOOP OVER Configurations
+                if(criteria.getOperator().equals("or")){
+                    boolean b=false;
+                    for (Configuration configuration :criteria.getConfigurationSet()) {
+                        switch (configuration.getOperation()){
+                            case "equal":
+                                if(map.get(criteria.getName()).equals(configuration.getValue())){
+                                 b=true;
+                                }
+                                break;
+                            case "lessAndEqual":
+                                if(Integer.valueOf(map.get(criteria.getName()))<= Integer.valueOf(configuration.getValue())){
+                                    b=true;
+                                }
+                                break;
+                            case "greater":
+
+                                if(Integer.valueOf(map.get(criteria.getName())) > Integer.valueOf(configuration.getValue())){
+                                    b=true;
+                                }
+                                break;
+                            case  "greaterAndEqual":
+
+                                if(Integer.valueOf(map.get(criteria.getName()))>= Integer.valueOf(configuration.getValue())){
+                                    b=true;
+                                }
+                                break;
+                        }
+                    }
+                    stringBooleanMap.put(criteria.getName(),b);
+                }else{
+
+                }
+            }
+        }
 //        for (Profile profile : profiles) {
 //            Map<String, Boolean> stringBooleanMap = new HashMap<>();
 //            for (Configuration configuration : profile.getConfigurations()) {
