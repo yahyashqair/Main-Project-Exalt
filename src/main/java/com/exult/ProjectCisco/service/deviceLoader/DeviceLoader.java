@@ -26,32 +26,47 @@ import java.util.*;
 public class DeviceLoader {
 
     @Autowired
+    CriteriaRepository criteriaRepository;
+    @Autowired
     private XdeService xdeService;
-
     @Autowired
     private FeatureService featureService;
-
     @Autowired
     private FeatureXdeRepository featureXdeRepository;
-
     @Autowired
     private FeatureRepository featureRepository;
-
     @Autowired
     private ProfileRepository profileRepository;
-
     @Autowired
     private MavenRepository mavenRepository;
-
 //    @Autowired
 //    private ConfigurationRepository configrationRepository;
-
     // Store all XmpXde and XmpFeature here For Sorting xml and feature to avoid errors
     private ArrayList<File> xdeFiles = new ArrayList<>();
     private ArrayList<File> featureFiles = new ArrayList<>();
     private ArrayList<File> profileFiles = new ArrayList<>();
     // Array for Solve the dependency between profiles
     private HashMap<String, String> profileMap = new HashMap<String, String>();
+
+    public static <T> ArrayList<T> removeDuplicates(ArrayList<T> list) {
+
+        // Create a new LinkedHashSet
+        Set<T> set = new LinkedHashSet<>();
+
+        // Add the elements to set
+        set.addAll(list);
+
+        // Clear the list
+        list.clear();
+
+        // add the elements of set
+        // with no duplicates to the list
+        list.addAll(set);
+
+        // return the list
+        return list;
+    }
+
     /*
      * Helper function for parse the xml pages and convert it into DOM object
      * */
@@ -92,37 +107,17 @@ public class DeviceLoader {
             }
         }
     }
-
-    public static <T> ArrayList<T> removeDuplicates(ArrayList<T> list)
-    {
-
-        // Create a new LinkedHashSet
-        Set<T> set = new LinkedHashSet<>();
-
-        // Add the elements to set
-        set.addAll(list);
-
-        // Clear the list
-        list.clear();
-
-        // add the elements of set
-        // with no duplicates to the list
-        list.addAll(set);
-
-        // return the list
-        return list;
-    }
     /*
      * Function that store Xdes first then store Features then store Profiles
      * */
 
     private void storeInOrder() throws ParserConfigurationException, SAXException, IOException {
         // Remove Dublicate
-        xdeFiles=removeDuplicates(xdeFiles);
-        featureFiles=removeDuplicates(featureFiles);
-        profileFiles=removeDuplicates(profileFiles);
+        xdeFiles = removeDuplicates(xdeFiles);
+        featureFiles = removeDuplicates(featureFiles);
+        profileFiles = removeDuplicates(profileFiles);
 
-        for (File xdeFile: xdeFiles) {
+        for (File xdeFile : xdeFiles) {
             readXde(xdeFile);
         }
         for (int i = 0; i < featureFiles.size(); i++) {
@@ -161,7 +156,7 @@ public class DeviceLoader {
                 maven.setVersion(node.getTextContent());
             }
         }
-        if(mavenRepository.findByArtifactIdAndAndGroupId(maven.getArtifactId(),maven.getGroupId())==null) {
+        if (mavenRepository.findByArtifactIdAndAndGroupId(maven.getArtifactId(), maven.getGroupId()) == null) {
             mavenRepository.save(maven);
             xdeService.insertXde(maven.getGroupId() + "." + maven.getArtifactId(), maven);
         }
@@ -193,8 +188,9 @@ public class DeviceLoader {
             }
         }
 
-        if(mavenRepository.findByArtifactIdAndAndGroupId(maven.getArtifactId(),maven.getGroupId())==null) {
-            mavenRepository.save(maven);}else{
+        if (mavenRepository.findByArtifactIdAndAndGroupId(maven.getArtifactId(), maven.getGroupId()) == null) {
+            mavenRepository.save(maven);
+        } else {
             return;
         }
         feature.setMaven(maven);
@@ -206,7 +202,7 @@ public class DeviceLoader {
         NodeList nList = document.getElementsByTagName("dependency");
         for (int i = 0; i < nList.getLength(); i++) {
             Node node = nList.item(i);
-            System.out.println("namee" + node.getTextContent());
+            // System.out.println("namee" + node.getTextContent());
             NodeList nodeList = node.getChildNodes();
             String groupId = null, artifactId = null;
             /*
@@ -223,8 +219,8 @@ public class DeviceLoader {
                     }
                 }
             }
-            Xde xde = xdeService.findXde(groupId  +"."+ artifactId);
-            System.out.println(xde);
+            Xde xde = xdeService.findXde(groupId + "." + artifactId);
+            //System.out.println(xde);
             FeatureXde featureXde = new FeatureXde();
             featureXde.setFeature(feature);
             featureXde.setXde(xde);
@@ -248,7 +244,7 @@ public class DeviceLoader {
     private String findRelationType(File file, Xde xde) {
         try {
             String newfile = file.getParent() + "\\src\\main\\resources\\META-INF\\MANIFEST.MF";
-            System.out.println(file.getPath());
+            //  System.out.println(file.getPath());
             BufferedReader br = new BufferedReader(new FileReader(newfile));
             String st;
             while ((st = br.readLine()) != null) {
@@ -293,9 +289,9 @@ public class DeviceLoader {
         }
         profile.setName(maven.getGroupId() + "." + maven.getArtifactId());
         profile.setMaven(maven);
-        if(mavenRepository.findByArtifactIdAndAndGroupId(maven.getArtifactId(),maven.getGroupId())==null) {
+        if (mavenRepository.findByArtifactIdAndAndGroupId(maven.getArtifactId(), maven.getGroupId()) == null) {
             mavenRepository.save(maven);
-        }else{
+        } else {
             return;
         }
         profileRepository.save(profile);
@@ -325,9 +321,9 @@ public class DeviceLoader {
                 }
             }
             if (type != null && type.contains("dar")) {
-                profileMap.put(maven.getGroupId() +"."+ maven.getArtifactId(), groupId  +"."+ artifactId);
+                profileMap.put(maven.getGroupId() + "." + maven.getArtifactId(), groupId + "." + artifactId);
             } else {
-                Feature feature = featureService.findFeature(groupId  +"."+ artifactId);
+                Feature feature = featureService.findFeature(groupId + "." + artifactId);
                 if (feature != null) {
                     featureSet.add(feature);
                 } else {
@@ -358,7 +354,7 @@ public class DeviceLoader {
                     }
                 }
             }
-            Feature feature = featureService.findFeature(groupId  +"."+artifactId);
+            Feature feature = featureService.findFeature(groupId + "." + artifactId);
             if (feature != null) {
                 exfeatureSet.add(feature);
             }
@@ -367,7 +363,7 @@ public class DeviceLoader {
         /*
          * Find Configration
          * */
-        profile.setConfigurations(findConfigurationsSet(file));
+        profile.setCriteriaSet(findConfigurationsSet(file));
         /*
          * Save profile ,
          * */
@@ -405,38 +401,77 @@ public class DeviceLoader {
     }
 
     @Transactional
-    public Set<Configuration> findConfigurationsSet(File file) throws IOException, SAXException, ParserConfigurationException {
+    public Set<Criteria> findConfigurationsSet(File file) throws IOException, SAXException, ParserConfigurationException {
         try {
             String newfile = file.getParent() + "\\src\\main\\resources\\.orderedFeatures";
             Document document = parse(new File(newfile));
             NodeList nodeList = document.getElementsByTagName("configuration");
             Node node1 = nodeList.item(0);
             NodeList nList = node1.getChildNodes();
-            Set<Configuration> configurations = new HashSet<>();
+            Set<Criteria> criteriaSet = new HashSet<>();
             for (int i = 0; i < nList.getLength(); i++) {
                 Node node = nList.item(i);
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
                     Element eElement = (Element) node;
                     String name, value;
-                    if (eElement.getNodeName().contains(":")) {
-                        int ind = eElement.getNodeName().indexOf(':') + 1;
-                        name = eElement.getNodeName().substring(ind);
-                    } else {
-                        name = eElement.getNodeName();
+                    name = eElement.getNodeName();
+                    if (name.contains("param")) {
+                        Criteria criteria = new Criteria();
+                        Set<Configuration> configurationSet = new HashSet<>();
+                        criteria.setName(findString(name, "name"));
+                        // Has more than 1 configuration
+                        System.out.println(eElement.getAttributes().getLength());
+                        if (!eElement.getAttribute("param:operator").isEmpty()) {
+                            criteria.setOperater(eElement.getAttribute("param:operator"));
+                            NodeList nList2 = nList.item(i).getChildNodes();
+                            for (int j = 0; j < nList2.getLength(); j++) {
+                                Node node2 = nList.item(j);
+                                Element eElement2 = (Element) node2;
+                                if (node2.getNodeType() == Node.ELEMENT_NODE) {
+                                    Configuration configuration = new Configuration();
+                                    if(!eElement2.getAttribute("param:operation").equals("")) {
+                                        configuration.setOperation(eElement2.getAttribute("param:operation"));
+                                    }else{
+                                        configuration.setOperation("equal");
+                                    }configuration.setValue(node2.getTextContent());
+                                    configurationSet.add(configuration);
+                                }
+                            }
+                        } else {
+                            Configuration configuration = new Configuration();
+                            configuration.setValue(eElement.getTextContent());
+                            if (!eElement.getAttribute("param:operation").equals("")) {
+                                configuration.setOperation(eElement.getAttribute("param:operation"));
+                            }else{
+                                configuration.setOperation("equal");
+                            }
+                            configurationSet.add(configuration);
+                        }
+                        criteria.setConfigurationSet(configurationSet);
+                        criteriaSet.add(criteria);
                     }
-                    value = eElement.getTextContent();
-                    Configuration configuration = new Configuration();
-                    configuration.setName(name);
-                    configuration.setValue(value);
-                    //configrationRepository.save(configuration);
-                    configurations.add(configuration);
                 }
             }
-            return configurations;
+            criteriaRepository.saveAll(criteriaSet);
+            System.out.println(criteriaSet);
+
+            return criteriaSet;
         } catch (Exception e) {
             System.err.println("Error" + e.getMessage());
         }
         return null;
     }
+
+    private String findString(String tagName, String delimiter) {
+        if (delimiter.equals("name")) {
+            if (tagName.contains("param")) {
+                int x = tagName.indexOf(":");
+                return tagName.substring(x+1);
+            }
+        }
+        //return tagName.split(delimiter)[1];
+        return null;
+    }
+
 }
 

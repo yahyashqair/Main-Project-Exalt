@@ -38,13 +38,7 @@ class Profile {
 //    @CollectionTable(
 //            joinColumns=@JoinColumn(name="profile_id")
 //    )
-//    @ManyToMany
-//    @JoinTable(name = "profile_configuration", joinColumns = @JoinColumn(name = "profile_id"), inverseJoinColumns = @JoinColumn(name = "configuration_id"))
-    @ElementCollection
-    @CollectionTable(
-            joinColumns=@JoinColumn(name="profile_id")
-    )
+    @ManyToMany
+    @JoinTable(name = "profile_criteria", joinColumns = @JoinColumn(name = "profile_id"), inverseJoinColumns = @JoinColumn(name = "criteria_id"))
     private Set<Criteria> criteriaSet = new HashSet<Criteria>();
-
-
 }

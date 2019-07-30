@@ -87,7 +87,7 @@ public class FileSystemStorageService implements StorageService {
             }
             zipFile.extractAll(file.getParent()+"/"+filename);
             File file1= new File(file.getParent()+"/"+filename);
-            System.out.println(file1);
+            //System.out.println(file1);
             deviceLoader.run(file1);
             return file1.getPath();
         }

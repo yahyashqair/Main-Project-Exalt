@@ -22,7 +22,7 @@ public class Mdfdata {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance(); DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         String filePath = System.getenv().get("mdfdata");
-        System.out.println(filePath);
+        //System.out.println(filePath);
         Document doc = builder.parse(new File(filePath));
         // Create XPathFactory for creating XPath Object
         XPathFactory xPathFactory = XPathFactory.newInstance();
@@ -42,7 +42,7 @@ public class Mdfdata {
         hashMap.put("productSeries",node.getAttributes().getNamedItem("MDFID").getNodeValue());
         node=node.getParentNode();
         hashMap.put("productFamily",node.getAttributes().getNamedItem("MDFID").getNodeValue());
-        System.out.println(hashMap);
+        //System.out.println(hashMap);
         return hashMap;
     }
 }
