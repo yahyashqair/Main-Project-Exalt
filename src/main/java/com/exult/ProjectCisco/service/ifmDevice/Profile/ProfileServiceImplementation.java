@@ -5,6 +5,7 @@ import com.exult.ProjectCisco.model.FeatureXde;
 import com.exult.ProjectCisco.model.Maven;
 import com.exult.ProjectCisco.model.Profile;
 import com.exult.ProjectCisco.repository.ProfileRepository;
+import com.exult.ProjectCisco.service.ifmDevice.Device.DeviceService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,6 +22,7 @@ public @Setter
 class ProfileServiceImplementation implements ProfileService {
     @Autowired
     private ProfileRepository profileRepository;
+
 
     /*
      * Add

@@ -7,6 +7,7 @@ import com.exult.ProjectCisco.model.FeatureXde;
 import com.exult.ProjectCisco.model.Profile;
 import com.exult.ProjectCisco.model.Xde;
 import com.exult.ProjectCisco.repository.MavenRepository;
+import com.exult.ProjectCisco.service.ifmDevice.Device.DeviceService;
 import com.exult.ProjectCisco.service.ifmDevice.Profile.ProfileService;
 import com.exult.ProjectCisco.service.ifmDevice.maven.MavenService;
 import org.hibernate.annotations.Parent;
@@ -16,10 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 @RestController
@@ -33,9 +31,20 @@ public class ProfileController {
     @Autowired
     private MavenService mavenService;
 
+    @Autowired
+    DeviceService deviceService ;
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Profile getProfile(@PathVariable("id") Long id) {
         return profileService.findById(id);
+    }
+
+    @RequestMapping(value = "/match/", method = RequestMethod.POST)
+    public List<Profile> getMatchingProfiles() {
+        HashMap<String,String> map=new HashMap<String,String>();
+        map.put("productSeries","281716314");
+        map.put("software","IOS");
+        return deviceService.getMatchingProfile(map);
     }
 
 

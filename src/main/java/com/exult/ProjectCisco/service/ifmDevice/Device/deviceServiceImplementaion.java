@@ -25,38 +25,52 @@ public class deviceServiceImplementaion implements DeviceService {
             Map<String, Boolean> stringBooleanMap = new HashMap<>();
             for (Criteria criteria : profile.getCriteriaSet()) {
                 // LOOP OVER Configurations
-                if(criteria.getOperator().equals("or")){
-                    boolean b=false;
-                    for (Configuration configuration :criteria.getConfigurationSet()) {
-                        switch (configuration.getOperation()){
+                if(map.containsKey(criteria.getName())){
+                if (criteria.getOperator().equals("or")) {
+                    boolean b = false;
+                    for (Configuration configuration : criteria.getConfigurationSet()) {
+
+                        switch (configuration.getOperation()) {
                             case "equal":
-                                if(map.get(criteria.getName()).equals(configuration.getValue())){
-                                 b=true;
+                                if (map.get(criteria.getName()).equals(configuration.getValue())) {
+                                    b = true;
                                 }
                                 break;
                             case "lessAndEqual":
-                                if(Integer.valueOf(map.get(criteria.getName()))<= Integer.valueOf(configuration.getValue())){
-                                    b=true;
+                                if (Integer.valueOf(map.get(criteria.getName())) <= Integer.valueOf(configuration.getValue())) {
+                                    b = true;
                                 }
                                 break;
                             case "greater":
-
-                                if(Integer.valueOf(map.get(criteria.getName())) > Integer.valueOf(configuration.getValue())){
-                                    b=true;
+                                if (Integer.valueOf(map.get(criteria.getName())) > Integer.valueOf(configuration.getValue())) {
+                                    b = true;
                                 }
                                 break;
-                            case  "greaterAndEqual":
-
-                                if(Integer.valueOf(map.get(criteria.getName()))>= Integer.valueOf(configuration.getValue())){
-                                    b=true;
+                            case "greaterAndEqual":
+                                if (Integer.valueOf(map.get(criteria.getName())) >= Integer.valueOf(configuration.getValue())) {
+                                    b = true;
                                 }
                                 break;
                         }
                     }
-                    stringBooleanMap.put(criteria.getName(),b);
-                }else{
+                    if(b==true){
+                        stringBooleanMap.put(criteria.getName(), b);
+                    }else{
+                        if(!stringBooleanMap.containsKey(criteria.getName())) {
+                            stringBooleanMap.put(criteria.getName(), b);
+                        }
+                    }
 
+                } else {
+                    // IF AND OPERATOR
                 }
+            }else{
+                    stringBooleanMap.put(criteria.getName(),false);
+                    break;
+                }
+            }
+            if (stringBooleanMap.size()>0&&!stringBooleanMap.values().contains(false)){
+                matchProfile.add(profile);
             }
         }
 //        for (Profile profile : profiles) {
