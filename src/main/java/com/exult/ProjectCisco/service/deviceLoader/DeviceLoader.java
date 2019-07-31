@@ -423,19 +423,22 @@ public class DeviceLoader {
                         Set<Configuration> configurationSet = new HashSet<>();
                         criteria.setName(findString(name, "name"));
                         // Has more than 1 configuration
-                        if (!eElement.getAttribute("param:operator").isEmpty()) {
+                        if (!eElement.getAttribute("param:operator").equals("")) {
                             criteria.setOperator(eElement.getAttribute("param:operator"));
-                            NodeList nList2 = nList.item(i).getChildNodes();
+                            System.err.println("Enter the operator");
+                            System.err.println(eElement.getAttribute("param:operator"));
+                            NodeList nList2 = node.getChildNodes();
                             for (int j = 0; j < nList2.getLength(); j++) {
-                                Node node2 = nList.item(j);
-                                Element eElement2 = (Element) node2;
+                                Node node2 = nList2.item(j);
                                 if (node2.getNodeType() == Node.ELEMENT_NODE) {
+                                    Element eElement2 = (Element) node2;
                                     Configuration configuration = new Configuration();
                                     if(!eElement2.getAttribute("param:operation").equals("")) {
                                         configuration.setOperation(eElement2.getAttribute("param:operation"));
                                     }else{
                                         configuration.setOperation("equal");
-                                    }configuration.setValue(node2.getTextContent());
+                                    }
+                                    configuration.setValue(node2.getTextContent());
                                     configurationSet.add(configuration);
                                 }
                             }
@@ -456,7 +459,6 @@ public class DeviceLoader {
                 }
             }
             criteriaRepository.saveAll(criteriaSet);
-            System.out.println(criteriaSet);
             return criteriaSet;
         } catch (Exception e) {
             System.err.println("Error" + e.getMessage());

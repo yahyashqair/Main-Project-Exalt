@@ -53,7 +53,7 @@ public class deviceServiceImplementaion implements DeviceService {
                                 break;
                         }
                     }
-                    if(b==true){
+                    if(b){
                         stringBooleanMap.put(criteria.getName(), b);
                     }else{
                         if(!stringBooleanMap.containsKey(criteria.getName())) {
@@ -63,6 +63,39 @@ public class deviceServiceImplementaion implements DeviceService {
 
                 } else {
                     // IF AND OPERATOR
+                    boolean b = true;
+                    for (Configuration configuration : criteria.getConfigurationSet()) {
+
+                        switch (configuration.getOperation()) {
+                            case "equal":
+                                if (!map.get(criteria.getName()).equals(configuration.getValue())) {
+                                    b = false;
+                                }
+                                break;
+                            case "lessAndEqual":
+                                if (Integer.valueOf(map.get(criteria.getName())) > Integer.valueOf(configuration.getValue())) {
+                                    b = false;
+                                }
+                                break;
+                            case "greater":
+                                if (Integer.valueOf(map.get(criteria.getName())) <= Integer.valueOf(configuration.getValue())) {
+                                    b = false;
+                                }
+                                break;
+                            case "greaterAndEqual":
+                                if (Integer.valueOf(map.get(criteria.getName())) >= Integer.valueOf(configuration.getValue())) {
+                                    b = true;
+                                }
+                                break;
+                        }
+                    }
+                    if(!b){
+                        stringBooleanMap.put(criteria.getName(), b);
+                    }else{
+                        if(!stringBooleanMap.containsKey(criteria.getName())) {
+                            stringBooleanMap.put(criteria.getName(), b);
+                        }
+                    }
                 }
             }else{
                     stringBooleanMap.put(criteria.getName(),false);
@@ -73,37 +106,17 @@ public class deviceServiceImplementaion implements DeviceService {
                 matchProfile.add(profile);
             }
         }
-//        for (Profile profile : profiles) {
-//            Map<String, Boolean> stringBooleanMap = new HashMap<>();
-//            for (Configuration configuration : profile.getConfigurations()) {
-//                if (map.containsKey(configuration.getName())) {
-//                    if (map.get(configuration.getName()).equals(configuration.getValue())) {
-//                        stringBooleanMap.put(configuration.getName(), true);
-//                    } else {
-//                        if (stringBooleanMap.containsKey(configuration.getName()) && stringBooleanMap.get(configuration.getName())) {
-//                            ;
-//                        }else{
-//                            stringBooleanMap.put(configuration.getName(),false);
-//                        }
-//                    }
-//                } else {
-//                    break;
-//                }
-//            }
-//            if(!stringBooleanMap.values().isEmpty()&&!stringBooleanMap.values().contains(false)){
-//                matchProfile.add(profile);
-//            }
-//        }
-//        if(matchProfile.isEmpty()){
-//            return matchProfile;
-//        }
-//        for (int i = 0 ; i < matchProfile.size();i++){
-//            Profile p = matchProfile.get(i).getParent();
-//            while(p!=null){
-//                matchProfile.remove(p);
-//                p=p.getParent();
-//            }
-//        }
+
+        if(matchProfile.isEmpty()){
+            return matchProfile;
+        }
+        for (int i = 0 ; i < matchProfile.size();i++){
+            Profile p = matchProfile.get(i).getParent();
+            while(p!=null){
+                matchProfile.remove(p);
+                p=p.getParent();
+            }
+        }
         return matchProfile;
     }
 }
