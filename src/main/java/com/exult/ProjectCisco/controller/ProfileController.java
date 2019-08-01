@@ -1,5 +1,6 @@
 package com.exult.ProjectCisco.controller;
 
+import com.exult.ProjectCisco.dto.DeviceDto;
 import com.exult.ProjectCisco.dto.ProfileDto;
 import com.exult.ProjectCisco.dto.ProfileRelation;
 import com.exult.ProjectCisco.model.Feature;
@@ -40,10 +41,8 @@ public class ProfileController {
     }
 
     @RequestMapping(value = "/match/", method = RequestMethod.POST)
-    public List<Profile> getMatchingProfiles() {
-        HashMap<String,String> map=new HashMap<String,String>();
-        map.put("productSeries","281716314");
-        map.put("software","IOS");
+    public List<Profile> getMatchingProfiles(@RequestBody HashMap<String,String> map) {
+        System.out.println(map);
         return deviceService.getMatchingProfile(map);
     }
 

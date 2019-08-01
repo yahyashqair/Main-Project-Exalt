@@ -30,6 +30,7 @@ public class DeviceLoaderController {
     @Autowired
     private StorageService storageService;
 
+
     @PostMapping("/zip")
     @ResponseBody
     public FileResponse uploadFile(@RequestParam("file") MultipartFile file) throws ParserConfigurationException, ZipException, SAXException, IOException {

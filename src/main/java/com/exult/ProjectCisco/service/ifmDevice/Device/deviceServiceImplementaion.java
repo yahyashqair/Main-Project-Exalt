@@ -29,7 +29,7 @@ public class deviceServiceImplementaion implements DeviceService {
                 if (criteria.getOperator().equals("or")) {
                     boolean b = false;
                     for (Configuration configuration : criteria.getConfigurationSet()) {
-
+                       try{
                         switch (configuration.getOperation()) {
                             case "equal":
                                 if (map.get(criteria.getName()).equals(configuration.getValue())) {
@@ -47,11 +47,13 @@ public class deviceServiceImplementaion implements DeviceService {
                                 }
                                 break;
                             case "greaterAndEqual":
-                                if (Integer.valueOf(map.get(criteria.getName())) >= Integer.valueOf(configuration.getValue())) {
+                                if (Double.valueOf(map.get(criteria.getName())) >= Double.valueOf(configuration.getValue())) {
                                     b = true;
                                 }
                                 break;
-                        }
+                        }} catch (Exception e) {
+                           System.out.println(e.getMessage());
+                       }
                     }
                     if(b){
                         stringBooleanMap.put(criteria.getName(), b);
