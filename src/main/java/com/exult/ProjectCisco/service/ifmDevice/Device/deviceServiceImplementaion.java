@@ -1,5 +1,7 @@
 package com.exult.ProjectCisco.service.ifmDevice.Device;
 
+import com.cisco.nm.expression.function.FunctionException;
+import com.epnm.bootstrap.DeviceCredentials;
 import com.exult.ProjectCisco.model.Configuration;
 import com.exult.ProjectCisco.model.Criteria;
 import com.exult.ProjectCisco.model.Profile;
@@ -14,11 +16,16 @@ import java.util.Map;
 
 @Service
 public class deviceServiceImplementaion implements DeviceService {
+
     @Autowired
     ProfileRepository profileRepository;
 
+    @Autowired
+    DeviceCredentials deviceCredentials;
+
     @Override
-    public List<Profile> getMatchingProfile(HashMap<String, String> map) {
+    public List<Profile> getMatchingProfile(HashMap<String, String> map) throws FunctionException {
+        deviceCredentials.readDeviceCredentials(map);
         List<Profile> profiles = profileRepository.findAll();
         List<Profile> matchProfile = new ArrayList<>();
         for (Profile profile : profiles) {

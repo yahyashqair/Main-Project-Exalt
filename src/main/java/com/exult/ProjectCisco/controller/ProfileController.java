@@ -1,5 +1,6 @@
 package com.exult.ProjectCisco.controller;
 
+import com.cisco.nm.expression.function.FunctionException;
 import com.exult.ProjectCisco.dto.DeviceDto;
 import com.exult.ProjectCisco.dto.ProfileDto;
 import com.exult.ProjectCisco.dto.ProfileRelation;
@@ -41,8 +42,7 @@ public class ProfileController {
     }
 
     @RequestMapping(value = "/match/", method = RequestMethod.POST)
-    public List<Profile> getMatchingProfiles(@RequestBody HashMap<String,String> map) {
-        System.out.println(map);
+    public List<Profile> getMatchingProfiles(@RequestBody HashMap<String,String> map) throws FunctionException {
         return deviceService.getMatchingProfile(map);
     }
 
