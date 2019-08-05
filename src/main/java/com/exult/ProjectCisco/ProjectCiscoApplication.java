@@ -39,7 +39,7 @@ public class ProjectCiscoApplication implements CommandLineRunner {
     private ProfileService profileService;
 
     @Autowired
-    DeviceCredentials deviceCredentials;
+    private DeviceCredentials deviceCredentials;
     public static void main(String[] args) {
         SpringApplication.run(ProjectCiscoApplication.class, args);
     }
@@ -62,8 +62,8 @@ public class ProjectCiscoApplication implements CommandLineRunner {
         map.put("SNMP_PORT","161");
         deviceCredentials.readDeviceCredentials(map);
         System.out.println(map);
-        System.err.println("Result");
-        System.out.println(deviceService.getMatchingProfile(map));
+//        System.err.println("Result");
+//        System.out.println(deviceService.getMatchingProfile(map));
         //loader.run(new File("C:\\Users\\user\\Desktop\\devices\\device_packages_ifm"));
         //System.out.println(loader.findConfigurationsSet(new File("C:\\Users\\user\\Desktop\\device_packages_ifm\\ifm_device_profiles\\com.cisco.ifm.deviceprofile.cat4k_wireless\\xmpdevice.xml")));
     }

@@ -34,7 +34,7 @@ public class ProfileController {
     private MavenService mavenService;
 
     @Autowired
-    DeviceService deviceService ;
+    private DeviceService deviceService ;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Profile getProfile(@PathVariable("id") Long id) {
@@ -43,7 +43,7 @@ public class ProfileController {
 
     @RequestMapping(value = "/match/", method = RequestMethod.POST)
     public List<Profile> getMatchingProfiles(@RequestBody HashMap<String,String> map) throws FunctionException {
-        return deviceService.getMatchingProfile(map);
+         return deviceService.getMatchingProfile(map);
     }
 
 

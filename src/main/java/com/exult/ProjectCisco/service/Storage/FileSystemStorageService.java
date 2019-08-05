@@ -26,10 +26,10 @@ public class FileSystemStorageService implements StorageService {
     private final Path rootLocation;
 
     @Autowired
-    StorageService storageService;
+    private StorageService storageService;
 
     @Autowired
-    DeviceLoader deviceLoader;
+    private DeviceLoader deviceLoader;
 
     @Autowired
     public FileSystemStorageService(StorageProperties properties) {

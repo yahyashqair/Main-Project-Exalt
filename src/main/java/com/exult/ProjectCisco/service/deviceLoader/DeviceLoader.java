@@ -26,7 +26,7 @@ import java.util.*;
 public class DeviceLoader {
 
     @Autowired
-    CriteriaRepository criteriaRepository;
+    private CriteriaRepository criteriaRepository;
     @Autowired
     private XdeService xdeService;
     @Autowired
