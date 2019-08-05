@@ -4,8 +4,12 @@ import com.cisco.nm.expression.function.FunctionException;
 import com.epnm.bootstrap.DeviceCredentials;
 import com.exult.ProjectCisco.model.Configuration;
 import com.exult.ProjectCisco.model.Criteria;
+import com.exult.ProjectCisco.model.Device;
 import com.exult.ProjectCisco.model.Profile;
+import com.exult.ProjectCisco.repository.DeviceRepository;
 import com.exult.ProjectCisco.repository.ProfileRepository;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +25,8 @@ public class deviceServiceImplementaion implements DeviceService {
     private ProfileRepository profileRepository;
     @Autowired
     private DeviceCredentials deviceCredentials;
+    @Autowired
+    private DeviceRepository deviceRepository;
 
     private boolean testOrCondition(Criteria criteria, Map<String, String> map) {
         boolean b = false;
@@ -87,7 +93,7 @@ public class deviceServiceImplementaion implements DeviceService {
     }
 
     @Override
-    public List<Profile> getMatchingProfile(HashMap<String, String> map) throws FunctionException {
+    public List<Profile> getMatchingProfile(Map<String, String> map) throws FunctionException {
         deviceCredentials.readDeviceCredentials(map);
         List<Profile> profiles = profileRepository.findAll();
         List<Profile> matchProfile = new ArrayList<>();
@@ -141,5 +147,40 @@ public class deviceServiceImplementaion implements DeviceService {
             }
         }
         return matchProfile;
+    }
+
+    @Override
+    public Device insertDevice(Device device) {
+        try {
+            device.setProfileSet(getMatchingProfile(deviceToMap(device)));
+        } catch (FunctionException e) {
+            e.printStackTrace();
+        }
+        deviceRepository.save(device);
+        return device;
+    }
+
+    @Override
+    public List<Device> getAllDevices() {
+        return deviceRepository.findAll();
+    }
+
+    @Override
+    public Device getDevice(Long id) {
+        return deviceRepository.findById(id).get();
+    }
+
+    public Map<String, String> deviceToMap(Device device) {
+        Map<String,String> map = new HashMap<>();
+        map.put("CLI_ADDRESS",device.getCli_ADDRESS());
+        map.put("CLI_LOGIN_USERNAME",device.getCli_LOGIN_USERNAME());
+        map.put("CLI_LOGIN_PASSWORD",device.getCli_LOGIN_PASSWORD());
+        map.put("CLI_PORT",device.getCli_PORT());
+        map.put("CLI_TRANSPORT",device.getCli_TRANSPORT());
+        map.put("SNMP_READ_CS",device.getSnmp_READ_CS());
+        map.put("CLI_ENABLE_PASSWORD",device.getCli_enable_password());
+        map.put("SNMP_PORT",device.getSnmp_PORT());
+        System.out.println(map);
+        return map;
     }
 }

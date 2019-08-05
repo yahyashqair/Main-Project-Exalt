@@ -24,7 +24,6 @@ public class FeatureController {
     @Autowired
     private FeatureService featureService;
 
-
     @Autowired
     private MavenService mavenService;
 
@@ -37,8 +36,6 @@ public class FeatureController {
     public List<Feature> getFeatures() {
         return featureService.getAllFeatures();
     }
-
-
 
     @RequestMapping(value = "/all/", method = RequestMethod.GET)
     Page<Feature> getFeaturePage(@RequestParam(defaultValue = "pagenumber") int pagenumber, @RequestParam(defaultValue = "size") int size) {
