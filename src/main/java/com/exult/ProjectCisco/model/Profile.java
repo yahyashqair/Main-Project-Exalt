@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,6 +15,9 @@ class Profile {
     @Id
     private Long id;
     private String name;
+
+    @Column(name = "local_date_time", columnDefinition = "TIMESTAMP")
+    private LocalDateTime localDateTime;
 
     @ManyToMany(targetEntity = Feature.class)
     private Set<Feature> features = new HashSet<Feature>();
