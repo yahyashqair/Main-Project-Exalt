@@ -41,13 +41,13 @@ class Device {
     @JsonProperty("CLI_TRANSPORT")
     private String cliTransport;
 
-    @JsonProperty("cli_enable_password")
+    @JsonProperty("CLI_ENABLE_PASSWORD")
     private String cliEnablePassword;
 
-    @JsonProperty("snmp_READ_CS")
+    @JsonProperty("SNMP_READ_CS")
     private String snmpReadCs;
 
-    @JsonProperty("snmpPort")
+    @JsonProperty("SNMP_PORT")
     private String snmpPort;
 
     @Column(name = "local_date_time", columnDefinition = "TIMESTAMP")

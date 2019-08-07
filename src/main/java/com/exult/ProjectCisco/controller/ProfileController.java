@@ -41,10 +41,10 @@ public class ProfileController {
         return profileService.findById(id);
     }
 
-    @RequestMapping(value = "/match/", method = RequestMethod.POST)
-    public List<Profile> getMatchingProfiles(@RequestBody HashMap<String,String> map) throws FunctionException {
-         return deviceService.getMatchingProfile(map);
-    }
+//    @RequestMapping(value = "/match/", method = RequestMethod.POST)
+//    public List<Profile> getMatchingProfiles(@RequestBody HashMap<String,String> map) throws FunctionException {
+//         return deviceService.getMatchingProfile(map);
+//    }
 
 
     @RequestMapping(value = "/parents/{id}", method = RequestMethod.GET)

@@ -8,9 +8,11 @@ import com.exult.ProjectCisco.model.Device;
 import com.exult.ProjectCisco.model.Profile;
 import com.exult.ProjectCisco.repository.DeviceRepository;
 import com.exult.ProjectCisco.repository.ProfileRepository;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -153,6 +155,7 @@ public class deviceServiceImplementaion implements DeviceService {
         return device ;
     }
 
+
     @Override
     public Device insertDevice(Device device) throws FunctionException {
         deviceToMap(device);
@@ -168,12 +171,71 @@ public class deviceServiceImplementaion implements DeviceService {
 
     @Override
     public List<Device> getAllDevices() {
+        for(Device device : deviceRepository.findAll()){
+            isUpdated(device);
+        }
         return deviceRepository.findAll();
     }
 
     @Override
     public Device getDevice(Long id) {
-        return deviceRepository.findById(id).get();
+        return isUpdated(deviceRepository.findById(id).get());
+    }
+
+    @Override
+    public Device isMatch(Profile profile, Device device) {
+        Map map = device.getConfigurations();
+        Map<String, Boolean> stringBooleanMap = new HashMap<>();
+        // Loop over all criteria
+        for (Criteria criteria : profile.getCriteriaSet()) {
+            // if Device has this criteria
+            if (map.containsKey(criteria.getName())) {
+                // Or operator or And operator
+                if (criteria.getOperator().equals("or")) {
+                    boolean b = false;
+                    b = testOrCondition(criteria, map);
+                    if (b) {
+                        stringBooleanMap.put(criteria.getName(), b);
+                    } else {
+                        if (!stringBooleanMap.containsKey(criteria.getName())) {
+                            stringBooleanMap.put(criteria.getName(), b);
+                        }
+                    }
+                } else {
+                    // IF AND OPERATOR
+                    boolean b = testAndCondition(criteria, map);
+                    if (!b) {
+                        stringBooleanMap.put(criteria.getName(), b);
+                    } else {
+                        if (!stringBooleanMap.containsKey(criteria.getName())) {
+                            stringBooleanMap.put(criteria.getName(), b);
+                        }
+                    }
+                }
+            } else {
+                stringBooleanMap.put(criteria.getName(), false);
+                break;
+            }
+        }
+        if (!stringBooleanMap.values().contains(false)) {
+            device.getProfileSet().add(profile);
+        }else{
+            device.getProfileSet().remove(profile);
+        }
+        return device;
+    }
+
+    @Override
+    @Transactional
+    public Device isUpdated(Device device) {
+        // loop over all profiles related to Device ( device )
+        for(Profile profile:device.getProfileSet()){
+            if(profile.getLocalDateTime().isAfter(device.getLocalDateTime())){
+                isMatch(profile,device);
+            }
+        }
+        deviceRepository.save(device);
+        return device;
     }
 
     public void deviceToMap(Device device) {
@@ -188,5 +250,4 @@ public class deviceServiceImplementaion implements DeviceService {
         map.put("SNMP_PORT",device.getSnmpPort());
         System.out.println(map);
     }
-
 }
