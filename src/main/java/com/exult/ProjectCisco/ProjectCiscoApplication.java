@@ -57,30 +57,29 @@ public class ProjectCiscoApplication implements CommandLineRunner {
 //        map.put("software","IOS");
 //        System.out.println(deviceService.getMatchingProfile(map));
         // mdfdata.getDeviceDetails("1.3.6.1.4.1.9.1.924");
-        map.put("CLI_ADDRESS", "10.63.10.206");
-        map.put("CLI_LOGIN_USERNAME", "lab");
-        map.put("CLI_LOGIN_PASSWORD", "lab");
-        map.put("CLI_PORT", "23");
-        map.put("CLI_TRANSPORT", "telnet");
-        map.put("SNMP_READ_CS", "public");
-        map.put("CLI_ENABLE_PASSWORD", "lab");
-        map.put("SNMP_PORT", "161");
-        deviceCredentials.readDeviceCredentials(map);
-        System.out.println(map);
-        Device device = new Device();
-        Class<Device> deviceClass = Device.class;
-        Field[] fields = deviceClass.getDeclaredFields();
-        for (Field field : fields) {
-            JsonProperty annotation = field.getAnnotation(com.fasterxml.jackson.annotation.JsonProperty.class);
-            if (annotation != null) {
-                String key=annotation.value();
-                String fieldName=field.getName();
-                String methodName="get"+Character.toUpperCase(fieldName.charAt(0))+fieldName.substring(1);
-                Method method =deviceClass.getMethod(methodName);
-                Object value=method.invoke(device);
-
-            }
-        }
+//        map.put("CLI_ADDRESS", "10.63.10.206");
+//        map.put("CLI_LOGIN_USERNAME", "lab");
+//        map.put("CLI_LOGIN_PASSWORD", "lab");
+//        map.put("CLI_PORT", "23");
+//        map.put("CLI_TRANSPORT", "telnet");
+//        map.put("SNMP_READ_CS", "public");
+//        map.put("CLI_ENABLE_PASSWORD", "lab");
+//        map.put("SNMP_PORT", "161");
+//        deviceCredentials.readDeviceCredentials(map);
+//        System.out.println(map);
+//        Device device = new Device();
+//        Class<Device> deviceClass = Device.class;
+//        Field[] fields = deviceClass.getDeclaredFields();
+//        for (Field field : fields) {
+//            JsonProperty annotation = field.getAnnotation(com.fasterxml.jackson.annotation.JsonProperty.class);
+//            if (annotation != null) {
+//                String key=annotation.value();
+//                String fieldName=field.getName();
+//                String methodName="get"+Character.toUpperCase(fieldName.charAt(0))+fieldName.substring(1);
+//                Method method =deviceClass.getMethod(methodName);
+//                Object value=method.invoke(device);
+//            }
+//        }
 
 //        System.err.println("Result");
 //        System.out.println(deviceService.getMatchingProfile(map));

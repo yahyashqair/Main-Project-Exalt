@@ -13,4 +13,5 @@ public interface DeviceService {
     Device getDevice(Long id);
     Device isMatch(Profile profile , Device device);
     Device isUpdated(Device device);
+    Device syncDevice(Device device) throws FunctionException;
 }

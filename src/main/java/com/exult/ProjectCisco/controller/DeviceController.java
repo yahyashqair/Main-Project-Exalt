@@ -18,6 +18,11 @@ public class DeviceController {
     @Autowired
     DeviceService deviceService;
 
+    @RequestMapping(value = "/sync/{id}", method = RequestMethod.GET)
+    public Device sync(@PathVariable("id") Long id ) throws FunctionException {
+        return deviceService.syncDevice(deviceService.getDevice(id));
+    }
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public List<Device> getAllDevices() {
         return deviceService.getAllDevices();

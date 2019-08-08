@@ -8,6 +8,7 @@ import com.exult.ProjectCisco.model.Device;
 import com.exult.ProjectCisco.model.Profile;
 import com.exult.ProjectCisco.repository.DeviceRepository;
 import com.exult.ProjectCisco.repository.ProfileRepository;
+import com.exult.ProjectCisco.service.deviceLoader.Mdfdata;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,8 @@ public class deviceServiceImplementaion implements DeviceService {
     private DeviceCredentials deviceCredentials;
     @Autowired
     private DeviceRepository deviceRepository;
+    @Autowired
+    private Mdfdata mdfdata;
 
 
     private boolean testOrCondition(Criteria criteria, Map<String, String> map) {
@@ -66,7 +69,7 @@ public class deviceServiceImplementaion implements DeviceService {
 
         boolean b = true;
         for (Configuration configuration : criteria.getConfigurationSet()) {
-
+            try{
             switch (configuration.getOperation()) {
                 case "equal":
                     if (!map.get(criteria.getName()).equals(configuration.getValue())) {
@@ -88,6 +91,8 @@ public class deviceServiceImplementaion implements DeviceService {
                         b = true;
                     }
                     break;
+            }}catch (Exception e){
+                System.out.println(e.getMessage());
             }
         }
         return b;
@@ -161,8 +166,10 @@ public class deviceServiceImplementaion implements DeviceService {
         deviceToMap(device);
         deviceCredentials.readDeviceCredentials(device.getConfigurations());
         try {
+            device.getConfigurations().putAll(mdfdata.getDeviceDetails(device.getConfigurations().get("sysObjectId")));
+            System.out.println(device.getConfigurations());
             getMatchingProfile(device);
-        } catch (FunctionException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         deviceRepository.save(device);
@@ -236,6 +243,11 @@ public class deviceServiceImplementaion implements DeviceService {
         }
         deviceRepository.save(device);
         return device;
+    }
+
+    @Override
+    public Device syncDevice(Device device) throws FunctionException {
+        return insertDevice(device);
     }
 
     public void deviceToMap(Device device) {
