@@ -13,7 +13,9 @@ public class Criteria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id ;
+    @Column(name="name")
     private String name;
+    @Column(name="operator")
     private String operator;
     @ElementCollection
     @CollectionTable(
