@@ -36,17 +36,14 @@ class Device {
 
     @JsonProperty("CLI_LOGIN_PASSWORD")
     @Column(name="CLI_LOGIN_PASSWORD")
-
     private String cliLoginPassword;
 
     @JsonProperty("CLI_PORT")
     @Column(name="CLI_PORT")
-
     private String cliPort;
 
     @JsonProperty("CLI_TRANSPORT")
     @Column(name="CLI_TRANSPORT")
-
     private String cliTransport;
 
     @JsonProperty("CLI_ENABLE_PASSWORD")
@@ -63,6 +60,10 @@ class Device {
 
     @Column(name = "local_date_time", columnDefinition = "TIMESTAMP")
     private LocalDateTime localDateTime;
+
+    @JsonProperty("name")
+    @Column(name="name")
+    private String name;
 
     @JsonProperty(access = Access.READ_ONLY)
     @ManyToMany
