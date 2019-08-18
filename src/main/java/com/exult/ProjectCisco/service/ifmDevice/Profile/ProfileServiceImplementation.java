@@ -20,9 +20,9 @@ import java.util.Set;
 @Service
 public @Setter
 class ProfileServiceImplementation implements ProfileService {
+
     @Autowired
     private ProfileRepository profileRepository;
-
 
     /*
      * Add

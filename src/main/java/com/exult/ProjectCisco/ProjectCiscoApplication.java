@@ -9,6 +9,7 @@ import com.exult.ProjectCisco.service.deviceLoader.Mdfdata;
 import com.exult.ProjectCisco.service.ifmDevice.Device.DeviceService;
 import com.exult.ProjectCisco.service.ifmDevice.Profile.ProfileService;
 import com.exult.ProjectCisco.service.ifmDevice.Xde.XdeService;
+import com.exult.ProjectCisco.service.server.ServerService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -41,6 +42,9 @@ public class ProjectCiscoApplication implements CommandLineRunner {
     private Mdfdata mdfdata;
     @Autowired
     private ProfileService profileService;
+
+    @Autowired
+    private ServerService serverService;
 
     @Autowired
     private DeviceCredentials deviceCredentials;
@@ -85,6 +89,8 @@ public class ProjectCiscoApplication implements CommandLineRunner {
 //        System.out.println(deviceService.getMatchingProfile(map));
         //loader.run(new File("C:\\Users\\user\\Desktop\\devices\\device_packages_ifm"));
         //System.out.println(loader.findConfigurationsSet(new File("C:\\Users\\user\\Desktop\\device_packages_ifm\\ifm_device_profiles\\com.cisco.ifm.deviceprofile.cat4k_wireless\\xmpdevice.xml")));
+        serverService.zipFile("root","172.20.68.7","Karmi123");
+
     }
 
 }
