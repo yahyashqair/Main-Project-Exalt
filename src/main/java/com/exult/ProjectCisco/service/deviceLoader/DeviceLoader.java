@@ -45,6 +45,11 @@ public class DeviceLoader {
     private ArrayList<File> xdeFiles = new ArrayList<>();
     private ArrayList<File> featureFiles = new ArrayList<>();
     private ArrayList<File> profileFiles = new ArrayList<>();
+
+    private ArrayList<File> zipXdes= new ArrayList<>();
+    private ArrayList<File> zipFeatures= new ArrayList<>();
+    private ArrayList<File> zipProfiles = new ArrayList<>();
+
     // Array for Solve the dependency between profiles
     private HashMap<String, String> profileMap = new HashMap<String, String>();
 
@@ -83,8 +88,8 @@ public class DeviceLoader {
      * */
     public void run(File folder) throws IOException, ParserConfigurationException, SAXException {
         // File folder = new File("C:\\Users\\user\\Desktop\\test2");
-        listAllFiles(folder);
-        storeInOrder();
+            listAllFiles(folder);
+            storeInOrder();
     }
 
     // Recurrence function that open all folders and explore files
@@ -107,6 +112,26 @@ public class DeviceLoader {
             }
         }
     }
+    private void listServerFiles(File folder) throws IOException, ParserConfigurationException, SAXException {
+        File[] fileNames = folder.listFiles();
+        if (fileNames != null) {
+            for (File file : fileNames) {
+                // if directory call the same method again
+                if (file.isDirectory()) {
+                    listAllFiles(file);
+                } else {
+                    if (file.getName().contains("xar")) {
+                        zipXdes.add(file);
+                    } else if (file.getName().equals("feature")) {
+                        zipFeatures.add(file);
+                    } else if (file.getName().equals("dar")) {
+                        zipProfiles.add(file);
+                    }
+                }
+            }
+        }
+    }
+
     /*
      * Function that store Xdes first then store Features then store Profiles
      * */
