@@ -89,9 +89,8 @@ public class DeviceLoader {
     public void run(File folder) throws IOException, ParserConfigurationException, SAXException {
         // File folder = new File("C:\\Users\\user\\Desktop\\test2");
             listAllFiles(folder);
-            storeInOrder();
+            storeInOrder(true);
     }
-
     // Recurrence function that open all folders and explore files
     private void listAllFiles(File folder) throws IOException, ParserConfigurationException, SAXException {
         File[] fileNames = folder.listFiles();
@@ -112,6 +111,7 @@ public class DeviceLoader {
             }
         }
     }
+
     private void listServerFiles(File folder) throws IOException, ParserConfigurationException, SAXException {
         File[] fileNames = folder.listFiles();
         if (fileNames != null) {
@@ -131,12 +131,10 @@ public class DeviceLoader {
             }
         }
     }
-
     /*
      * Function that store Xdes first then store Features then store Profiles
      * */
-
-    private void storeInOrder() throws ParserConfigurationException, SAXException, IOException {
+    private void storeInOrder(boolean isLocal) throws ParserConfigurationException, SAXException, IOException {
         // Remove Dublicate
         xdeFiles = removeDuplicates(xdeFiles);
         featureFiles = removeDuplicates(featureFiles);
@@ -146,10 +144,10 @@ public class DeviceLoader {
             readXde(xdeFile);
         }
         for (int i = 0; i < featureFiles.size(); i++) {
-            readFeature(featureFiles.get(i));
+            readFeature(featureFiles.get(i),isLocal);
         }
         for (int i = 0; i < profileFiles.size(); i++) {
-            readProfile(profileFiles.get(i));
+            readProfile(profileFiles.get(i),isLocal);
         }
         /*
          * Solve profile Dependency !!
@@ -192,7 +190,7 @@ public class DeviceLoader {
      * Helper Function findRelationType
      * */
     @Transactional
-    public void readFeature(File file) throws IOException, SAXException, ParserConfigurationException {
+    public void readFeature(File file,Boolean local) throws IOException, SAXException, ParserConfigurationException {
         Document document = parse(file);
         Element element = document.getDocumentElement();
         Feature feature = new Feature();
@@ -251,7 +249,12 @@ public class DeviceLoader {
                 featureXde.setFeature(feature);
                 featureXde.setXde(xde);
                 Set<FeatureXde> featureXdeSet = feature.getXdeSet();
-                String newfile = file.getParent() + "/src/main/resources/META-INF/MANIFEST.MF";
+                String newfile = "";
+                if(local) {
+                     newfile = file.getParent() + "/src/main/resources/META-INF/MANIFEST.MF";
+                }else{
+
+                }
                 featureXde.setTypeOfRelation(findRelationType(newfile, xde));
                 featureXdeSet.add(featureXde);
                 feature.setXdeSet(featureXdeSet);
@@ -293,7 +296,7 @@ public class DeviceLoader {
      * Helper Function solveProfileDependency
      * */
     @Transactional
-    public void readProfile(File file) throws IOException, SAXException, ParserConfigurationException {
+    public void readProfile(File file,Boolean local) throws IOException, SAXException, ParserConfigurationException {
         Document document = parse(file);
         Element element = document.getDocumentElement();
         Profile profile = new Profile();
@@ -391,7 +394,13 @@ public class DeviceLoader {
         /*
          * Find Configration
          * */
-        profile.setCriteriaSet(findConfigurationsSet(file));
+        String newfile="";
+        if(local) {
+            newfile = file.getParent() + "/src/main/resources/.orderedFeatures";
+        }else{
+
+        }
+        profile.setCriteriaSet(findConfigurationsSet(newfile));
         /*
          * Save profile ,
          * */
@@ -429,9 +438,8 @@ public class DeviceLoader {
     }
 
     @Transactional
-    public Set<Criteria> findConfigurationsSet(File file) throws IOException, SAXException, ParserConfigurationException {
+    public Set<Criteria> findConfigurationsSet(String newfile) throws IOException, SAXException, ParserConfigurationException {
         try {
-            String newfile = file.getParent() + "/src/main/resources/.orderedFeatures";
             Document document = parse(new File(newfile));
             NodeList nodeList = document.getElementsByTagName("configuration");
             Node node1 = nodeList.item(0);
