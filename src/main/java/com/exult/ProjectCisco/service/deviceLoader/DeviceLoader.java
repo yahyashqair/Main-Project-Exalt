@@ -251,7 +251,8 @@ public class DeviceLoader {
                 featureXde.setFeature(feature);
                 featureXde.setXde(xde);
                 Set<FeatureXde> featureXdeSet = feature.getXdeSet();
-                featureXde.setTypeOfRelation(findRelationType(file, xde));
+                String newfile = file.getParent() + "/src/main/resources/META-INF/MANIFEST.MF";
+                featureXde.setTypeOfRelation(findRelationType(newfile, xde));
                 featureXdeSet.add(featureXde);
                 feature.setXdeSet(featureXdeSet);
                 featureXdeRepository.save(featureXde);
@@ -268,9 +269,8 @@ public class DeviceLoader {
      * Helper Function for readFeature
      * Take xmpfeature.xml and xde and return type of its relation
      * */
-    private String findRelationType(File file, Xde xde) {
+    private String findRelationType(String newfile, Xde xde) {
         try {
-            String newfile = file.getParent() + "/src/main/resources/META-INF/MANIFEST.MF";
             //  System.out.println(file.getPath());
             BufferedReader br = new BufferedReader(new FileReader(newfile));
             String st;
