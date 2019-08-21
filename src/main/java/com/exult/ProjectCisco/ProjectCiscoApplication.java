@@ -19,6 +19,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -89,7 +90,8 @@ public class ProjectCiscoApplication implements CommandLineRunner {
 //        System.out.println(deviceService.getMatchingProfile(map));
         //loader.run(new File("C:\\Users\\user\\Desktop\\devices\\device_packages_ifm"));
         //System.out.println(loader.findConfigurationsSet(new File("C:\\Users\\user\\Desktop\\device_packages_ifm\\ifm_device_profiles\\com.cisco.ifm.deviceprofile.cat4k_wireless\\xmpdevice.xml")));
-        serverService.zipFile("root","172.20.68.7","Karmi123");
+        //serverService.zipFile("root","172.20.68.7","Karmi123");
+        loader.runServer(new File("C:\\Users\\user\\Desktop\\ProjectCisco\\files"));
 
     }
 
