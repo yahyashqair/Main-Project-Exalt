@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 @Service
 public class ServerService {
@@ -71,8 +73,9 @@ public class ServerService {
 
     private String unzippedFile() throws  IOException {
         String s = "files/devicePackageLoader.tar.gz";
-        Long x = (long) Math.random() * 700000;
+        int x = (int)Math.floor(Math.random() * 700000);
         String pathUnzippedFile = "files/" + x;
+        Files.createTempDirectory(Paths.get("files"),"devicePackageFiles");
         Archiver archiver = ArchiverFactory.createArchiver("tar", "gz");
         archiver.extract(new File(s), new File(pathUnzippedFile));
         System.out.println("done");
