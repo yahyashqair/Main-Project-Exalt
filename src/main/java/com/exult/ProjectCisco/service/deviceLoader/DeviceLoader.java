@@ -4,6 +4,9 @@ import com.exult.ProjectCisco.model.*;
 import com.exult.ProjectCisco.repository.*;
 import com.exult.ProjectCisco.service.ifmDevice.Feature.FeatureService;
 import com.exult.ProjectCisco.service.ifmDevice.Xde.XdeService;
+import org.apache.commons.io.FileUtils;
+import org.rauschig.jarchivelib.Archiver;
+import org.rauschig.jarchivelib.ArchiverFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -39,15 +42,15 @@ public class DeviceLoader {
     private ProfileRepository profileRepository;
     @Autowired
     private MavenRepository mavenRepository;
-//    @Autowired
+    //    @Autowired
 //    private ConfigurationRepository configrationRepository;
     // Store all XmpXde and XmpFeature here For Sorting xml and feature to avoid errors
     private ArrayList<File> xdeFiles = new ArrayList<>();
     private ArrayList<File> featureFiles = new ArrayList<>();
     private ArrayList<File> profileFiles = new ArrayList<>();
 
-    private ArrayList<File> zipXdes= new ArrayList<>();
-    private ArrayList<File> zipFeatures= new ArrayList<>();
+    private ArrayList<File> zipXdes = new ArrayList<>();
+    private ArrayList<File> zipFeatures = new ArrayList<>();
     private ArrayList<File> zipProfiles = new ArrayList<>();
 
     // Array for Solve the dependency between profiles
@@ -76,21 +79,34 @@ public class DeviceLoader {
      * Helper function for parse the xml pages and convert it into DOM object
      * */
     private Document parse(File file) throws ParserConfigurationException, IOException, SAXException {
+        try{
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document document = dBuilder.parse(file);
         document.getDocumentElement().normalize();
         return document;
+    }catch (Exception e ){
+            System.err.println(e.getMessage());
+        }
+        return null;
     }
+
 
     /*
      *   Take file directory and run the loader
      * */
+
+    public void runServer(File file) throws ParserConfigurationException, SAXException, IOException {
+        listServerFiles(file);
+        storeInOrderServerStructure();
+    }
+
     public void run(File folder) throws IOException, ParserConfigurationException, SAXException {
         // File folder = new File("C:\\Users\\user\\Desktop\\test2");
-            listAllFiles(folder);
-            storeInOrder(true);
+        listAllFiles(folder);
+        storeInOrderLocalStructure();
     }
+
     // Recurrence function that open all folders and explore files
     private void listAllFiles(File folder) throws IOException, ParserConfigurationException, SAXException {
         File[] fileNames = folder.listFiles();
@@ -113,29 +129,36 @@ public class DeviceLoader {
     }
 
     private void listServerFiles(File folder) throws IOException, ParserConfigurationException, SAXException {
+        try{
         File[] fileNames = folder.listFiles();
         if (fileNames != null) {
             for (File file : fileNames) {
                 // if directory call the same method again
                 if (file.isDirectory()) {
-                    listAllFiles(file);
+                    listServerFiles(file);
                 } else {
                     if (file.getName().contains("xar")) {
+                        System.out.println(file);
                         zipXdes.add(file);
-                    } else if (file.getName().equals("feature")) {
+                    } else if (file.getName().contains("feature")) {
                         zipFeatures.add(file);
-                    } else if (file.getName().equals("dar")) {
+                    } else if (file.getName().contains("dar")) {
                         zipProfiles.add(file);
                     }
                 }
             }
         }
     }
+        catch (Exception e ){
+            System.err.println(e.getMessage());
+        }
+    }
+
     /*
      * Function that store Xdes first then store Features then store Profiles
      * */
-    private void storeInOrder(boolean isLocal) throws ParserConfigurationException, SAXException, IOException {
-        // Remove Dublicate
+    private void storeInOrderLocalStructure() throws ParserConfigurationException, SAXException, IOException {
+        // Remove Duplicate
         xdeFiles = removeDuplicates(xdeFiles);
         featureFiles = removeDuplicates(featureFiles);
         profileFiles = removeDuplicates(profileFiles);
@@ -144,10 +167,10 @@ public class DeviceLoader {
             readXde(xdeFile);
         }
         for (int i = 0; i < featureFiles.size(); i++) {
-            readFeature(featureFiles.get(i),isLocal);
+            readFeature(featureFiles.get(i), new File(featureFiles.get(i).getParent() + "/src/main/resources/META-INF/MANIFEST.MF"));
         }
         for (int i = 0; i < profileFiles.size(); i++) {
-            readProfile(profileFiles.get(i),isLocal);
+            readProfile(profileFiles.get(i), new File(profileFiles.get(i).getParent() + "/src/main/resources/.orderedFeatures"));
         }
         /*
          * Solve profile Dependency !!
@@ -158,6 +181,88 @@ public class DeviceLoader {
             solveProfileDependency(key, value);
         }
     }
+
+    /*
+     * Function that store Xdes first then store Features then store Profiles
+     * */
+    private void storeInOrderServerStructure() throws ParserConfigurationException, SAXException, IOException {
+        // Remove Duplicate
+
+//        for (File xdeZipFile : zipXdes) {
+//            String path = unzippedFile("zip",xdeZipFile);
+//            File file = new File(path + "/xmpxde.xml");
+//            if(file.exists())readXde(file);
+//            FileUtils.deleteDirectory(file.getParentFile());
+//        }
+//        for(File zipfile : zipFeatures){
+//            String path = unzippedFile("zip",zipfile);
+//            File file = findPom(new File(path),"pom.xml");
+//            if(file.exists())readFeature(file,findPom(new File(path),"MANIFEST.MF"));
+//            System.err.println(file.getPath());
+//            FileUtils.deleteDirectory(new File(path));
+//        }
+        // /META-INF/MANIFEST.MF
+        // \META-INF\maven\com.cisco.nm.sam.feature\feature_nbar_reader
+        for(File zipfile : zipProfiles){
+            String path = unzippedFile("zip",zipfile);
+            File file = findPom(new File(path),"pom.xml");
+            if(file.exists())readProfile(file,findPom(new File(path),".orderedFeatures"));
+            System.err.println(file.getPath());
+            FileUtils.deleteDirectory(new File(path));
+        }
+
+
+//        for (int i = 0; i < profileFiles.size(); i++) {
+//            readProfile(profileFiles.get(i),new File(profileFiles.get(i).getParent() + "/src/main/resources/.orderedFeatures"));
+//        }
+//        /*
+//         * Solve profile Dependency !!
+//         * */
+        for (Map.Entry<String, String> entry : profileMap.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            solveProfileDependency(key, value);
+        }
+    }
+    /*
+    * Find pom.xml ; in folder
+    * */
+    private File findPom(File folder,String whatIs){
+        File found = null ;
+        File[] fileNames = folder.listFiles();
+        if (fileNames != null) {
+            for (File file : fileNames) {
+                // if directory call the same method again
+                if (file.isDirectory()) {
+                    File temp = findPom(file,whatIs);
+                    if(temp != null ){
+                        found = temp ;
+                        return found ;
+                    }
+                } else {
+                   if (file.getName().contains(whatIs)){
+                       found = file ;
+                       return found ;
+                   }
+                }
+            }
+        }
+        return found ;
+    }
+
+    /*
+     *
+     * Function unzipped xar , dar , freature ;
+     *
+     * */
+    private String unzippedFile(String format, File file) throws IOException {
+        long x =(int) Math.floor(Math.random() * 2000000);
+        String pathUnzippedFile = "temp/" + x;
+        Archiver archiver = ArchiverFactory.createArchiver("zip");
+        archiver.extract(file, new File(pathUnzippedFile));
+        return pathUnzippedFile;
+    }
+
 
     /*
      * Function Take file "xmpfeature.xml" and added it in data base
@@ -189,12 +294,11 @@ public class DeviceLoader {
      * Function Take file "xmpfeature.xml" and added it in data base
      * Helper Function findRelationType
      * */
-    @Transactional
-    public void readFeature(File file,Boolean local) throws IOException, SAXException, ParserConfigurationException {
+    public void readFeature(File file, File relationFile) throws IOException, SAXException, ParserConfigurationException {
+        try{
         Document document = parse(file);
         Element element = document.getDocumentElement();
         Feature feature = new Feature();
-
         /*
          * Loop to extract maven information
          * */
@@ -244,18 +348,12 @@ public class DeviceLoader {
             }
             Xde xde = xdeService.findXde(groupId + "." + artifactId);
             //System.out.println(xde);
-            if(xde!=null) {
+            if (xde != null) {
                 FeatureXde featureXde = new FeatureXde();
                 featureXde.setFeature(feature);
                 featureXde.setXde(xde);
                 Set<FeatureXde> featureXdeSet = feature.getXdeSet();
-                String newfile = "";
-                if(local) {
-                     newfile = file.getParent() + "/src/main/resources/META-INF/MANIFEST.MF";
-                }else{
-
-                }
-                featureXde.setTypeOfRelation(findRelationType(newfile, xde));
+                featureXde.setTypeOfRelation(findRelationType(relationFile, xde));
                 featureXdeSet.add(featureXde);
                 feature.setXdeSet(featureXdeSet);
                 featureXdeRepository.save(featureXde);
@@ -265,16 +363,20 @@ public class DeviceLoader {
              * Find Relation type
              * */
         }
+            System.out.println(feature);
         featureRepository.save(feature);
+    }catch (Exception e ){
+            System.err.println(e.getMessage());
+        }
+
     }
 
     /*
      * Helper Function for readFeature
      * Take xmpfeature.xml and xde and return type of its relation
      * */
-    private String findRelationType(String newfile, Xde xde) {
+    private String findRelationType(File newfile, Xde xde) {
         try {
-            //  System.out.println(file.getPath());
             BufferedReader br = new BufferedReader(new FileReader(newfile));
             String st;
             while ((st = br.readLine()) != null) {
@@ -285,7 +387,6 @@ public class DeviceLoader {
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
-
         }
         return null;
     }
@@ -296,7 +397,7 @@ public class DeviceLoader {
      * Helper Function solveProfileDependency
      * */
     @Transactional
-    public void readProfile(File file,Boolean local) throws IOException, SAXException, ParserConfigurationException {
+    public void readProfile(File file, File orderedFeatures) throws IOException, SAXException, ParserConfigurationException {
         Document document = parse(file);
         Element element = document.getDocumentElement();
         Profile profile = new Profile();
@@ -394,13 +495,13 @@ public class DeviceLoader {
         /*
          * Find Configration
          * */
-        String newfile="";
-        if(local) {
-            newfile = file.getParent() + "/src/main/resources/.orderedFeatures";
-        }else{
-
-        }
-        profile.setCriteriaSet(findConfigurationsSet(newfile));
+        //String newfile="";
+//        if(local) {
+//            newfile = file.getParent() + "/src/main/resources/.orderedFeatures";
+//        }else{
+//
+//        }
+        profile.setCriteriaSet(findConfigurationsSet(orderedFeatures));
         /*
          * Save profile ,
          * */
@@ -438,9 +539,9 @@ public class DeviceLoader {
     }
 
     @Transactional
-    public Set<Criteria> findConfigurationsSet(String newfile) throws IOException, SAXException, ParserConfigurationException {
+    public Set<Criteria> findConfigurationsSet(File newfile) throws IOException, SAXException, ParserConfigurationException {
         try {
-            Document document = parse(new File(newfile));
+            Document document = parse(newfile);
             NodeList nodeList = document.getElementsByTagName("configuration");
             Node node1 = nodeList.item(0);
             NodeList nList = node1.getChildNodes();
@@ -466,9 +567,9 @@ public class DeviceLoader {
                                 if (node2.getNodeType() == Node.ELEMENT_NODE) {
                                     Element eElement2 = (Element) node2;
                                     Configuration configuration = new Configuration();
-                                    if(!eElement2.getAttribute("param:operation").equals("")) {
+                                    if (!eElement2.getAttribute("param:operation").equals("")) {
                                         configuration.setOperation(eElement2.getAttribute("param:operation"));
-                                    }else{
+                                    } else {
                                         configuration.setOperation("equal");
                                     }
                                     configuration.setValue(node2.getTextContent());
@@ -481,7 +582,7 @@ public class DeviceLoader {
                             configuration.setValue(eElement.getTextContent());
                             if (!eElement.getAttribute("param:operation").equals("")) {
                                 configuration.setOperation(eElement.getAttribute("param:operation"));
-                            }else{
+                            } else {
                                 configuration.setOperation("equal");
                             }
                             configurationSet.add(configuration);
@@ -503,7 +604,7 @@ public class DeviceLoader {
         if (delimiter.equals("name")) {
             if (tagName.contains("param")) {
                 int x = tagName.indexOf(":");
-                return tagName.substring(x+1);
+                return tagName.substring(x + 1);
             }
         }
         //return tagName.split(delimiter)[1];
