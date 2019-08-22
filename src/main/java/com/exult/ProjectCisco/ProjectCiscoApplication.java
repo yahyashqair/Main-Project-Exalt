@@ -91,7 +91,7 @@ public class ProjectCiscoApplication implements CommandLineRunner {
         //loader.run(new File("C:\\Users\\user\\Desktop\\devices\\device_packages_ifm"));
         //System.out.println(loader.findConfigurationsSet(new File("C:\\Users\\user\\Desktop\\device_packages_ifm\\ifm_device_profiles\\com.cisco.ifm.deviceprofile.cat4k_wireless\\xmpdevice.xml")));
         //serverService.zipFile("root","172.20.68.7","Karmi123");
-        loader.runServer(new File("C:\\Users\\user\\Desktop\\ProjectCisco\\files"));
+        //loader.runServer(new File("C:\\Users\\user\\Desktop\\ProjectCisco\\files"));
 
     }
 
