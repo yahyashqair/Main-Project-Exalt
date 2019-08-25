@@ -31,7 +31,8 @@ public class ServerController {
     public Server getServer(@PathVariable("id") Long id) {
         return serverService.getServer(id);
     }
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+
+    @RequestMapping(value = "/readData/{id}", method = RequestMethod.GET)
     public void getData(@PathVariable("id") Long id) throws ParserConfigurationException, SAXException, IOException {
         serverService.ReadDataFromServer(id);
     }

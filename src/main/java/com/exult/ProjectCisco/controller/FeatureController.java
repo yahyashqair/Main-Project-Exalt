@@ -6,6 +6,7 @@ import com.exult.ProjectCisco.model.Xde;
 import com.exult.ProjectCisco.service.ifmDevice.Feature.FeatureService;
 import com.exult.ProjectCisco.service.ifmDevice.Xde.XdeService;
 import com.exult.ProjectCisco.service.ifmDevice.maven.MavenService;
+import com.exult.ProjectCisco.service.server.ServerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +28,8 @@ public class FeatureController {
     @Autowired
     private MavenService mavenService;
 
+    @Autowired
+    private ServerService serverService;
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Feature getFeature(@PathVariable("id") Long id) {
         return featureService.findFeatureById(id);
@@ -70,7 +73,7 @@ public class FeatureController {
 
     @RequestMapping(value = "/server/{id}/", method = RequestMethod.GET)
     Page<Feature> getFeaturePage(@PathVariable("id") Long id ,@RequestParam(defaultValue = "pagenumber") int pagenumber, @RequestParam(defaultValue = "size") int size) {
-        return featureService.findAllPage(PageRequest.of(pagenumber,size));
+        return featureService.getAllFeaturesBelongToServer(serverService.getServer(id),PageRequest.of(pagenumber,size));
     }
 
 }

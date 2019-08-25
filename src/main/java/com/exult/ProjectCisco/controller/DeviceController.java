@@ -58,7 +58,7 @@ public class DeviceController {
 
     @RequestMapping(value = "/server/{id}", method = RequestMethod.GET)
     public List<Device> getAllDevicesWithServer(@PathVariable("id") Long id) {
-        return deviceService.getAllDevices();
+        return deviceService.getAllDevicesBelongToServer(serverService.getServer(id));
     }
 
 
