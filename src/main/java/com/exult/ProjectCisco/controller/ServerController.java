@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -29,8 +32,8 @@ public class ServerController {
         return serverService.getServer(id);
     }
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Server getData(@PathVariable("id") Long id) {
-        return serverService.getData(id);
+    public void getData(@PathVariable("id") Long id) throws ParserConfigurationException, SAXException, IOException {
+        serverService.ReadDataFromServer(id);
     }
 
 

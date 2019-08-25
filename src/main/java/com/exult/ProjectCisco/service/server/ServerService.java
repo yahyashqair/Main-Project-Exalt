@@ -27,6 +27,7 @@ public class ServerService {
 
     @Autowired
     private DeviceLoader deviceLoader;
+
     public void ReadDataFromServer(Long id) throws IOException, SAXException, ParserConfigurationException {
         this.zipFile(getServer(id));
         deviceLoader.setServer(getServer(id));
