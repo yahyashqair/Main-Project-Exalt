@@ -34,4 +34,9 @@ class Feature {
     @OneToMany(mappedBy = "feature")
     private Set<FeatureXde> xdeSet = new HashSet<FeatureXde>();
 
+    @ManyToOne
+    @JoinColumn(name="SERVER_ID")
+    private Server server;
+
+
 }

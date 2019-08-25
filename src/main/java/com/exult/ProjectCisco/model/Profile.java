@@ -45,4 +45,9 @@ class Profile {
     @ManyToMany
     @JoinTable(name = "profile_criteria", joinColumns = @JoinColumn(name = "profile_id"), inverseJoinColumns = @JoinColumn(name = "criteria_id"))
     private Set<Criteria> criteriaSet = new HashSet<Criteria>();
+
+    @ManyToOne
+    @JoinColumn(name="SERVER_ID")
+    private Server server;
+
 }

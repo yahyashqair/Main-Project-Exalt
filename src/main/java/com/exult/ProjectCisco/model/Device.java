@@ -69,4 +69,9 @@ class Device {
     @ManyToMany
     private List<Profile> profileSet = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name="SERVER_ID")
+    private Server server;
+
+
 }
