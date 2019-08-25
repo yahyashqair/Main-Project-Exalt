@@ -42,6 +42,9 @@ public class DeviceLoader {
     private ProfileRepository profileRepository;
     @Autowired
     private MavenRepository mavenRepository;
+
+    private Server server;
+
     //    @Autowired
 //    private ConfigurationRepository configrationRepository;
     // Store all XmpXde and XmpFeature here For Sorting xml and feature to avoid errors
@@ -286,7 +289,7 @@ public class DeviceLoader {
         }
         if (mavenRepository.findByArtifactIdAndAndGroupId(maven.getArtifactId(), maven.getGroupId()) == null) {
             mavenRepository.save(maven);
-            xdeService.insertXde(maven.getGroupId() + "." + maven.getArtifactId(), maven);
+            xdeService.insertXde(maven.getGroupId() + "." + maven.getArtifactId(), maven,this.server);
         }
     }
 
@@ -364,6 +367,7 @@ public class DeviceLoader {
              * */
         }
             System.out.println(feature);
+        feature.setServer(this.server);
         featureRepository.save(feature);
     }catch (Exception e ){
             System.err.println(e.getMessage());
@@ -421,10 +425,14 @@ public class DeviceLoader {
         }
         profile.setName(maven.getGroupId() + "." + maven.getArtifactId());
         profile.setMaven(maven);
-        if (mavenRepository.findByArtifactIdAndAndGroupId(maven.getArtifactId(), maven.getGroupId()) == null) {
+        Maven test = mavenRepository.findByArtifactIdAndAndGroupId(maven.getArtifactId(), maven.getGroupId());
+        if (test == null) {
             mavenRepository.save(maven);
         } else {
-            return;
+            if(profileRepository.findById(test.getId()).get().getServer()==this.server){
+                return;
+            }
+            mavenRepository.save(maven);
         }
         profileRepository.save(profile);
         /*
@@ -505,6 +513,7 @@ public class DeviceLoader {
         /*
          * Save profile ,
          * */
+        profile.setServer(this.server);
         profileRepository.save(profile);
     }
     /*
