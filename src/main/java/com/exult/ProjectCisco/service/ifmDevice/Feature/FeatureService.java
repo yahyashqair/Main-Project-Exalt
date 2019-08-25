@@ -1,9 +1,6 @@
 package com.exult.ProjectCisco.service.ifmDevice.Feature;
 
-import com.exult.ProjectCisco.model.Feature;
-import com.exult.ProjectCisco.model.Maven;
-import com.exult.ProjectCisco.model.Server;
-import com.exult.ProjectCisco.model.Xde;
+import com.exult.ProjectCisco.model.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -20,4 +17,5 @@ public interface FeatureService {
     List<Feature> getAllFeatures();
     List<Feature> findByNameLike(String username);
     Page<Feature> findAllPage(Pageable pageable);
+    List<Feature> getAllFeaturesBelongToServer(Server server);
 }

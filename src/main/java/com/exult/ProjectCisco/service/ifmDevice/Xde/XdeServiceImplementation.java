@@ -36,6 +36,7 @@ class XdeServiceImplementation implements XdeService {
         }
         return null;
     }
+
     @Transactional
     @Override
     public Xde findById(Long x) {
@@ -87,5 +88,10 @@ class XdeServiceImplementation implements XdeService {
     @Override
     public List<Xde> findByNameLike(String search) {
         return xdeRepository.findByNameLike(search);
+    }
+
+    @Override
+    public List<Xde> getAllXdesBelongToServer(Server server) {
+        return xdeRepository.findAllByServer(server);
     }
 }

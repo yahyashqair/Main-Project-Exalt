@@ -52,6 +52,11 @@ class FeatureServiceImplementation implements FeatureService {
         return featureRepository.findAll(pageable);
     }
 
+    @Override
+    public List<Feature> getAllFeaturesBelongToServer(Server server) {
+        return featureRepository.findAllByServer(server);
+    }
+
     @Transactional
     public Feature findFeature(String x) {
         List<Feature> featureList = featureRepository.findByName(x);

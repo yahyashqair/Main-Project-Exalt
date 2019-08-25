@@ -19,4 +19,5 @@ public interface XdeService {
     List<Xde> findAllXde();
     Page<Xde> findAllPage(Pageable P);
     List<Xde> findByNameLike(String search);
+    List<Xde> getAllXdesBelongToServer(Server server);
 }

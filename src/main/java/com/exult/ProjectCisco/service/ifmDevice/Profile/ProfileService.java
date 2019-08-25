@@ -17,7 +17,7 @@ public interface ProfileService {
     Set<FeatureXde> getFeatureXde(long id);
     Page<Profile> findAllPage(Pageable P);
     List<Profile> findByNameLike(String search);
-
-
+    List<Profile> getAllProfilesBelongToServer(Server server);
+    Page<Profile> getAllProfilesBelongToServer(Server server,Pageable P);
 
 }

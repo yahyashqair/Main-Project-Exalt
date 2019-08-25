@@ -101,4 +101,14 @@ class ProfileServiceImplementation implements ProfileService {
         return profileRepository.findByNameLike(search);
     }
 
+    @Override
+    public List<Profile> getAllProfilesBelongToServer(Server server) {
+        return profileRepository.findAllByServer(server);
+    }
+
+    @Override
+    public Page<Profile> getAllProfilesBelongToServer(Server server, Pageable P) {
+        return profileRepository.findAllByServer(server,P);
+    }
+
 }

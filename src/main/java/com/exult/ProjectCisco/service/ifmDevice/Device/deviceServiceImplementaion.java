@@ -2,10 +2,7 @@ package com.exult.ProjectCisco.service.ifmDevice.Device;
 
 import com.cisco.nm.expression.function.FunctionException;
 import com.epnm.bootstrap.DeviceCredentials;
-import com.exult.ProjectCisco.model.Configuration;
-import com.exult.ProjectCisco.model.Criteria;
-import com.exult.ProjectCisco.model.Device;
-import com.exult.ProjectCisco.model.Profile;
+import com.exult.ProjectCisco.model.*;
 import com.exult.ProjectCisco.repository.DeviceRepository;
 import com.exult.ProjectCisco.repository.ProfileRepository;
 import com.exult.ProjectCisco.service.deviceLoader.Mdfdata;
@@ -182,6 +179,11 @@ public class deviceServiceImplementaion implements DeviceService {
             isUpdated(device);
         }
         return deviceRepository.findAll();
+    }
+
+    @Override
+    public List<Device> getAllDevicesBelongToServer(Server server) {
+        return deviceRepository.findAllByServer(server);
     }
 
     @Override
