@@ -28,5 +28,10 @@ public class ServerController {
     public Server getServer(@PathVariable("id") Long id) {
         return serverService.getServer(id);
     }
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public Server getData(@PathVariable("id") Long id) {
+        return serverService.getData(id);
+    }
+
 
 }

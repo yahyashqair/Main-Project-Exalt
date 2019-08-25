@@ -4,6 +4,7 @@ import com.exult.ProjectCisco.model.*;
 import com.exult.ProjectCisco.repository.*;
 import com.exult.ProjectCisco.service.ifmDevice.Feature.FeatureService;
 import com.exult.ProjectCisco.service.ifmDevice.Xde.XdeService;
+import lombok.Data;
 import org.apache.commons.io.FileUtils;
 import org.rauschig.jarchivelib.Archiver;
 import org.rauschig.jarchivelib.ArchiverFactory;
@@ -26,6 +27,7 @@ import java.io.IOException;
 import java.util.*;
 
 @Service
+@Data
 public class DeviceLoader {
 
     @Autowired
@@ -389,6 +391,7 @@ public class DeviceLoader {
      * Helper Function for readFeature
      * Take xmpfeature.xml and xde and return type of its relation
      * */
+
     private String findRelationType(File newfile, Xde xde) {
         try {
             BufferedReader br = new BufferedReader(new FileReader(newfile));

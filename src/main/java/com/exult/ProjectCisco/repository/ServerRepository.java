@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface ServerRepository extends JpaRepository<Server,Long> {
-    Server findByName(String name);
+    Server findByUsername(String name);
     List<Server> findByUsernameLike(String username);
 }
