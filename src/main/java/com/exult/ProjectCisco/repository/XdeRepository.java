@@ -16,4 +16,6 @@ public interface XdeRepository extends JpaRepository<Xde,Long>, PagingAndSorting
     Page<Xde> findAll(Pageable pageable);
     List<Xde> findByNameLike(String username);
     List<Xde> findAllByServer(Server server);
+    Page<Xde> findAllByServer(Server server,Pageable pageable);
+
 }
