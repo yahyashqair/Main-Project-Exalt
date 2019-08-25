@@ -4,8 +4,6 @@ import com.exult.ProjectCisco.model.Server;
 import com.exult.ProjectCisco.repository.ServerRepository;
 import com.google.common.io.CharStreams;
 import com.jcraft.jsch.*;
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
 import org.rauschig.jarchivelib.Archiver;
 import org.rauschig.jarchivelib.ArchiverFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,19 +15,24 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 @Service
 public class ServerService {
     @Autowired
     private ServerRepository serverRepository;
 
-    public Server insertServer(Server server){
+    public Server insertServer(Server server) {
         serverRepository.save(server);
         return server;
     }
 
-    public Server getServer(Long id){
+    public Server getServer(Long id) {
         return serverRepository.findById(id).get();
+    }
+
+    public List<Server> getAll() {
+        return serverRepository.findAll();
     }
 
     public void zipFile(Server server) {
@@ -84,11 +87,11 @@ public class ServerService {
         }
     }
 
-    private String unzippedFile() throws  IOException {
+    private String unzippedFile() throws IOException {
         String s = "files/devicePackageLoader.tar.gz";
-        int x = (int)Math.floor(Math.random() * 700000);
+        int x = (int) Math.floor(Math.random() * 700000);
         String pathUnzippedFile = "files/" + x;
-        Files.createTempDirectory(Paths.get("files"),"devicePackageFiles");
+        Files.createTempDirectory(Paths.get("files"), "devicePackageFiles");
         Archiver archiver = ArchiverFactory.createArchiver("tar", "gz");
         archiver.extract(new File(s), new File(pathUnzippedFile));
         System.out.println("done");

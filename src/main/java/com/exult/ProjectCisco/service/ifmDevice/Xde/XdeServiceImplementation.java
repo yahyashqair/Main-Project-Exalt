@@ -7,7 +7,6 @@ import com.exult.ProjectCisco.repository.XdeRepository;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -93,5 +92,10 @@ class XdeServiceImplementation implements XdeService {
     @Override
     public List<Xde> getAllXdesBelongToServer(Server server) {
         return xdeRepository.findAllByServer(server);
+    }
+
+    @Override
+    public Page<Xde> getAllXdesBelongToServer(Server server, Pageable p) {
+        return xdeRepository.findAllByServer(server,p);
     }
 }

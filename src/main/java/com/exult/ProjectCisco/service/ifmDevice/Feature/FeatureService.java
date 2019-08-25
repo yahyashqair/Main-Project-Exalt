@@ -18,4 +18,5 @@ public interface FeatureService {
     List<Feature> findByNameLike(String username);
     Page<Feature> findAllPage(Pageable pageable);
     List<Feature> getAllFeaturesBelongToServer(Server server);
+    Page<Feature> getAllFeaturesBelongToServer(Server server,Pageable pageable);
 }
