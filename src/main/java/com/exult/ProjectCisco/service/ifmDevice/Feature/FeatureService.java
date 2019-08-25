@@ -2,6 +2,7 @@ package com.exult.ProjectCisco.service.ifmDevice.Feature;
 
 import com.exult.ProjectCisco.model.Feature;
 import com.exult.ProjectCisco.model.Maven;
+import com.exult.ProjectCisco.model.Server;
 import com.exult.ProjectCisco.model.Xde;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +14,7 @@ public interface FeatureService {
     Feature findFeature(String x);
     boolean deleteFeature(Long id);
     Feature updateFeature(Long id, String name, Maven maven);
-    Feature insertFeature(String name, Maven maven);
+    Feature insertFeature(String name, Maven maven, Server server);
     Feature findFeatureById(Long x);
     public Set<Xde> getFeatureXdeSet(Long id);
     List<Feature> getAllFeatures();

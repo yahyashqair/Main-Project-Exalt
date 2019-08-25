@@ -2,7 +2,10 @@ package com.exult.ProjectCisco.controller;
 
 import com.cisco.nm.expression.function.FunctionException;
 import com.exult.ProjectCisco.model.Device;
+import com.exult.ProjectCisco.model.Server;
+import com.exult.ProjectCisco.repository.ServerRepository;
 import com.exult.ProjectCisco.service.ifmDevice.Device.DeviceService;
+import com.exult.ProjectCisco.service.server.ServerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +19,9 @@ import java.util.List;
 public class DeviceController {
 
     @Autowired
-    DeviceService deviceService;
+    private DeviceService deviceService;
+    @Autowired
+    private ServerService serverService;
 
     @RequestMapping(value = "/sync/{id}", method = RequestMethod.GET)
     public Device sync(@PathVariable("id") Long id ) throws FunctionException {
@@ -28,9 +33,10 @@ public class DeviceController {
         return deviceService.getAllDevices();
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.POST)
-    public Device insertDevice(@RequestBody Device device) {
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    public Device insertDevice(@RequestBody Device device,@PathVariable("id") Long id) {
         System.out.println(device);
+        device.setServer(serverService.getServer(id));
         try {
             return deviceService.insertDevice(device);
         } catch (FunctionException e) {

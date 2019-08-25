@@ -101,7 +101,7 @@ public class deviceServiceImplementaion implements DeviceService {
     @Override
     public Device getMatchingProfile(Device device) throws FunctionException {
         Map map = device.getConfigurations();
-        List<Profile> profiles = profileRepository.findAll();
+        List<Profile> profiles = profileRepository.findAllByServer(device.getServer());
         List<Profile> matchProfile = new ArrayList<>();
         // Loop Over All Profiles
         for (Profile profile : profiles) {

@@ -1,9 +1,6 @@
 package com.exult.ProjectCisco.service.ifmDevice.Feature;
 
-import com.exult.ProjectCisco.model.Feature;
-import com.exult.ProjectCisco.model.FeatureXde;
-import com.exult.ProjectCisco.model.Maven;
-import com.exult.ProjectCisco.model.Xde;
+import com.exult.ProjectCisco.model.*;
 import com.exult.ProjectCisco.repository.FeatureRepository;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,11 +77,12 @@ class FeatureServiceImplementation implements FeatureService {
     }
 
     @Transactional
-    public Feature insertFeature(String name, Maven maven) {
+    public Feature insertFeature(String name, Maven maven, Server server) {
         try {
             Feature feature = new Feature();
             feature.setMaven(maven);
             feature.setName(name);
+            feature.setServer(server);
             feature = featureRepository.save(feature);
             return feature;
         } catch (Exception e) {

@@ -1,6 +1,7 @@
 package com.exult.ProjectCisco.service.ifmDevice.Xde;
 
 import com.exult.ProjectCisco.model.Maven;
+import com.exult.ProjectCisco.model.Server;
 import com.exult.ProjectCisco.model.Xde;
 import com.exult.ProjectCisco.repository.XdeRepository;
 import lombok.Setter;
@@ -57,9 +58,10 @@ class XdeServiceImplementation implements XdeService {
     }
 
     @Transactional
-    public Xde insertXde(String name, Maven maven) {
+    public Xde insertXde(String name, Maven maven, Server server) {
         try {
             Xde xde = new Xde();
+            xde.setServer(server);
             xde.setMaven(maven);
             xde.setName(name);
             xde = xdeRepository.save(xde);
