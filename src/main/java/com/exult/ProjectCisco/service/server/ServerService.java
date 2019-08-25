@@ -2,13 +2,16 @@ package com.exult.ProjectCisco.service.server;
 
 import com.exult.ProjectCisco.model.Server;
 import com.exult.ProjectCisco.repository.ServerRepository;
+import com.exult.ProjectCisco.service.deviceLoader.DeviceLoader;
 import com.google.common.io.CharStreams;
 import com.jcraft.jsch.*;
 import org.rauschig.jarchivelib.Archiver;
 import org.rauschig.jarchivelib.ArchiverFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +24,14 @@ import java.util.List;
 public class ServerService {
     @Autowired
     private ServerRepository serverRepository;
+
+    @Autowired
+    private DeviceLoader deviceLoader;
+    public void ReadDataFromServer(Long id) throws IOException, SAXException, ParserConfigurationException {
+        this.zipFile(getServer(id));
+        deviceLoader.setServer(getServer(id));
+        deviceLoader.runServer(new File("C:\\Users\\user\\Desktop\\ProjectCisco\\files"));
+    }
 
     public Server insertServer(Server server) {
         serverRepository.save(server);
