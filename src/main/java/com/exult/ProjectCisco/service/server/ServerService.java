@@ -1,11 +1,14 @@
 package com.exult.ProjectCisco.service.server;
 
+import com.exult.ProjectCisco.model.Server;
+import com.exult.ProjectCisco.repository.ServerRepository;
 import com.google.common.io.CharStreams;
 import com.jcraft.jsch.*;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import org.rauschig.jarchivelib.Archiver;
 import org.rauschig.jarchivelib.ArchiverFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -17,7 +20,17 @@ import java.nio.file.Paths;
 
 @Service
 public class ServerService {
+    @Autowired
+    private ServerRepository serverRepository;
 
+    public Server insertServer(Server server){
+        serverRepository.save(server);
+        return server;
+    }
+
+    public Server getServer(Long id){
+        return serverRepository.findById(id).get();
+    }
 
     public void zipFile(String username, String host, String password) {
         try {
@@ -81,4 +94,5 @@ public class ServerService {
         System.out.println("done");
         return pathUnzippedFile;
     }
+
 }

@@ -1,5 +1,6 @@
 package com.exult.ProjectCisco.repository;
 
+import com.exult.ProjectCisco.model.Server;
 import com.exult.ProjectCisco.model.Xde;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,5 +15,5 @@ public interface XdeRepository extends JpaRepository<Xde,Long>, PagingAndSorting
     List<Xde> findByName(String name);
     Page<Xde> findAll(Pageable pageable);
     List<Xde> findByNameLike(String username);
-
+    List<Xde> findAllByServer(Server server);
 }
