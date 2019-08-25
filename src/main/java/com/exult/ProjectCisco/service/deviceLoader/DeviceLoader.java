@@ -287,10 +287,16 @@ public class DeviceLoader {
                 maven.setVersion(node.getTextContent());
             }
         }
-        if (mavenRepository.findByArtifactIdAndAndGroupId(maven.getArtifactId(), maven.getGroupId()) == null) {
+        Maven test = mavenRepository.findByArtifactIdAndAndGroupId(maven.getArtifactId(), maven.getGroupId());
+        if (test == null) {
             mavenRepository.save(maven);
-            xdeService.insertXde(maven.getGroupId() + "." + maven.getArtifactId(), maven,this.server);
+        } else {
+            if(xdeService.findById(test.getId()).getServer()==this.server){
+                return;
+            }
+            mavenRepository.save(maven);
         }
+        xdeService.insertXde(maven.getGroupId() + "." + maven.getArtifactId(), maven,this.server);
     }
 
     /*
@@ -318,11 +324,15 @@ public class DeviceLoader {
             }
         }
 
-        if (mavenRepository.findByArtifactIdAndAndGroupId(maven.getArtifactId(), maven.getGroupId()) == null) {
-            mavenRepository.save(maven);
-        } else {
-            return;
-        }
+            Maven test = mavenRepository.findByArtifactIdAndAndGroupId(maven.getArtifactId(), maven.getGroupId());
+            if (test == null) {
+                mavenRepository.save(maven);
+            } else {
+                if(featureRepository.findById(test.getId()).get().getServer()==this.server){
+                    return;
+                }
+                mavenRepository.save(maven);
+            }
         feature.setMaven(maven);
         featureRepository.save(feature);
         //System.out.println(maven);
