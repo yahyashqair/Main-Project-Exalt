@@ -8,6 +8,7 @@ import com.jcraft.jsch.*;
 import org.rauschig.jarchivelib.Archiver;
 import org.rauschig.jarchivelib.ArchiverFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;
 
@@ -28,10 +29,11 @@ public class ServerService {
     @Autowired
     private DeviceLoader deviceLoader;
 
+    @Async
     public void ReadDataFromServer(Long id) throws IOException, SAXException, ParserConfigurationException {
-        this.zipFile(getServer(id));
+        String x = this.zipFile(getServer(id));
         deviceLoader.setServer(getServer(id));
-        deviceLoader.runServer(new File("C:\\Users\\user\\Desktop\\ProjectCisco\\files"));
+        deviceLoader.runServer(new File("C:\\Users\\user\\Desktop\\ProjectCisco\\files\\"+x));
     }
 
     public Server insertServer(Server server) {
@@ -46,8 +48,7 @@ public class ServerService {
     public List<Server> getAll() {
         return serverRepository.findAll();
     }
-
-    public void zipFile(Server server) {
+    public String zipFile(Server server) {
         try {
             JSch jsch = new JSch();
             Session session = jsch.getSession(server.getUsername(), server.getIpAddress(), 22);
@@ -58,11 +59,13 @@ public class ServerService {
             session.connect(30000);   // making a connection with timeout.
             String command = "tar -czvf devicePackageLoader.tar.gz /opt/CSCOlumos/xmp_inventory/dar  /opt/CSCOlumos/xmp_inventory/xde-home/packages/standard\n ";
             //System.out.println(executeCommand(session,command));
-            //downloadFile(session);
-            unzippedFile();
+            System.out.println("downloading : ");
+            downloadFile(session);
+            return unzippedFile();
         } catch (Exception e) {
             System.err.println(e);
         }
+        return null;
     }
 
     private String executeCommand(Session session, String command) {
