@@ -194,26 +194,39 @@ public class DeviceLoader {
         // Remove Duplicate
 
         for (File xdeZipFile : zipXdes) {
-            String path = unzippedFile("zip",xdeZipFile);
-            File file = new File(path + "/xmpxde.xml");
-            if(file.exists())readXde(file);
-            FileUtils.deleteDirectory(file.getParentFile());
+            try {
+                String path = unzippedFile("zip", xdeZipFile);
+                File file = new File(path + "/xmpxde.xml");
+                if (file.exists()) readXde(file);
+                FileUtils.deleteDirectory(file.getParentFile());
+            }catch (Exception e){
+                System.out.println(e.getMessage());
+            }
         }
         for(File zipfile : zipFeatures){
-            String path = unzippedFile("zip",zipfile);
+            try {
+                String path = unzippedFile("zip",zipfile);
             File file = findPom(new File(path),"pom.xml");
             if(file.exists())readFeature(file,findPom(new File(path),"MANIFEST.MF"));
             System.err.println(file.getPath());
             FileUtils.deleteDirectory(new File(path));
+        }catch (Exception e){
+                System.out.println(e.getMessage());
+            }
         }
         // /META-INF/MANIFEST.MF
         // \META-INF\maven\com.cisco.nm.sam.feature\feature_nbar_reader
         for(File zipfile : zipProfiles){
+            try{
             String path = unzippedFile("zip",zipfile);
             File file = findPom(new File(path),"pom.xml");
             if(file.exists())readProfile(file,findPom(new File(path),".orderedFeatures"));
             System.err.println(file.getPath());
             FileUtils.deleteDirectory(new File(path));
+        }catch (Exception e){
+                System.out.println(e.getMessage());
+            }
+
         }
 
 
