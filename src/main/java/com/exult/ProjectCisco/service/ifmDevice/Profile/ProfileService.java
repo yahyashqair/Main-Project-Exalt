@@ -19,5 +19,6 @@ public interface ProfileService {
     List<Profile> findByNameLike(String search);
     List<Profile> getAllProfilesBelongToServer(Server server);
     Page<Profile> getAllProfilesBelongToServer(Server server,Pageable P);
+    Integer countAllByServer(Server server);
 
 }

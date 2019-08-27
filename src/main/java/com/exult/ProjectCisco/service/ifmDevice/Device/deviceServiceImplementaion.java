@@ -6,7 +6,6 @@ import com.exult.ProjectCisco.model.*;
 import com.exult.ProjectCisco.repository.DeviceRepository;
 import com.exult.ProjectCisco.repository.ProfileRepository;
 import com.exult.ProjectCisco.service.deviceLoader.Mdfdata;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -66,29 +65,30 @@ public class deviceServiceImplementaion implements DeviceService {
 
         boolean b = true;
         for (Configuration configuration : criteria.getConfigurationSet()) {
-            try{
-            switch (configuration.getOperation()) {
-                case "equal":
-                    if (!map.get(criteria.getName()).equals(configuration.getValue())) {
-                        b = false;
-                    }
-                    break;
-                case "lessAndEqual":
-                    if (Integer.valueOf(map.get(criteria.getName())) > Integer.valueOf(configuration.getValue())) {
-                        b = false;
-                    }
-                    break;
-                case "greater":
-                    if (Integer.valueOf(map.get(criteria.getName())) <= Integer.valueOf(configuration.getValue())) {
-                        b = false;
-                    }
-                    break;
-                case "greaterAndEqual":
-                    if (Integer.valueOf(map.get(criteria.getName())) >= Integer.valueOf(configuration.getValue())) {
-                        b = true;
-                    }
-                    break;
-            }}catch (Exception e){
+            try {
+                switch (configuration.getOperation()) {
+                    case "equal":
+                        if (!map.get(criteria.getName()).equals(configuration.getValue())) {
+                            b = false;
+                        }
+                        break;
+                    case "lessAndEqual":
+                        if (Integer.valueOf(map.get(criteria.getName())) > Integer.valueOf(configuration.getValue())) {
+                            b = false;
+                        }
+                        break;
+                    case "greater":
+                        if (Integer.valueOf(map.get(criteria.getName())) <= Integer.valueOf(configuration.getValue())) {
+                            b = false;
+                        }
+                        break;
+                    case "greaterAndEqual":
+                        if (Integer.valueOf(map.get(criteria.getName())) >= Integer.valueOf(configuration.getValue())) {
+                            b = true;
+                        }
+                        break;
+                }
+            } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -142,7 +142,7 @@ public class deviceServiceImplementaion implements DeviceService {
         if (matchProfile.isEmpty()) {
             device.setProfileSet(matchProfile);
             deviceRepository.save(device);
-            return device ;
+            return device;
         }
         for (int i = 0; i < matchProfile.size(); i++) {
             Profile p = matchProfile.get(i).getParent();
@@ -154,7 +154,7 @@ public class deviceServiceImplementaion implements DeviceService {
 
         device.setProfileSet(matchProfile);
         deviceRepository.save(device);
-        return device ;
+        return device;
     }
 
 
@@ -175,7 +175,7 @@ public class deviceServiceImplementaion implements DeviceService {
 
     @Override
     public List<Device> getAllDevices() {
-        for(Device device : deviceRepository.findAll()){
+        for (Device device : deviceRepository.findAll()) {
             isUpdated(device);
         }
         return deviceRepository.findAll();
@@ -228,7 +228,7 @@ public class deviceServiceImplementaion implements DeviceService {
         }
         if (!stringBooleanMap.values().contains(false)) {
             device.getProfileSet().add(profile);
-        }else{
+        } else {
             device.getProfileSet().remove(profile);
         }
         return device;
@@ -238,9 +238,9 @@ public class deviceServiceImplementaion implements DeviceService {
     @Transactional
     public Device isUpdated(Device device) {
         // loop over all profiles related to Device ( device )
-        for(Profile profile:device.getProfileSet()){
-            if(profile.getLocalDateTime().isAfter(device.getLocalDateTime())){
-                isMatch(profile,device);
+        for (Profile profile : device.getProfileSet()) {
+            if (profile.getLocalDateTime().isAfter(device.getLocalDateTime())) {
+                isMatch(profile, device);
             }
         }
         deviceRepository.save(device);
@@ -252,16 +252,21 @@ public class deviceServiceImplementaion implements DeviceService {
         return insertDevice(device);
     }
 
+    @Override
+    public Integer countAllByServer(Server server) {
+        return deviceRepository.countAllByServer(Server server);
+    }
+
     public void deviceToMap(Device device) {
-        Map<String,String> map = device.getConfigurations();
-        map.put("CLI_ADDRESS",device.getCliAddress());
-        map.put("CLI_LOGIN_USERNAME",device.getCliLoginUsername());
-        map.put("CLI_LOGIN_PASSWORD",device.getCliLoginPassword());
-        map.put("CLI_PORT",device.getCliPort());
-        map.put("CLI_TRANSPORT",device.getCliTransport());
-        map.put("SNMP_READ_CS",device.getSnmpReadCs());
-        map.put("CLI_ENABLE_PASSWORD",device.getCliEnablePassword());
-        map.put("SNMP_PORT",device.getSnmpPort());
+        Map<String, String> map = device.getConfigurations();
+        map.put("CLI_ADDRESS", device.getCliAddress());
+        map.put("CLI_LOGIN_USERNAME", device.getCliLoginUsername());
+        map.put("CLI_LOGIN_PASSWORD", device.getCliLoginPassword());
+        map.put("CLI_PORT", device.getCliPort());
+        map.put("CLI_TRANSPORT", device.getCliTransport());
+        map.put("SNMP_READ_CS", device.getSnmpReadCs());
+        map.put("CLI_ENABLE_PASSWORD", device.getCliEnablePassword());
+        map.put("SNMP_PORT", device.getSnmpPort());
         System.out.println(map);
     }
 }

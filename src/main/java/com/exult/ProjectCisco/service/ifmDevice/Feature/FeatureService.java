@@ -19,4 +19,5 @@ public interface FeatureService {
     Page<Feature> findAllPage(Pageable pageable);
     List<Feature> getAllFeaturesBelongToServer(Server server);
     Page<Feature> getAllFeaturesBelongToServer(Server server,Pageable pageable);
+    Integer countAllByServer(Server server);
 }

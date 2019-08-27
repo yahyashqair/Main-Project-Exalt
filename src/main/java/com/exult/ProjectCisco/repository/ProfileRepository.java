@@ -18,4 +18,5 @@ public interface ProfileRepository extends JpaRepository<Profile,Long>, PagingAn
     List<Profile> findByNameLike(String username);
     List<Profile> findAllByServer(Server server);
     Page<Profile> findAllByServer(Server server, Pageable pageable);
+    Integer countAllByServer(Server server);
 }

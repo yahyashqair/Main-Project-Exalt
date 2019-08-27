@@ -98,4 +98,9 @@ class XdeServiceImplementation implements XdeService {
     public Page<Xde> getAllXdesBelongToServer(Server server, Pageable p) {
         return xdeRepository.findAllByServer(server,p);
     }
+
+    @Override
+    public Integer countAllByServer(Server server) {
+        return  xdeRepository.countAllByServer(Server server);;
+    }
 }

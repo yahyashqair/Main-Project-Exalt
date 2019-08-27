@@ -129,12 +129,17 @@ public class ProfileController {
     }
 
     @RequestMapping(value = "/server/{id}/", method = RequestMethod.GET)
-    Page<Profile> findAllPage(@PathVariable("id") Long id ,@RequestParam(defaultValue = "pagenumber") int pagenumber, @RequestParam(defaultValue = "size") int size) {
+    Page<Profile> findAllPagebelongtoServer(@PathVariable("id") Long id ,@RequestParam(defaultValue = "pagenumber") int pagenumber, @RequestParam(defaultValue = "size") int size) {
         return profileService.getAllProfilesBelongToServer(serverService.getServer(id),PageRequest.of(pagenumber,size));
     }
-    @RequestMapping(value = "/server/{id}", method = RequestMethod.GET)
+
+    @RequestMapping(value = "/server/{id}/tree", method = RequestMethod.GET)
     List<Profile> findAllPage(@PathVariable("id") Long id) {
         return profileService.getAllProfilesBelongToServer(serverService.getServer(id));
+    }
+    @RequestMapping(value = "/count/{id}", method = RequestMethod.GET)
+    public Integer countAllWithServer(@PathVariable("id") Long id) {
+        return profileService.countAllByServer(serverService.getServer(id));
     }
 
 

@@ -75,5 +75,9 @@ public class FeatureController {
     Page<Feature> getFeaturePage(@PathVariable("id") Long id ,@RequestParam(defaultValue = "pagenumber") int pagenumber, @RequestParam(defaultValue = "size") int size) {
         return featureService.getAllFeaturesBelongToServer(serverService.getServer(id),PageRequest.of(pagenumber,size));
     }
+    @RequestMapping(value = "/count/{id}", method = RequestMethod.GET)
+    public Integer countAllWithServer(@PathVariable("id") Long id) {
+        return featureService.countAllByServer(serverService.getServer(id));
+    }
 
 }

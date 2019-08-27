@@ -16,4 +16,5 @@ public interface DeviceService {
     Device isMatch(Profile profile , Device device);
     Device isUpdated(Device device);
     Device syncDevice(Device device) throws FunctionException;
+    Integer countAllByServer(Server server);
 }

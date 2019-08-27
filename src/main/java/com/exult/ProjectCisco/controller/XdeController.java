@@ -67,4 +67,9 @@ public class XdeController {
     Page<Xde> getXdePage(@PathVariable Long id, @RequestParam(defaultValue = "pagenumber") int pagenumber, @RequestParam(defaultValue = "size") int size) {
         return xdeService.getAllXdesBelongToServer(serverService.getServer(id), PageRequest.of(pagenumber, size));
     }
+
+    @RequestMapping(value = "/count/{id}", method = RequestMethod.GET)
+    public Integer countAllWithServer(@PathVariable("id") Long id) {
+        return xdeService.countAllByServer(serverService.getServer(id));
+    }
 }

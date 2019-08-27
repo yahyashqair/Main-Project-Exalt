@@ -29,4 +29,5 @@ public interface XdeService {
 
     Page<Xde> getAllXdesBelongToServer(Server server, Pageable p);
 
+    Integer countAllByServer(Server server);
 }

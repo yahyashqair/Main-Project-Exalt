@@ -61,5 +61,9 @@ public class DeviceController {
         return deviceService.getAllDevicesBelongToServer(serverService.getServer(id));
     }
 
+    @RequestMapping(value = "/count/{id}", method = RequestMethod.GET)
+    public Integer countAllWithServer(@PathVariable("id") Long id) {
+        return deviceService.countAllByServer(serverService.getServer(id));
+    }
 
 }

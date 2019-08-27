@@ -111,4 +111,9 @@ class ProfileServiceImplementation implements ProfileService {
         return profileRepository.findAllByServer(server,P);
     }
 
+    @Override
+    public Integer countAllByServer(Server server) {
+        return profileRepository.countAllByServer(Server server);;
+    }
+
 }

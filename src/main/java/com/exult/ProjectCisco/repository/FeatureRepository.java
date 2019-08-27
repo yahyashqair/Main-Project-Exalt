@@ -18,4 +18,5 @@ public interface FeatureRepository extends JpaRepository<Feature,Long>, PagingAn
     List<Feature> findByNameLike(String username);
     List<Feature> findAllByServer(Server server);
     Page<Feature> findAllByServer(Server server,Pageable pageable);
+    Integer countAllByServer(Server server);
 }
