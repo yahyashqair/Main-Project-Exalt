@@ -1,6 +1,7 @@
 package com.exult.ProjectCisco.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import org.springframework.context.annotation.EnableMBeanExport;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @Entity
+@Data
 public class DeviceTemplate {
 
     @Id

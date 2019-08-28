@@ -18,15 +18,16 @@ public class DeviceTemplateController {
     @Autowired
     DeviceTemplateService deviceTemplateService;
 
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public List<DeviceTemplate> getDevices( ) {
+        return deviceTemplateService.getAllDevices();
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public DeviceTemplate getDevice(@PathVariable("id") Long id ) {
         return deviceTemplateService.getDevice(id);
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public List<DeviceTemplate> getDevices( ) {
-        return deviceTemplateService.getAllDevices();
-    }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public DeviceTemplate insertDevice(@RequestBody DeviceTemplate device) {
