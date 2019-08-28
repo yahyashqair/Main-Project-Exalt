@@ -12,6 +12,7 @@ import com.exult.ProjectCisco.repository.MavenRepository;
 import com.exult.ProjectCisco.service.ifmDevice.Device.DeviceService;
 import com.exult.ProjectCisco.service.ifmDevice.Profile.ProfileService;
 import com.exult.ProjectCisco.service.ifmDevice.maven.MavenService;
+import com.exult.ProjectCisco.service.server.ServerService;
 import org.hibernate.annotations.Parent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,6 +37,9 @@ public class ProfileController {
     @Autowired
     private DeviceService deviceService ;
 
+    @Autowired
+    private ServerService serverService;
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Profile getProfile(@PathVariable("id") Long id) {
         return profileService.findById(id);
@@ -45,7 +49,6 @@ public class ProfileController {
 //    public List<Profile> getMatchingProfiles(@RequestBody HashMap<String,String> map) throws FunctionException {
 //         return deviceService.getMatchingProfile(map);
 //    }
-
 
     @RequestMapping(value = "/parents/{id}", method = RequestMethod.GET)
     public List<Profile> getParents(@PathVariable("id") Long id) {
@@ -78,10 +81,12 @@ public class ProfileController {
     public List<Profile> getpro(@PathVariable("qstring") String qstring) {
         return profileService.findByNameLike("%"+qstring+"%");
     }
+
     @RequestMapping(value = "/search/", method = RequestMethod.GET)
     public List<Profile> getpros() {
         return  findAllPage(1,10).getContent();
     }
+
     @RequestMapping(value = "/xde/{id}", method = RequestMethod.GET)
     public Set<FeatureXde> getXde(@PathVariable("id") Long id) {
         return profileService.getFeatureXde(id);
@@ -107,19 +112,36 @@ public class ProfileController {
         return profileRelations;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.POST)
-    public Profile postProfile(@RequestBody ProfileDto profileDto) {
-        System.out.println(profileDto);
-        return profileService.insertProfile(profileDto.getName(), mavenService.findMavenById(profileDto.getMavenId()));
-    }
-    // Update Profile
-    @RequestMapping(value = "/", method = RequestMethod.PUT)
-    public Profile putProfile(ProfileDto profileDto) {
-        return profileService.insertProfile(profileDto.getName(), mavenService.findMavenById(profileDto.getMavenId()));
-    }
+//    @RequestMapping(value = "/", method = RequestMethod.POST)
+//    public Profile postProfile(@RequestBody ProfileDto profileDto) {
+//        System.out.println(profileDto);
+//        return profileService.insertProfile(profileDto.getName(), mavenService.findMavenById(profileDto.getMavenId()),serverService.getServer(profileDto.));
+//    }
+//    // Update Profile
+//    @RequestMapping(value = "/", method = RequestMethod.PUT)
+//    public Profile putProfile(ProfileDto profileDto) {
+//        return profileService.insertProfile(profileDto.getName(), mavenService.findMavenById(profileDto.getMavenId()));
+//    }
     // Delete Profile
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
     public boolean deleteProfile(ProfileDto profileDto) {
         return profileService.deleteProfile(mavenService.findMavenById(profileDto.getMavenId()).getId());
     }
+
+    @RequestMapping(value = "/server/{id}/", method = RequestMethod.GET)
+    Page<Profile> findAllPagebelongtoServer(@PathVariable("id") Long id ,@RequestParam(defaultValue = "pagenumber") int pagenumber, @RequestParam(defaultValue = "size") int size) {
+        return profileService.getAllProfilesBelongToServer(serverService.getServer(id),PageRequest.of(pagenumber,size));
+    }
+
+    @RequestMapping(value = "/server/{id}/tree", method = RequestMethod.GET)
+    List<Profile> findAllPage(@PathVariable("id") Long id) {
+        return profileService.getAllProfilesBelongToServer(serverService.getServer(id));
+    }
+    @RequestMapping(value = "/count/{id}", method = RequestMethod.GET)
+    public Integer countAllWithServer(@PathVariable("id") Long id) {
+        return profileService.countAllByServer(serverService.getServer(id));
+    }
+
+
+
 }

@@ -17,4 +17,10 @@ class Xde {
     @JoinColumn(name = "id")
     @MapsId
     private Maven maven;
+
+
+    // Server Relation ;
+    @ManyToOne
+    @JoinColumn(name="SERVER_ID")
+    private Server server;
 }

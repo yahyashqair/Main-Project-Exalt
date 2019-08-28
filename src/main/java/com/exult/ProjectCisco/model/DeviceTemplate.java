@@ -2,6 +2,7 @@ package com.exult.ProjectCisco.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.springframework.context.annotation.EnableMBeanExport;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -10,17 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.fasterxml.jackson.annotation.JsonProperty.Access;
-
 @Entity
-public @Data
-class Device {
-
-    @ElementCollection
-    @MapKeyColumn(name = "name")
-    @Column(name = "value")
-    @CollectionTable(name = "device_Configuration", joinColumns = @JoinColumn(name = "device_id"))
-    Map<String, String> configurations = new HashMap<String, String>(); // maps from attribute name to value
+@Data
+public class DeviceTemplate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,14 +57,4 @@ class Device {
     @JsonProperty("name")
     @Column(name="name")
     private String name;
-
-    @JsonProperty(access = Access.READ_ONLY)
-    @ManyToMany
-    private List<Profile> profileSet = new ArrayList<>();
-
-    @ManyToOne
-    @JoinColumn(name="SERVER_ID")
-    private Server server;
-
-
 }

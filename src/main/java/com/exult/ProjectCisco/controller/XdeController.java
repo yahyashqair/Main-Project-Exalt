@@ -2,9 +2,9 @@ package com.exult.ProjectCisco.controller;
 
 import com.exult.ProjectCisco.dto.XdeDto;
 import com.exult.ProjectCisco.model.Xde;
-import com.exult.ProjectCisco.repository.MavenRepository;
 import com.exult.ProjectCisco.service.ifmDevice.Xde.XdeService;
 import com.exult.ProjectCisco.service.ifmDevice.maven.MavenService;
+import com.exult.ProjectCisco.service.server.ServerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RestController
@@ -25,14 +24,17 @@ public class XdeController {
 
     @Autowired
     private MavenService mavenService;
+    @Autowired
+    private ServerService serverService;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     Xde getXde(@PathVariable("id") Long id) {
         return xdeService.findById(id);
     }
+
     @RequestMapping(value = "/search/{qstring}", method = RequestMethod.GET)
     public List<Xde> getpro(@PathVariable("qstring") String qstring) {
-        return xdeService.findByNameLike("%"+qstring+"%");
+        return xdeService.findByNameLike("%" + qstring + "%");
     }
 
 //    @RequestMapping(value = "/all", method = RequestMethod.GET)
@@ -41,22 +43,33 @@ public class XdeController {
 //    }
 
     @RequestMapping(value = "/all/", method = RequestMethod.GET)
-    Page<Xde> getXdePage(@RequestParam(defaultValue = "pagenumber") int pagenumber,@RequestParam(defaultValue = "size") int size) {
-        return xdeService.findAllPage(PageRequest.of(pagenumber,size));
-    }
-    @RequestMapping(value = "/", method = RequestMethod.POST)
-    Xde postXde(XdeDto xdeDto) {
-        return xdeService.insertXde(xdeDto.getName(), mavenService.findMavenById(xdeDto.getMavenId()));
+    Page<Xde> getXdePage(@RequestParam(defaultValue = "pagenumber") int pagenumber, @RequestParam(defaultValue = "size") int size) {
+        return xdeService.findAllPage(PageRequest.of(pagenumber, size));
     }
 
-    // Update Xde
-    @RequestMapping(value = "/", method = RequestMethod.PUT)
-    Xde putXde(XdeDto xdeDto) {
-        return xdeService.insertXde(xdeDto.getName(), mavenService.findMavenById(xdeDto.getMavenId()));
-    }
+    //    @RequestMapping(value = "/", method = RequestMethod.POST)
+//    Xde postXde(XdeDto xdeDto) {
+//        return xdeService.insertXde(xdeDto.getName(), mavenService.findMavenById(xdeDto.getMavenId()));
+//    }
+//
+//    // Update Xde
+//    @RequestMapping(value = "/", method = RequestMethod.PUT)
+//    Xde putXde(XdeDto xdeDto) {
+//        return xdeService.insertXde(xdeDto.getName(), mavenService.findMavenById(xdeDto.getMavenId()));
+//    }
     // Delete Xde
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
     boolean deleteXde(XdeDto xdeDto) {
         return xdeService.deleteXde(mavenService.findMavenById(xdeDto.getMavenId()).getId());
+    }
+
+    @RequestMapping(value = "/server/{id}/", method = RequestMethod.GET)
+    Page<Xde> getXdePage(@PathVariable Long id, @RequestParam(defaultValue = "pagenumber") int pagenumber, @RequestParam(defaultValue = "size") int size) {
+        return xdeService.getAllXdesBelongToServer(serverService.getServer(id), PageRequest.of(pagenumber, size));
+    }
+
+    @RequestMapping(value = "/count/{id}", method = RequestMethod.GET)
+    public Integer countAllWithServer(@PathVariable("id") Long id) {
+        return xdeService.countAllByServer(serverService.getServer(id));
     }
 }

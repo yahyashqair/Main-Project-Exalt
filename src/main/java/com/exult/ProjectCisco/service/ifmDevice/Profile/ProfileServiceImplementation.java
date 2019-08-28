@@ -1,11 +1,7 @@
 package com.exult.ProjectCisco.service.ifmDevice.Profile;
 
-import com.exult.ProjectCisco.model.Feature;
-import com.exult.ProjectCisco.model.FeatureXde;
-import com.exult.ProjectCisco.model.Maven;
-import com.exult.ProjectCisco.model.Profile;
+import com.exult.ProjectCisco.model.*;
 import com.exult.ProjectCisco.repository.ProfileRepository;
-import com.exult.ProjectCisco.service.ifmDevice.Device.DeviceService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -56,10 +52,11 @@ class ProfileServiceImplementation implements ProfileService {
     }
 
     @Transactional
-    public Profile insertProfile(String name, Maven maven) {
+    public Profile insertProfile(String name, Maven maven, Server server) {
         try {
             Profile profile = new Profile();
             profile.setName(name);
+            profile.setServer(server);
             profile.setMaven(maven);
             profile = profileRepository.save(profile);
             return profile;
@@ -101,6 +98,21 @@ class ProfileServiceImplementation implements ProfileService {
     @Override
     public List<Profile> findByNameLike(String search) {
         return profileRepository.findByNameLike(search);
+    }
+
+    @Override
+    public List<Profile> getAllProfilesBelongToServer(Server server) {
+        return profileRepository.findAllByServer(server);
+    }
+
+    @Override
+    public Page<Profile> getAllProfilesBelongToServer(Server server, Pageable P) {
+        return profileRepository.findAllByServer(server, P);
+    }
+
+    @Override
+    public Integer countAllByServer(Server server) {
+        return profileRepository.countAllByServer(server);
     }
 
 }

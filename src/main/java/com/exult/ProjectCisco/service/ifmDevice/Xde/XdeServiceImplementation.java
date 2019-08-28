@@ -1,12 +1,12 @@
 package com.exult.ProjectCisco.service.ifmDevice.Xde;
 
 import com.exult.ProjectCisco.model.Maven;
+import com.exult.ProjectCisco.model.Server;
 import com.exult.ProjectCisco.model.Xde;
 import com.exult.ProjectCisco.repository.XdeRepository;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +35,7 @@ class XdeServiceImplementation implements XdeService {
         }
         return null;
     }
+
     @Transactional
     @Override
     public Xde findById(Long x) {
@@ -57,9 +58,10 @@ class XdeServiceImplementation implements XdeService {
     }
 
     @Transactional
-    public Xde insertXde(String name, Maven maven) {
+    public Xde insertXde(String name, Maven maven, Server server) {
         try {
             Xde xde = new Xde();
+            xde.setServer(server);
             xde.setMaven(maven);
             xde.setName(name);
             xde = xdeRepository.save(xde);
@@ -85,5 +87,20 @@ class XdeServiceImplementation implements XdeService {
     @Override
     public List<Xde> findByNameLike(String search) {
         return xdeRepository.findByNameLike(search);
+    }
+
+    @Override
+    public List<Xde> getAllXdesBelongToServer(Server server) {
+        return xdeRepository.findAllByServer(server);
+    }
+
+    @Override
+    public Page<Xde> getAllXdesBelongToServer(Server server, Pageable p) {
+        return xdeRepository.findAllByServer(server,p);
+    }
+
+    @Override
+    public Integer countAllByServer(Server server) {
+        return  xdeRepository.countAllByServer(server);
     }
 }

@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 public interface MavenRepository extends JpaRepository<Maven,Long> {
     Maven findByArtifactIdAndAndGroupId(String artifactId ,String groupId);
+
 }

@@ -1,6 +1,7 @@
 package com.exult.ProjectCisco.repository;
 
 import com.exult.ProjectCisco.model.Feature;
+import com.exult.ProjectCisco.model.Server;
 import com.exult.ProjectCisco.model.Xde;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,5 +16,7 @@ public interface FeatureRepository extends JpaRepository<Feature,Long>, PagingAn
     List<Feature> findByName(String name);
     Page<Feature> findAll(Pageable pageable);
     List<Feature> findByNameLike(String username);
-
+    List<Feature> findAllByServer(Server server);
+    Page<Feature> findAllByServer(Server server,Pageable pageable);
+    Integer countAllByServer(Server server);
 }

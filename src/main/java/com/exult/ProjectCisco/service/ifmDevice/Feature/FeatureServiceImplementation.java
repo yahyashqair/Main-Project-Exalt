@@ -1,9 +1,6 @@
 package com.exult.ProjectCisco.service.ifmDevice.Feature;
 
-import com.exult.ProjectCisco.model.Feature;
-import com.exult.ProjectCisco.model.FeatureXde;
-import com.exult.ProjectCisco.model.Maven;
-import com.exult.ProjectCisco.model.Xde;
+import com.exult.ProjectCisco.model.*;
 import com.exult.ProjectCisco.repository.FeatureRepository;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +52,21 @@ class FeatureServiceImplementation implements FeatureService {
         return featureRepository.findAll(pageable);
     }
 
+    @Override
+    public List<Feature> getAllFeaturesBelongToServer(Server server) {
+        return featureRepository.findAllByServer(server);
+    }
+
+    @Override
+    public Page<Feature> getAllFeaturesBelongToServer(Server server, Pageable pageable) {
+        return featureRepository.findAllByServer(server, pageable);
+    }
+
+    @Override
+    public Integer countAllByServer(Server server) {
+        return featureRepository.countAllByServer(server);
+    }
+
     @Transactional
     public Feature findFeature(String x) {
         List<Feature> featureList = featureRepository.findByName(x);
@@ -80,11 +92,12 @@ class FeatureServiceImplementation implements FeatureService {
     }
 
     @Transactional
-    public Feature insertFeature(String name, Maven maven) {
+    public Feature insertFeature(String name, Maven maven, Server server) {
         try {
             Feature feature = new Feature();
             feature.setMaven(maven);
             feature.setName(name);
+            feature.setServer(server);
             feature = featureRepository.save(feature);
             return feature;
         } catch (Exception e) {

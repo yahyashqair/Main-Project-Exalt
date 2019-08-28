@@ -4,6 +4,7 @@ import com.exult.ProjectCisco.model.*;
 import com.exult.ProjectCisco.repository.*;
 import com.exult.ProjectCisco.service.ifmDevice.Feature.FeatureService;
 import com.exult.ProjectCisco.service.ifmDevice.Xde.XdeService;
+import lombok.Data;
 import org.apache.commons.io.FileUtils;
 import org.rauschig.jarchivelib.Archiver;
 import org.rauschig.jarchivelib.ArchiverFactory;
@@ -26,6 +27,7 @@ import java.io.IOException;
 import java.util.*;
 
 @Service
+@Data
 public class DeviceLoader {
 
     @Autowired
@@ -42,6 +44,9 @@ public class DeviceLoader {
     private ProfileRepository profileRepository;
     @Autowired
     private MavenRepository mavenRepository;
+
+    private Server server;
+
     //    @Autowired
 //    private ConfigurationRepository configrationRepository;
     // Store all XmpXde and XmpFeature here For Sorting xml and feature to avoid errors
@@ -188,27 +193,40 @@ public class DeviceLoader {
     private void storeInOrderServerStructure() throws ParserConfigurationException, SAXException, IOException {
         // Remove Duplicate
 
-//        for (File xdeZipFile : zipXdes) {
-//            String path = unzippedFile("zip",xdeZipFile);
-//            File file = new File(path + "/xmpxde.xml");
-//            if(file.exists())readXde(file);
-//            FileUtils.deleteDirectory(file.getParentFile());
-//        }
-//        for(File zipfile : zipFeatures){
-//            String path = unzippedFile("zip",zipfile);
-//            File file = findPom(new File(path),"pom.xml");
-//            if(file.exists())readFeature(file,findPom(new File(path),"MANIFEST.MF"));
-//            System.err.println(file.getPath());
-//            FileUtils.deleteDirectory(new File(path));
-//        }
+        for (File xdeZipFile : zipXdes) {
+            try {
+                String path = unzippedFile("zip", xdeZipFile);
+                File file = new File(path + "/xmpxde.xml");
+                if (file.exists()) readXde(file);
+                FileUtils.deleteDirectory(file.getParentFile());
+            }catch (Exception e){
+                System.out.println(e.getMessage());
+            }
+        }
+        for(File zipfile : zipFeatures){
+            try {
+                String path = unzippedFile("zip",zipfile);
+            File file = findPom(new File(path),"pom.xml");
+            if(file.exists())readFeature(file,findPom(new File(path),"MANIFEST.MF"));
+            System.err.println(file.getPath());
+            FileUtils.deleteDirectory(new File(path));
+        }catch (Exception e){
+                System.out.println(e.getMessage());
+            }
+        }
         // /META-INF/MANIFEST.MF
         // \META-INF\maven\com.cisco.nm.sam.feature\feature_nbar_reader
         for(File zipfile : zipProfiles){
+            try{
             String path = unzippedFile("zip",zipfile);
             File file = findPom(new File(path),"pom.xml");
             if(file.exists())readProfile(file,findPom(new File(path),".orderedFeatures"));
             System.err.println(file.getPath());
             FileUtils.deleteDirectory(new File(path));
+        }catch (Exception e){
+                System.out.println(e.getMessage());
+            }
+
         }
 
 
@@ -284,10 +302,16 @@ public class DeviceLoader {
                 maven.setVersion(node.getTextContent());
             }
         }
-        if (mavenRepository.findByArtifactIdAndAndGroupId(maven.getArtifactId(), maven.getGroupId()) == null) {
+        Maven test = mavenRepository.findByArtifactIdAndAndGroupId(maven.getArtifactId(), maven.getGroupId());
+        if (test == null) {
             mavenRepository.save(maven);
-            xdeService.insertXde(maven.getGroupId() + "." + maven.getArtifactId(), maven);
+        } else {
+            if(xdeService.findById(test.getId()).getServer()==this.server){
+                return;
+            }
+            mavenRepository.save(maven);
         }
+        xdeService.insertXde(maven.getGroupId() + "." + maven.getArtifactId(), maven,this.server);
     }
 
     /*
@@ -315,11 +339,15 @@ public class DeviceLoader {
             }
         }
 
-        if (mavenRepository.findByArtifactIdAndAndGroupId(maven.getArtifactId(), maven.getGroupId()) == null) {
-            mavenRepository.save(maven);
-        } else {
-            return;
-        }
+            Maven test = mavenRepository.findByArtifactIdAndAndGroupId(maven.getArtifactId(), maven.getGroupId());
+            if (test == null) {
+                mavenRepository.save(maven);
+            } else {
+                if(featureRepository.findById(test.getId()).get().getServer()==this.server){
+                    return;
+                }
+                mavenRepository.save(maven);
+            }
         feature.setMaven(maven);
         featureRepository.save(feature);
         //System.out.println(maven);
@@ -364,6 +392,7 @@ public class DeviceLoader {
              * */
         }
             System.out.println(feature);
+        feature.setServer(this.server);
         featureRepository.save(feature);
     }catch (Exception e ){
             System.err.println(e.getMessage());
@@ -375,6 +404,7 @@ public class DeviceLoader {
      * Helper Function for readFeature
      * Take xmpfeature.xml and xde and return type of its relation
      * */
+
     private String findRelationType(File newfile, Xde xde) {
         try {
             BufferedReader br = new BufferedReader(new FileReader(newfile));
@@ -421,10 +451,14 @@ public class DeviceLoader {
         }
         profile.setName(maven.getGroupId() + "." + maven.getArtifactId());
         profile.setMaven(maven);
-        if (mavenRepository.findByArtifactIdAndAndGroupId(maven.getArtifactId(), maven.getGroupId()) == null) {
+        Maven test = mavenRepository.findByArtifactIdAndAndGroupId(maven.getArtifactId(), maven.getGroupId());
+        if (test == null) {
             mavenRepository.save(maven);
         } else {
-            return;
+            if(profileRepository.findById(test.getId()).get().getServer()==this.server){
+                return;
+            }
+            mavenRepository.save(maven);
         }
         profileRepository.save(profile);
         /*
@@ -505,6 +539,7 @@ public class DeviceLoader {
         /*
          * Save profile ,
          * */
+        profile.setServer(this.server);
         profileRepository.save(profile);
     }
     /*
