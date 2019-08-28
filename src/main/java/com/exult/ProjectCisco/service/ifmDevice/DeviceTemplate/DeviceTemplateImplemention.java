@@ -25,7 +25,7 @@ public class DeviceTemplateImplemention implements DeviceTemplateService{
 
     @Override
     public DeviceTemplate getDevice(Long id) {
-        return deviceTemplateRepository.getOne(id);
+        return deviceTemplateRepository.findById(id).get();
     }
 
 }

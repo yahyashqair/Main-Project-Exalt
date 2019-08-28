@@ -57,6 +57,4 @@ public class DeviceTemplate {
     @JsonProperty("name")
     @Column(name="name")
     private String name;
-
-
 }
