@@ -2,7 +2,6 @@ package com.exult.ProjectCisco.service.ifmDevice.Profile;
 
 import com.exult.ProjectCisco.model.*;
 import com.exult.ProjectCisco.repository.ProfileRepository;
-import com.exult.ProjectCisco.service.ifmDevice.Device.DeviceService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -108,12 +107,12 @@ class ProfileServiceImplementation implements ProfileService {
 
     @Override
     public Page<Profile> getAllProfilesBelongToServer(Server server, Pageable P) {
-        return profileRepository.findAllByServer(server,P);
+        return profileRepository.findAllByServer(server, P);
     }
 
     @Override
     public Integer countAllByServer(Server server) {
-        return profileRepository.countAllByServer(Server server);;
+        return profileRepository.countAllByServer(server);
     }
 
 }

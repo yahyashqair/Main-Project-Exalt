@@ -59,12 +59,12 @@ class FeatureServiceImplementation implements FeatureService {
 
     @Override
     public Page<Feature> getAllFeaturesBelongToServer(Server server, Pageable pageable) {
-        return featureRepository.findAllByServer(server,pageable);
+        return featureRepository.findAllByServer(server, pageable);
     }
 
     @Override
     public Integer countAllByServer(Server server) {
-        return featureRepository.countAllByServer(Server server);
+        return featureRepository.countAllByServer(server);
     }
 
     @Transactional

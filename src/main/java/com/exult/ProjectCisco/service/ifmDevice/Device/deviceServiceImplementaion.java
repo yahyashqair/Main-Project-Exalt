@@ -254,7 +254,7 @@ public class deviceServiceImplementaion implements DeviceService {
 
     @Override
     public Integer countAllByServer(Server server) {
-        return deviceRepository.countAllByServer(Server server);
+        return deviceRepository.countAllByServer(server);
     }
 
     public void deviceToMap(Device device) {

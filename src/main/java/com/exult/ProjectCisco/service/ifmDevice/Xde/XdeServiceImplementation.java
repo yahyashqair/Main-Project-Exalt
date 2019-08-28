@@ -101,6 +101,6 @@ class XdeServiceImplementation implements XdeService {
 
     @Override
     public Integer countAllByServer(Server server) {
-        return  xdeRepository.countAllByServer(Server server);;
+        return  xdeRepository.countAllByServer(server);
     }
 }
