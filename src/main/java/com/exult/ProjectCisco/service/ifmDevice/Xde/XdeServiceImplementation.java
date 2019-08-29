@@ -85,9 +85,14 @@ class XdeServiceImplementation implements XdeService {
     }
 
     @Override
-    public List<Xde> findByNameLike(String search) {
-        return xdeRepository.findByNameLike(search);
+    public Page<Xde> findByNameLikeAndServer(Server server,String search, Pageable pageable) {
+         return xdeRepository.findByNameLikeAndServer(search,server,pageable);
     }
+
+//    @Override
+//    public List<Xde> findByNameLike(String search) {
+//        return xdeRepository.findByNameLike(search);
+//    }
 
     @Override
     public List<Xde> getAllXdesBelongToServer(Server server) {

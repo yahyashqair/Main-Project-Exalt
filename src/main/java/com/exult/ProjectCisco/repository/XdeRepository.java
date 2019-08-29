@@ -14,7 +14,7 @@ import java.util.List;
 public interface XdeRepository extends JpaRepository<Xde,Long>, PagingAndSortingRepository<Xde, Long> {
     List<Xde> findByName(String name);
     Page<Xde> findAll(Pageable pageable);
-    List<Xde> findByNameLike(String username);
+    Page<Xde> findByNameLikeAndServer(String username,Server server,Pageable pageable);
     List<Xde> findAllByServer(Server server);
     Page<Xde> findAllByServer(Server server,Pageable pageable);
     Integer countAllByServer(Server server);

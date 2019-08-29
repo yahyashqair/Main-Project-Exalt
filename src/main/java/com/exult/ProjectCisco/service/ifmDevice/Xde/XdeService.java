@@ -23,7 +23,7 @@ public interface XdeService {
 
     Page<Xde> findAllPage(Pageable P);
 
-    List<Xde> findByNameLike(String search);
+    Page<Xde> findByNameLikeAndServer(Server server,String search,Pageable pageable);
 
     List<Xde> getAllXdesBelongToServer(Server server);
 
