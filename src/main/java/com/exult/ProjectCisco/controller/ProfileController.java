@@ -76,10 +76,21 @@ public class ProfileController {
     public Set<Feature> getFeature(@PathVariable("id") Long id) {
         return profileService.findById(id).getFeatures();
     }
+    @RequestMapping(value = "/server/{id}/tree", method = RequestMethod.GET)
+    List<Profile> findAllPage(@PathVariable("id") Long id) {
+        return profileService.getAllProfilesBelongToServer(serverService.getServer(id));
+    }
 
-    @RequestMapping(value = "/search/{qstring}", method = RequestMethod.GET)
-    public List<Profile> getpro(@PathVariable("qstring") String qstring) {
-        return profileService.findByNameLike("%"+qstring+"%");
+    //    @RequestMapping(value = "/search/{qstring}", method = RequestMethod.GET)
+//    public List<Profile> getpro(@PathVariable("qstring") String qstring,@RequestParam(defaultValue = "pagenumber") int pagenumber, @RequestParam(defaultValue = "size") int size) {
+//        return profileService.findByNameLike("%"+qstring+"%",PageRequest.of(pagenumber, size));
+//    }
+
+    @RequestMapping(value = {"/server/{id}/{qstring}", "/server/{id}/"}, method = RequestMethod.GET)
+    public Page<Profile> getpro(@PathVariable("id") Long id, @PathVariable("qstring")Optional<String> string, @RequestParam(defaultValue = "pagenumber") int pagenumber, @RequestParam(defaultValue = "size") int size) {
+        String query="";
+        if(string.isPresent())query=string.get();
+        return profileService.findByNameLikeAndServer(serverService.getServer(id), "%" + query + "%", PageRequest.of(pagenumber, size));
     }
 
     @RequestMapping(value = "/search/", method = RequestMethod.GET)
@@ -128,15 +139,11 @@ public class ProfileController {
         return profileService.deleteProfile(mavenService.findMavenById(profileDto.getMavenId()).getId());
     }
 
-    @RequestMapping(value = "/server/{id}/", method = RequestMethod.GET)
-    Page<Profile> findAllPagebelongtoServer(@PathVariable("id") Long id ,@RequestParam(defaultValue = "pagenumber") int pagenumber, @RequestParam(defaultValue = "size") int size) {
-        return profileService.getAllProfilesBelongToServer(serverService.getServer(id),PageRequest.of(pagenumber,size));
-    }
+//    @RequestMapping(value = "/server/{id}/", method = RequestMethod.GET)
+//    Page<Profile> findAllPagebelongtoServer(@PathVariable("id") Long id ,@RequestParam(defaultValue = "pagenumber") int pagenumber, @RequestParam(defaultValue = "size") int size) {
+//        return profileService.getAllProfilesBelongToServer(serverService.getServer(id),PageRequest.of(pagenumber,size));
+//    }
 
-    @RequestMapping(value = "/server/{id}/tree", method = RequestMethod.GET)
-    List<Profile> findAllPage(@PathVariable("id") Long id) {
-        return profileService.getAllProfilesBelongToServer(serverService.getServer(id));
-    }
     @RequestMapping(value = "/count/{id}", method = RequestMethod.GET)
     public Integer countAllWithServer(@PathVariable("id") Long id) {
         return profileService.countAllByServer(serverService.getServer(id));

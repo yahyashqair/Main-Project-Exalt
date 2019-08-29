@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RestController
@@ -32,15 +33,12 @@ public class XdeController {
         return xdeService.findById(id);
     }
 
-    @RequestMapping(value = "/search/{qstring}", method = RequestMethod.GET)
-    public List<Xde> getpro(@PathVariable("qstring") String qstring) {
-        return xdeService.findByNameLike("%" + qstring + "%");
+    @RequestMapping(value = {"/server/{id}/{qstring}", "/server/{id}/"}, method = RequestMethod.GET)
+    public Page<Xde> getpro(@PathVariable("id") Long id, @PathVariable("qstring") Optional<String> string, @RequestParam(defaultValue = "pagenumber") int pagenumber, @RequestParam(defaultValue = "size") int size) {
+        String query = "";
+        if (string.isPresent()) query = string.get();
+        return xdeService.findByNameLikeAndServer(serverService.getServer(id), "%" + query + "%", PageRequest.of(pagenumber, size));
     }
-
-//    @RequestMapping(value = "/all", method = RequestMethod.GET)
-//    List<Xde> getXdes() {
-//        return xdeService.findAllXde();
-//    }
 
     @RequestMapping(value = "/all/", method = RequestMethod.GET)
     Page<Xde> getXdePage(@RequestParam(defaultValue = "pagenumber") int pagenumber, @RequestParam(defaultValue = "size") int size) {
@@ -63,10 +61,10 @@ public class XdeController {
         return xdeService.deleteXde(mavenService.findMavenById(xdeDto.getMavenId()).getId());
     }
 
-    @RequestMapping(value = "/server/{id}/", method = RequestMethod.GET)
-    Page<Xde> getXdePage(@PathVariable Long id, @RequestParam(defaultValue = "pagenumber") int pagenumber, @RequestParam(defaultValue = "size") int size) {
-        return xdeService.getAllXdesBelongToServer(serverService.getServer(id), PageRequest.of(pagenumber, size));
-    }
+//    @RequestMapping(value = "/server/{id}/", method = RequestMethod.GET)
+//    Page<Xde> getXdePage(@PathVariable Long id, @RequestParam(defaultValue = "pagenumber") int pagenumber, @RequestParam(defaultValue = "size") int size) {
+//        return xdeService.getAllXdesBelongToServer(serverService.getServer(id), PageRequest.of(pagenumber, size));
+//    }
 
     @RequestMapping(value = "/count/{id}", method = RequestMethod.GET)
     public Integer countAllWithServer(@PathVariable("id") Long id) {

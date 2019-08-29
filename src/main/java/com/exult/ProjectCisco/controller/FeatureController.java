@@ -4,7 +4,6 @@ import com.exult.ProjectCisco.dto.FeatureDto;
 import com.exult.ProjectCisco.model.Feature;
 import com.exult.ProjectCisco.model.Xde;
 import com.exult.ProjectCisco.service.ifmDevice.Feature.FeatureService;
-import com.exult.ProjectCisco.service.ifmDevice.Xde.XdeService;
 import com.exult.ProjectCisco.service.ifmDevice.maven.MavenService;
 import com.exult.ProjectCisco.service.server.ServerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Controller
@@ -30,6 +30,7 @@ public class FeatureController {
 
     @Autowired
     private ServerService serverService;
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Feature getFeature(@PathVariable("id") Long id) {
         return featureService.findFeatureById(id);
@@ -42,7 +43,7 @@ public class FeatureController {
 
     @RequestMapping(value = "/all/", method = RequestMethod.GET)
     Page<Feature> getFeaturePage(@RequestParam(defaultValue = "pagenumber") int pagenumber, @RequestParam(defaultValue = "size") int size) {
-        return featureService.findAllPage(PageRequest.of(pagenumber,size));
+        return featureService.findAllPage(PageRequest.of(pagenumber, size));
     }
 
     @RequestMapping(value = "/xde/{id}", method = RequestMethod.GET)
@@ -55,9 +56,11 @@ public class FeatureController {
 //        return featureService.insertFeature(featureDto.getName(), mavenService.findMavenById(featureDto.getMavenId()));
 //    }
 
-    @RequestMapping(value = "/search/{qstring}", method = RequestMethod.GET)
-    public List<Feature> getpro(@PathVariable("qstring") String qstring) {
-        return featureService.findByNameLike("%"+qstring+"%");
+    @RequestMapping(value = {"/server/{id}/{qstring}", "/server/{id}/"}, method = RequestMethod.GET)
+    public Page<Feature> getpro(@PathVariable("id") Long id, @PathVariable("qstring")Optional<String> string, @RequestParam(defaultValue = "pagenumber") int pagenumber, @RequestParam(defaultValue = "size") int size) {
+        String query="";
+        if(string.isPresent())query=string.get();
+        return featureService.findByNameLikeAndServer(serverService.getServer(id), "%" + query + "%", PageRequest.of(pagenumber, size));
     }
 //    // Update Feature
 //    @RequestMapping(value = "/", method = RequestMethod.PUT)
@@ -71,10 +74,10 @@ public class FeatureController {
         return featureService.deleteFeature(mavenService.findMavenById(featureDto.getMavenId()).getId());
     }
 
-    @RequestMapping(value = "/server/{id}/", method = RequestMethod.GET)
-    Page<Feature> getFeaturePage(@PathVariable("id") Long id ,@RequestParam(defaultValue = "pagenumber") int pagenumber, @RequestParam(defaultValue = "size") int size) {
-        return featureService.getAllFeaturesBelongToServer(serverService.getServer(id),PageRequest.of(pagenumber,size));
-    }
+    //    @RequestMapping(value = "/server/{id}/", method = RequestMethod.GET)
+//    Page<Feature> getFeaturePage(@PathVariable("id") Long id ,@RequestParam(defaultValue = "pagenumber") int pagenumber, @RequestParam(defaultValue = "size") int size) {
+//        return featureService.getAllFeaturesBelongToServer(serverService.getServer(id),PageRequest.of(pagenumber,size));
+//    }
     @RequestMapping(value = "/count/{id}", method = RequestMethod.GET)
     public Integer countAllWithServer(@PathVariable("id") Long id) {
         return featureService.countAllByServer(serverService.getServer(id));
