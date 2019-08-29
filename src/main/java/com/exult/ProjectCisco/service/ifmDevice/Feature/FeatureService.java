@@ -15,7 +15,7 @@ public interface FeatureService {
     Feature findFeatureById(Long x);
     public Set<Xde> getFeatureXdeSet(Long id);
     List<Feature> getAllFeatures();
-    List<Feature> findByNameLike(String username);
+    Page<Feature> findByNameLikeAndServer(Server server,String username,Pageable pageable);
     Page<Feature> findAllPage(Pageable pageable);
     List<Feature> getAllFeaturesBelongToServer(Server server);
     Page<Feature> getAllFeaturesBelongToServer(Server server,Pageable pageable);

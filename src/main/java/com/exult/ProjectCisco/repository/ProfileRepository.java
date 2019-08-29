@@ -15,7 +15,7 @@ import java.util.List;
 @Repository
 public interface ProfileRepository extends JpaRepository<Profile,Long>, PagingAndSortingRepository<Profile, Long> {
     Profile findByName(String name);
-    List<Profile> findByNameLike(String username);
+    Page<Profile> findByNameLikeAndServer(String username,Server server,Pageable pageable);
     List<Profile> findAllByServer(Server server);
     Page<Profile> findAllByServer(Server server, Pageable pageable);
     Integer countAllByServer(Server server);

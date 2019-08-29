@@ -15,7 +15,7 @@ import java.util.List;
 public interface FeatureRepository extends JpaRepository<Feature,Long>, PagingAndSortingRepository<Feature, Long> {
     List<Feature> findByName(String name);
     Page<Feature> findAll(Pageable pageable);
-    List<Feature> findByNameLike(String username);
+    Page<Feature> findByNameLikeAndServer(String username,Server server,Pageable pageable);
     List<Feature> findAllByServer(Server server);
     Page<Feature> findAllByServer(Server server,Pageable pageable);
     Integer countAllByServer(Server server);

@@ -16,7 +16,7 @@ public interface ProfileService {
     public List<Profile> findAll();
     Set<FeatureXde> getFeatureXde(long id);
     Page<Profile> findAllPage(Pageable P);
-    List<Profile> findByNameLike(String search);
+    Page<Profile> findByNameLikeAndServer(Server server,String search,Pageable pageable);
     List<Profile> getAllProfilesBelongToServer(Server server);
     Page<Profile> getAllProfilesBelongToServer(Server server,Pageable P);
     Integer countAllByServer(Server server);
