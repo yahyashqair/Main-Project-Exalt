@@ -41,6 +41,10 @@ public class ServerService {
         return server;
     }
 
+    public void deleteServer(Server server){
+         serverRepository.delete(server);
+    }
+
     public Server getServer(Long id) {
         return serverRepository.findById(id).get();
     }

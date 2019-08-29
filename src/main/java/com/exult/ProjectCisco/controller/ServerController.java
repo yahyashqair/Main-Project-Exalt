@@ -30,6 +30,11 @@ public class ServerController {
         return serverService.getServer(id);
     }
 
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public void deleteServer(@PathVariable("id") Long id) {
+        serverService.deleteServer(serverService.getServer(id));
+    }
+
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public Server insertDevice(@RequestBody Server server) {
         return serverService.insertServer(server);
